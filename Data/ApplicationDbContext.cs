@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CySim.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace CySim.Data
             : base(options)
         {
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
 
