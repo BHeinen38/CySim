@@ -23,17 +23,20 @@ namespace CySim.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -50,6 +53,8 @@ namespace CySim.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            public string UserName { get; set; }
+
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
@@ -60,6 +65,8 @@ namespace CySim.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string Role { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -78,6 +85,24 @@ namespace CySim.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    if (!await _roleManager.RoleExistsAsync("Admin"))
+                        await _roleManager.CreateAsync(new IdentityRole("Admin"));
+
+                    if (!await _roleManager.RoleExistsAsync("Red Team"))
+                        await _roleManager.CreateAsync(new IdentityRole("Red Team"));
+
+                    if (!await _roleManager.RoleExistsAsync("Blue Team"))
+                        await _roleManager.CreateAsync(new IdentityRole("Blue Team"));
+
+                    if (Input.Role == "Admin")
+                        await _userManager.AddToRoleAsync(user, "Admin");
+
+                    if (Input.Role == "Red Team")
+                        await _userManager.AddToRoleAsync(user, "Red Team");
+
+                    if (Input.Role == "Blue Team")
+                        await _userManager.AddToRoleAsync(user, "Blue Team");
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

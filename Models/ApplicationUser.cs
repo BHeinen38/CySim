@@ -8,7 +8,7 @@ namespace CySim.Models
 {
 	public class ApplicationUser : IdentityUser
 	{
-		[DisplayName("Role")]
+		[NotMapped]
 		public string Role { get; set; }
 	}
 }
