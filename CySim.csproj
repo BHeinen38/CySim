@@ -10,6 +10,13 @@
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
     <None Remove="Data\Migrations\" />
+    <None Remove="Controllers\BaseController\" />
+    <None Remove="Models\ScoreBoardModels\" />
+    <None Remove="Controllers\ScoreBoardController\" />
+    <None Remove="Views\ScoreBoard\" />
+    <None Remove="Controllers\TeamRegistration\" />
+    <None Remove="Models\TeamRegistration\" />
+    <None Remove="Views\TeamRegistration\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -34,5 +41,12 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="Controllers\BaseController\" />
+    <Folder Include="Models\ScoreBoardModels\" />
+    <Folder Include="Controllers\ScoreBoardController\" />
+    <Folder Include="Views\ScoreBoard\" />
+    <Folder Include="Controllers\TeamRegistration\" />
+    <Folder Include="Models\TeamRegistration\" />
+    <Folder Include="Views\TeamRegistration\" />
   </ItemGroup>
 </Project>
