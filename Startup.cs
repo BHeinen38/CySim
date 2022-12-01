@@ -35,7 +35,7 @@ namespace CySim
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
-    
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
