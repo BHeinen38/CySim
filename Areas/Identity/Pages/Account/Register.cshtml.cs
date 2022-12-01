@@ -53,6 +53,7 @@ namespace CySim.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Display(Name = "User Name")]
             public string UserName { get; set; }
 
             [Required]
