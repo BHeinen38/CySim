@@ -17,6 +17,9 @@
     <None Remove="Controllers\TeamRegistration\" />
     <None Remove="Models\TeamRegistration\" />
     <None Remove="Views\TeamRegistration\" />
+    <None Remove="Controllers\Tutorial\" />
+    <None Remove="Views\Tutorial\" />
+    <None Remove="Models\Tutorial\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -48,5 +51,8 @@
     <Folder Include="Controllers\TeamRegistration\" />
     <Folder Include="Models\TeamRegistration\" />
     <Folder Include="Views\TeamRegistration\" />
+    <Folder Include="Controllers\Tutorial\" />
+    <Folder Include="Views\Tutorial\" />
+    <Folder Include="Models\Tutorial\" />
   </ItemGroup>
 </Project>
