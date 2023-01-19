@@ -2,29 +2,53 @@
     ViewData["Title"] = "Tutorial Page";
 }
 
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> signInManager;
+
 <div class="text-center">
     <h1 class="display-4"> Attack Tutorials</h1>
     <h4>Below are all of the tutorial's available for a Red Team User</h4>
     <br /> <br />
-           <div>
-               <table cellpadding="15">
-                   <tr>
-                       <th align="left">Type</th>
-                       <th align="left"> Description </th>
-                   </tr>
-                   <tr>
-                       <td align="left">NMAP</td>
-                       <td align="left">This will show you how to run a stealth scan using NMAP</td>
-                   </tr>
-                   <tr>
-                       <td align="left">Windows SMB</td>
-                       <td align="left">This should show you how to break into a broken SMB Windows Server</td>
-                   </tr>
-                   <tr>
-                       <td align="left">Metasploit</td>
-                       <td align="left">This is just general tutorial on how  to use metasploit</td>
-                   </tr>
-               </table>
-           </div>
+    <div>
+        <table cellpadding="15">
+            <tr>
+                <th align="left">Type</th>
+                <th align="left"> Description </th>
+            </tr>
+
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+            {
+                <tr>
+                    <td align="left">Configure Ldap</td>
+                    <td align="left">This will show you the best practices when configuring ldap on windows</td>
+                </tr>
+                <tr>
+                    <td align="left">Port Forwarding on Nat</td>
+                    <td align="left">This will explain to you how to port forward using NAT</td>
+                </tr>
+
+            }
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+            {
+                <tr>
+                    <td align="left">NMAP</td>
+                    <td align="left">This will show you how to run a stealth scan using NMAP</td>
+                </tr>
+                <tr>
+                    <td align="left">Windows SMB</td>
+                    <td align="left">This should show you how to break into a broken SMB Windows Server</td>
+                </tr>
+                <tr>
+                    <td align="left">Metasploit</td>
+                    <td align="left">This is just general tutorial on how  to use metasploit</td>
+                </tr>
+
+            }
+
+
+        </table>
+
+
+    </div>
 </div>
 
