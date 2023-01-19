@@ -20,6 +20,7 @@
     <None Remove="Controllers\Tutorial\" />
     <None Remove="Views\Tutorial\" />
     <None Remove="Models\Tutorial\" />
+    <None Remove="Documents\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -54,5 +55,6 @@
     <Folder Include="Controllers\Tutorial\" />
     <Folder Include="Views\Tutorial\" />
     <Folder Include="Models\Tutorial\" />
+    <Folder Include="Documents\" />
   </ItemGroup>
 </Project>

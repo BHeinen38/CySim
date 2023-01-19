@@ -3,6 +3,7 @@ namespace CySim.Models.ScoreBoardModels
 {
 	public class ScoreBoard
 	{
+
 		public int Id { get; set; }
 
 		public string TeamName { get; set; }

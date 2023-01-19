@@ -1,0 +1,26 @@
+﻿@model CySim.Data.ApplicationDbContext;
+@{
+    ViewData["Title"] = "ScoreBoard Page";
+}
+
+<!DOCTYPE html>
+<html>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-centered">
+                <h1 class="text-centered">Leaderboard</h1>
+                <table class="table table-striped">
+                    <tr><th>Rank</th><th>Name</th><th>Score</th></tr>
+                    @{int i = 1; }
+                    @foreach (var item in Model.Leaders())
+                    {
+                        <tr><td width="50px">@i</td><td>@item.TeamName</td><td>@item.Score</td></tr>
+                        ++i;
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

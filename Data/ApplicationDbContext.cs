@@ -7,6 +7,7 @@ using CySim.Models.TeamRegistration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CySim.Models.Tutorial;
+using System.Linq;
 
 namespace CySim.Data
 {
@@ -25,7 +26,14 @@ namespace CySim.Data
 
         public DbSet<Tutorial> Tutorials { get; set; }
 
-
+        public IEnumerable<ScoreBoard> Leaders()
+        {
+            return ScoreBoards.OrderByDescending(x => x.Score);
+        }
+        public IEnumerable<ScoreBoard> Leaders(int count)
+        {
+            return ScoreBoards.OrderByDescending(x => x.Score).Take(count);
+        }
     }
 }
 
