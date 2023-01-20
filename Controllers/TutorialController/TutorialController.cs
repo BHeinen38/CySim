@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using CySim.Controllers.TeamRegistration;
+using CySim.Controllers.TeamRegistrationController;
 using CySim.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 
 
-namespace CySim.Controllers.Tutorial
+namespace CySim.Controllers.TutorialController
 {
 	public class TutorialController : Controller
 	{

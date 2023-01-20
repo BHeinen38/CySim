@@ -1,10 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Team Registration Page";
+﻿@model IEnumerable<CySim.Models.TeamRegistration.TeamRegistration>
+
+@{
+
+    ViewData["Title"] = "Team Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Register</h1>
-    <p>This is where a user will have the ability to register to a team</p>
+<br />
+<br />
+<br />
+
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-info">Register For a Team</h2>
+    </div>
+    <div align="right" class="col-6">
+        <a class="btn btn-info" asp-action="Create">Register or Add a Team <i class="fa-solid fa-bicycle"></i></a>
+    </div>
+    <br />
+    <div class="col-12">
+        <table class="table table-striped border">
+            <tr class="table-info">
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.TeamName)
+                </th>
+                @*<th></th>*@
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(w => item.TeamName)
+                    </td>
+                    <partial name="_TableButtonPartial" model="item.Id" />
+                </tr>
+            }
+        </table>
+    </div>
 </div>
-
-
