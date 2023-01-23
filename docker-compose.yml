@@ -1,6 +1,15 @@
 version: "3"
 
 services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_PASSWD:?Need to set MSSQL_PASSWD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssqlvol:/var/opt/mssql 
   cysim:
     build: ./ #https://github.com/BHeinen/CySim.git
     ports:
@@ -13,15 +22,5 @@ services:
     entrypoint:
       - dotnet 
       - CySim.dll
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${MSSQL_PASSWD}
-    ports:
-      - "1433:1433"
-    volumes:
-      - mssqlvol:/var/opt/mssql 
-
 volumes:
   mssqlvol:
