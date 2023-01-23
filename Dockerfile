@@ -1,11 +1,19 @@
 # Build CySim
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /app
 COPY . ./
 RUN dotnet restore 
 RUN dotnet publish CySim.csproj -c Debug -o out
 
-# Running web server
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
+# Migrate data using ef
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS migrate
 WORKDIR /app
-COPY --from=build-env /app/out ./
+COPY . ./
+RUN dotnet tool install --global dotnet-ef --version 6.0.5
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Running web server
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS run
+WORKDIR /app
+COPY --from=build /app/out ./
