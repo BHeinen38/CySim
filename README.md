@@ -9,6 +9,9 @@ When you are using the Blue Team role you will be known as a defending user.
 Admin are administrators and will be presented their own respected view.
 
 
+
+
+
 Useful commands:
 
 add a new database migration - dotnet ef migrations add <description string>
