@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CySim.Data;
 using CySim.Models;
 using CySim.Models.TeamRegistration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,10 +20,14 @@ namespace CySim.Controllers.TeamRegistrationController
 
         private readonly ApplicationDbContext _context;
 
-        public TeamRegistrationController(ILogger<TeamRegistrationController> logger, ApplicationDbContext context)
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+
+        public TeamRegistrationController(ILogger<TeamRegistrationController> logger, ApplicationDbContext context, SignInManager<IdentityUser> signInManager)
         {
             _logger = logger;
             _context = context;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -99,6 +104,36 @@ namespace CySim.Controllers.TeamRegistrationController
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Join(TeamRegistration teamRegistration)
+        {
+            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
+            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
+            if (ModelState.IsValid)
+            {
+                if(teamRegistration.Users.Count <= 6 && !teamRegistration.Users.Contains(User.Identity.Name))
+                {
+                    _logger.LogInformation(User.Identity.Name + " just joined the team " + teamRegistration.TeamName);
+                    
+                    teamRegistration.Users.Append(User.Identity.Name);
+                    teamRegistration.SpotsTaken++;
+                    _context.Update(teamRegistration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (teamRegistration.Users.Contains(User.Identity.Name))
+                {
+                    _logger.LogInformation(User.Identity.Name + " is already in " + teamRegistration.TeamName);
+                    return RedirectToAction(nameof(Index));
+                }
+
+            }
+            return View(teamRegistration);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

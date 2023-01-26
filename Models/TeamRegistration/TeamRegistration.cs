@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace CySim.Models.TeamRegistration
@@ -16,7 +17,8 @@ namespace CySim.Models.TeamRegistration
 
 		public bool ProfilePicture { get; set; }
 
-		public List<IdentityUser> Users { get; set; }
+		[NotMapped]
+		public List<String> Users { get; set; }
 
 	}
 }
