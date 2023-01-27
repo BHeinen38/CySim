@@ -23,16 +23,43 @@
             <tr class="table-info">
                 <th colspan="2">
                     @Html.DisplayNameFor(m => m.TeamName)
+
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.AvailableSpots)
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.SpotsTaken)
+                </th>
+                <th colspan="2">
+                    Join Team
+                </th>
+                <th align="right">
+                    Edit/Delete
                 </th>
                 @*<th></th>*@
             </tr>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    <td colspan="2">
                         @Html.DisplayFor(w => item.TeamName)
                     </td>
+                    <td colspan="2">
+                        @Html.DisplayFor(w => item.AvailableSpots)
+                    </td>
+                    <td colspan="2"> 
+                        @Html.DisplayFor(w => item.SpotsTaken)
+                    </td>
+
+                    <td colspan="2">
+                        <a class="btn btn-info" asp-action="Join">Join Team<i class="fa-solid fa-bicycle"></i></a>
+                    </td>
+                    @*<td colspan="2">
+                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join")"><i class="fa-regular fa-pen-to-square"></i>Join</a>
+                    </td>*@
                     <partial name="_TableButtonPartial" model="item.Id" />
+
                 </tr>
             }
         </table>

@@ -31,7 +31,7 @@ namespace CySim.Controllers.ScoreBoardController
             return View(_context);
         }
 
-
+       
         public IActionResult ScoreBoard()
         {
             return View(_context);

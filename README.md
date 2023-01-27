@@ -9,6 +9,27 @@ When you are using the Blue Team role you will be known as a defending user.
 Admin are administrators and will be presented their own respected view.
 
 
+## Database Migration
+
+### Adding a Migration
+To create the needed migration for the current, run this command:
+```
+dotnet ef migrations add <description string>
+```
+
+### Updating the Database
+Make sure to have your own database running and ConnectionStrings in appsettings.json points to it.
+
+Then run the following to sync your database with migrations created above:
+```
+dotnet ef database update
+```
+
+More info is at:
+
+https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
+
+
 ## Docker (On Linux)
 ### Installation
 
@@ -61,4 +82,3 @@ This can be delete by doing the following:
 docker compose down --volumes
 ```
 If you lock yourself out of the database, this will reset it losing all the data in the process.
-
