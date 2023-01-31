@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  # Run the MSSQL server with persistent data
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_PASSWD:?Need to set MSSQL_PASSWD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+  
+  # Creates the needed base data/tables at start up 
+  migrate-data:
+    build:
+      context: ./  # https://github.com/BHeinen/CySim.git
+      target: migrate
+    depends_on:
+      - mssql
+    restart: "no"
+    environment:
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+    entrypoint:
+      - dotnet 
+      - ef
+      - database
+      - update
+
+  # Run the CySim Webserver
+  cysim:
+    build:
+      context: ./  # https://github.com/BHeinen/CySim.git
+      target: run
+    ports:
+      - "8080:80"
+    depends_on:
+      - mssql
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENV}
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+    entrypoint:
+      - dotnet 
+      - CySim.dll
+
+volumes:
+  sqldata:
