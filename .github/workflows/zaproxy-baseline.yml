@@ -15,8 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Docker Run
+      - name: Add MSSQL Password
         run: echo "MSSQL_PASSWD=$(openssl rand -base64 24)" >> .env
+      
+      - name: Docker Run
         run: docker compose up -d
         
       - name: ZAP Scan
