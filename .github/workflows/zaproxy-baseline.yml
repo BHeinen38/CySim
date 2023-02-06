@@ -24,4 +24,5 @@ jobs:
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.7.0
         with:
+          cmd_options: '--network=main'
           target: 'http://cysim'
