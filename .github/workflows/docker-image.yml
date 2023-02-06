@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag CySim:$(date +%s)
+      run: docker build . --file Dockerfile --tag cysim:$(date +%s)
