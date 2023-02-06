@@ -11,7 +11,9 @@ services:
       - "1433:1433"
     volumes:
       - sqldata:/var/opt/mssql
-  
+    networks:
+      - main
+
   # Creates the needed base data/tables at start up 
   migrate-data:
     build:
@@ -20,6 +22,8 @@ services:
     depends_on:
       - mssql
     restart: "no"
+    networks:
+      - main
     environment:
       - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
     entrypoint:
@@ -37,6 +41,8 @@ services:
       - "8080:80"
     depends_on:
       - mssql
+    networks:
+      - main
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
       - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
@@ -46,3 +52,8 @@ services:
 
 volumes:
   sqldata:
+
+networks:
+  main:
+
+
