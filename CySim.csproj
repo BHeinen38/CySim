@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>aspnet-CySim-2bd92663-6c2f-415f-a1a0-ebb1d054d4ec</UserSecretsId>
   </PropertyGroup>
 
@@ -18,8 +18,10 @@
     <None Remove="Views\TeamRegistration\" />
     <None Remove="Views\Tutorial\" />
     <None Remove="Models\Tutorial\" />
-    <None Remove="Documents\" />
     <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Documents\NMAP.pdf" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -52,7 +54,11 @@
     <Folder Include="Views\TeamRegistration\" />
     <Folder Include="Views\Tutorial\" />
     <Folder Include="Models\Tutorial\" />
-    <Folder Include="Documents\" />
     <Folder Include="Extensions\" />
+    <Folder Include="wwwroot\Documents\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\Documents\NMAP.pdf" />
+    <Content Remove="wwwroot\Documents\" />
   </ItemGroup>
 </Project>
