@@ -65,10 +65,12 @@
     <Folder Include="Views\Scenario\" />
     <Folder Include="Views\MachineInfo\" />
     <Folder Include="wwwroot\Documents\Tutorial\" />
+    <Folder Include="wwwroot\Documents\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Documents\" />
     <Content Remove="wwwroot\Documents\Tutorial\" />
     <Content Remove="wwwroot\Documents\Tutorial\NMAP.pdf" />
+    <Content Remove="wwwroot\Documents\Images\" />
   </ItemGroup>
 </Project>
