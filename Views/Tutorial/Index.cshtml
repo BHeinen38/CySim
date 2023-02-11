@@ -8,12 +8,13 @@
 @inject SignInManager<IdentityUser> signInManager;
  
 
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4"> Attack Tutorials</h1>
     <h4>Below are all of the tutorial's available for a Red Team User</h4>
     <br /> <br />
     <div>
-        <table cellpadding="15">
+        <h2>Getting </h2>
+        <table cellpadding="15" class="col-md-10">
             <tr>
                 <th align="left">Type</th>
                 <th align="left"> Description </th>
@@ -53,11 +54,11 @@
 
 
     </div>
-</div>
+</div>*@
 
 @*this is a start to uploading document in app*@ 
 
-@*<form method="post" enctype="multipart/form-data" asp-controller="FileUpload" asp-action="Index">
+<form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">
     <div class="form-group">
         <div class="col-md-10">
             <p>Upload one or more files using this form:</p>
@@ -69,5 +70,5 @@
             <input type="submit" value="Upload" />
         </div>
     </div>
-</form>*@
+</form>
 

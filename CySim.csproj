@@ -23,10 +23,6 @@
     <None Remove="Controllers\ScenarioController\" />
     <None Remove="Views\Scenario\" />
     <None Remove="Views\MachineInfo\" />
-    <None Remove="Controllers\FileUploadController\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\Documents\Tutorial\NMAP.pdf" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -67,12 +63,10 @@
     <Folder Include="Views\MachineInfo\" />
     <Folder Include="wwwroot\Documents\Tutorial\" />
     <Folder Include="wwwroot\Documents\Images\" />
-    <Folder Include="Controllers\FileUploadController\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Documents\" />
     <Content Remove="wwwroot\Documents\Tutorial\" />
-    <Content Remove="wwwroot\Documents\Tutorial\NMAP.pdf" />
     <Content Remove="wwwroot\Documents\Images\" />
   </ItemGroup>
 </Project>
