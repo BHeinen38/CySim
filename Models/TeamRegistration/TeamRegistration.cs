@@ -18,7 +18,7 @@ namespace CySim.Models.TeamRegistration
 		public bool ProfilePicture { get; set; }
 
 		[NotMapped]
-		public List<String> Users { get; set; }
+		public List <String> Users { get; set; }
 
 	}
 }
