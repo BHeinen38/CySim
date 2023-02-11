@@ -61,7 +61,7 @@ html {
 }
 
 body {
-    /* Margin bottom by footer height */
+     Margin bottom by footer height 
     margin-bottom: 60px;
 }
 
@@ -70,5 +70,71 @@ body {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+    line-height: 60px;  Vertically center the text there 
+}
+
+
+
+
+/*this is the start of the scoreboard*/
+
+
+article {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 8;
+}
+
+
+
+table {
+    min-width: 320px;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+thead {
+    background-color: black;
+    color: white;
+    font-size: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+
+.article {
+    background-color: aliceblue;
+    text-align: center;
+}
+
+.footer {
+    width: 100%;
+    background-color: cadetblue;
+    text-align: center;
+}
+
+.scoreboard-score {
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.scoreboard-team {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+img.scoreboard-team-logo {
+    width: 22pt;
+    padding-right: 0.5em;
+}
+
+@media only screen and (min-width: 850px) {
+    td {
+        padding: 10px;
+    }
 }
