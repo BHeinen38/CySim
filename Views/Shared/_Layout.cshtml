@@ -27,6 +27,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="ScoreBoard" asp-action="ScoreBoard">ScoreBoard</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tutorial" asp-action="Index">Tutorial</a>
+                            </li>
 
                         }
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
@@ -67,11 +70,11 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Tutorial" asp-action="Index">Tutorial</a>
                             </li>
                             @*<li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Machine" asp-action="Machine">Machine</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="MachineInfo" asp-action="MachineInfo">Machine Info</a>
-                            </li>*@
+                <a class="nav-link text-dark" asp-area="" asp-controller="Machine" asp-action="Machine">Machine</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="MachineInfo" asp-action="MachineInfo">Machine Info</a>
+            </li>*@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Scenario">Scenario</a>
                             </li>

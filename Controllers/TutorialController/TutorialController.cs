@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CySim.Controllers.TeamRegistrationController;
+using CySim.Data;
 using CySim.Models;
 using CySim.Models.Tutorial;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
@@ -19,14 +21,16 @@ namespace CySim.Controllers.TutorialController
 	{
 
         private readonly ILogger<TutorialController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public TutorialController(ILogger<TutorialController> logger)
+        public TutorialController(ILogger<TutorialController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
         public IActionResult Index()
         {
-            return View();
+            return View(_context.Tutorials.ToList());
         }
 
         [HttpPost]
@@ -48,6 +52,31 @@ namespace CySim.Controllers.TutorialController
                 }
             }
             return Ok(new { count = files.Count, size, filePaths });
+        }
+
+        //we need two create becuase one  is to display form to user
+        //other one is used as a submit to save data
+        //HTTP Get Method
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Tutorial tutorial)
+        {
+            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
+            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
+
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(tutorial);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(tutorial);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
