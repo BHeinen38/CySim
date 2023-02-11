@@ -19,34 +19,81 @@
                 <a class="btn btn-info" asp-action="Create">Add a Tutorial<i class="fa-solid fa-bicycle"></i></a>
             </div>
         }
-        <table class="table table-striped border">
-            <tr class="table-info">
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.FileName)
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th colspan="2">
+                @Html.DisplayNameFor(m => m.FileName)
 
-                </th>
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.Description)
-                </th>
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.FilePath)
-                </th>
-            </tr>
+            </th>
+            <th colspan="2">
+                @Html.DisplayNameFor(m => m.Description)
+            </th>
+        </tr>
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+        {
             @foreach (var item in Model)
             {
-                <tr>
-                    <td colspan="2">
-                        @Html.DisplayFor(w => item.FileName)
-                    </td>
-                    <td colspan="2">
-                        @Html.DisplayFor(w => item.Description)
-                    </td>
-                    <td colspan="2">
-                        @Html.DisplayFor(w => item.FilePath)
-                    </td>
-                </tr>
+                @if (item.isRed.Equals("True") || item.isRed.Equals("true"))
+                {
+                    <tr>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.FileName)
+                        </td>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.Description)
+                        </td>
+                    </tr>
+                }
             }
-        </table>
+        }
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+        {
+            @foreach (var item in Model)
+            {
+                @if (item.isRed.Equals("false") || item.isRed.Equals("False"))
+                    {
+                    <tr>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.FileName)
+                        </td>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.Description)
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            @foreach (var item in Model)
+            {
+                @if (item.isRed.Equals("true") || item.isRed.Equals("True"))
+                    {
+                    <tr>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.FileName)
+                        </td>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.Description)
+                        </td>
+                    </tr>
+                }
+                @if (item.isRed.Equals("false") || item.isRed.Equals("False"))
+                    {
+                    <tr>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.FileName)
+                        </td>
+                        <td colspan="2">
+                            @Html.DisplayFor(w => item.Description)
+                        </td>
+                    </tr>
+                }
+            }
+        }
+
+    </table>
+
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
             <form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">

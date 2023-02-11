@@ -5,7 +5,9 @@ namespace CySim.Models.Tutorial
 	{
 		public  int Id { get; set; }
 
-		public string FileName { get; set; }
+        public string isRed { get; set; }
+
+        public string FileName { get; set; }
 
 		public string Description { get; set; }
 

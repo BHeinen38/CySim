@@ -30,7 +30,7 @@ namespace CySim.Controllers.TutorialController
         }
         public IActionResult Index()
         {
-            return View(_context.Tutorials.ToList());
+            return View(_context.Tutorials.OrderBy(x => x.isRed).ToList());
         }
 
         [HttpPost]

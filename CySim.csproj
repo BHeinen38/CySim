@@ -63,10 +63,12 @@
     <Folder Include="Views\MachineInfo\" />
     <Folder Include="wwwroot\Documents\Tutorial\" />
     <Folder Include="wwwroot\Documents\Images\" />
+    <Folder Include="wwwroot\Documents\Scenario\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Documents\" />
     <Content Remove="wwwroot\Documents\Tutorial\" />
     <Content Remove="wwwroot\Documents\Images\" />
+    <Content Remove="wwwroot\Documents\Scenario\" />
   </ItemGroup>
 </Project>
