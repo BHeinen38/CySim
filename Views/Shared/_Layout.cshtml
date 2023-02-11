@@ -30,6 +30,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Tutorial" asp-action="Index">Tutorial</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Index">Scenario</a>
+                            </li>
 
                         }
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
@@ -44,7 +47,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Tutorial" asp-action="Index">Tutorial</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Scenario">Scenario</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Index">Scenario</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,7 +79,7 @@
                 <a class="nav-link text-dark" asp-area="" asp-controller="MachineInfo" asp-action="MachineInfo">Machine Info</a>
             </li>*@
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Scenario">Scenario</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Scenario" asp-action="Index">Scenario</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

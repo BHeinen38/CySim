@@ -4,6 +4,7 @@ using System.Text;
 using CySim.Models;
 using CySim.Models.ScoreBoardModels;
 using CySim.Models.TeamRegistration;
+using CySim.Models.Scenario;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CySim.Models.Tutorial;
@@ -21,6 +22,8 @@ namespace CySim.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<ScoreBoard> ScoreBoards { get; set; }
+
+        public DbSet<Scenario> Scenarios { get; set; }
 
         public DbSet<TeamRegistration> TeamRegistrations { get; set; }
 
