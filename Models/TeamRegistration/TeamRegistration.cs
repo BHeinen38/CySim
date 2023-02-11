@@ -19,6 +19,7 @@ namespace CySim.Models.TeamRegistration
 
 		[NotMapped]
 		public List <String> Users { get; set; }
+		
 
 	}
 }
