@@ -1,12 +1,16 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace CySim.Models.ScoreBoardModels
 {
 	public class ScoreBoard
 	{
+        [Required]
+        public int Id { get; set; }
 
-		public int Id { get; set; }
-
-		public string TeamName { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string TeamName { get; set; }
 
 		public int Score { get; set; }
 

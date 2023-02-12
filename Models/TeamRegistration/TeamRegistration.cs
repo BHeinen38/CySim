@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,9 +8,12 @@ namespace CySim.Models.TeamRegistration
 {
 	public class TeamRegistration
 	{
-		public int Id { get; set; }
+        [Required]
+        public int Id { get; set; }
 
-		public string TeamName { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string TeamName { get; set; }
 
 		public int AvailableSpots { get; set; }
 
