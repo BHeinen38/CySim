@@ -10,7 +10,7 @@ namespace CySim.Controllers.MachineController
 {
     public class MachineInfoController : Controller
     {
-        // GET: /<controller>/
+        [HttpGet]
         public IActionResult MachineInfo()
         {
             return View();

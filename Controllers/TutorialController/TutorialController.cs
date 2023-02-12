@@ -28,6 +28,7 @@ namespace CySim.Controllers.TutorialController
             _logger = logger;
             _context = context;
         }
+        [HttpGet]
         public IActionResult Index()
         {
             return View(_context.Tutorials.OrderBy(x => x.isRed).ToList());

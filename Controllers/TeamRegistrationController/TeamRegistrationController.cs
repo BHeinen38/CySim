@@ -30,7 +30,7 @@ namespace CySim.Controllers.TeamRegistrationController
             _context = context;
             _signInManager = signInManager;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             return View(_context.TeamRegistrations.ToList());
@@ -75,6 +75,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         //HTTP GET
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -101,6 +102,7 @@ namespace CySim.Controllers.TeamRegistrationController
 
 
         //HTTP GET
+        [HttpGet]
         public IActionResult Join(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);

@@ -10,7 +10,7 @@ namespace CySim.Controllers.MachineController
 {
     public class MachineStatusController : Controller
     {
-        // GET: /<controller>/
+        [HttpGet]
         public IActionResult MachineStatus()
         {
             return View();

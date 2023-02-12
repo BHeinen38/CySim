@@ -25,7 +25,7 @@ namespace CySim.Controllers.ScoreBoardController
             _context = context;
         }
 
-       
+        [HttpGet]
         public IActionResult ScoreBoard()
         {
             return View(_context);

@@ -26,6 +26,7 @@ namespace CySim.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
