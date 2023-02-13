@@ -23,6 +23,11 @@ namespace CySim.Models.Tutorial
         [Required]
         [MaxLength(512)]
         public string FilePath { get; set; }
-	}
+
+        [Required]
+        [MaxLength(10)]
+        public string isGameType { get; set; }
+        //if true then it will be a game tutorial
+    }
 }
 

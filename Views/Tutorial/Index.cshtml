@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-6">
-        <h2 class="text-info">Access the tutorials here</h2>
+        <h2 class="text-center">Access the tutorials here</h2>
     </div>
     <br />
     <div class="col-12">
@@ -19,80 +19,160 @@
                 <a class="btn btn-info" asp-action="Create">Add a Tutorial<i class="fa-solid fa-bicycle"></i></a>
             </div>
         }
-    <table class="table table-striped border">
-        <tr class="table-info">
-            <th colspan="2">
-                @Html.DisplayNameFor(m => m.FileName)
+        <br />
+        <h4 class="text-info">Getting Started</h4>
+        <table class="table table-striped border">
+            <tr class="table-info">
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.FileName)
 
-            </th>
-            <th colspan="2">
-                @Html.DisplayNameFor(m => m.Description)
-            </th>
-        </tr>
-        @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
-        {
-            @foreach (var item in Model)
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.Description)
+                </th>
+            </tr>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
             {
-                @if (item.isRed.Equals("True") || item.isRed.Equals("true"))
+                @foreach (var item in Model)
                 {
-                    <tr>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.FileName)
-                        </td>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.Description)
-                        </td>
-                    </tr>
+                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
                 }
             }
-        }
-        @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-        {
-            @foreach (var item in Model)
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
             {
-                @if (item.isRed.Equals("false") || item.isRed.Equals("False"))
+                @foreach (var item in Model)
+                {
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
-                    <tr>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.FileName)
-                        </td>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.Description)
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
                 }
             }
-        }
-        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            @foreach (var item in Model)
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
             {
-                @if (item.isRed.Equals("true") || item.isRed.Equals("True"))
+                @foreach (var item in Model)
+                {
+                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
-                    <tr>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.FileName)
-                        </td>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.Description)
-                        </td>
-                    </tr>
-                }
-                @if (item.isRed.Equals("false") || item.isRed.Equals("False"))
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
-                    <tr>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.FileName)
-                        </td>
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.Description)
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
                 }
             }
-        }
 
-    </table>
+        </table>
+
+        <br />
+        <br />
+        <h4 class="text-info">Game Type</h4>
+        <table class="table table-striped border">
+            <tr class="table-info">
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.FileName)
+
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.Description)
+                </th>
+            </tr>
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+            {
+                @foreach (var item in Model)
+                {
+                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+            {
+                @foreach (var item in Model)
+                {
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            {
+                @foreach (var item in Model)
+                {
+                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+
+        </table>
 
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
