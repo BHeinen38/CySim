@@ -31,9 +31,10 @@
                     @Html.DisplayNameFor(m => m.Description)
                 </th>
             </tr>
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+
+            @foreach (var item in Model)
             {
-                @foreach (var item in Model)
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
                 {
                     @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
@@ -47,10 +48,7 @@
                         </tr>
                     }
                 }
-            }
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-            {
-                @foreach (var item in Model)
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
                     @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
@@ -63,11 +61,10 @@
                             </td>
                         </tr>
                     }
+
                 }
-            }
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-            {
-                @foreach (var item in Model)
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
                     @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
                     {
@@ -91,7 +88,10 @@
                             </td>
                         </tr>
                     }
+
                 }
+
+
             }
 
         </table>
@@ -109,9 +109,10 @@
                     @Html.DisplayNameFor(m => m.Description)
                 </th>
             </tr>
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+
+            @foreach (var item in Model)
             {
-                @foreach (var item in Model)
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
                 {
                     @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
                     {
@@ -125,10 +126,7 @@
                         </tr>
                     }
                 }
-            }
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-            {
-                @foreach (var item in Model)
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
                     @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
                     {
@@ -141,11 +139,10 @@
                             </td>
                         </tr>
                     }
+
                 }
-            }
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-            {
-                @foreach (var item in Model)
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
                     @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
                     {
@@ -169,10 +166,15 @@
                             </td>
                         </tr>
                     }
+
                 }
+
+
             }
 
         </table>
+         
+                
 
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
@@ -195,67 +197,4 @@
 </div>
 
 
-@*<div class="text-center">
-        <h1 class="display-4"> Attack Tutorials</h1>
-        <h4>Below are all of the tutorial's available for a Red Team User</h4>
-        <br /> <br />
-        <div>
-            <h2>Getting </h2>
-            <table cellpadding="15" class="col-md-10">
-                <tr>
-                    <th align="left">Type</th>
-                    <th align="left"> Description </th>
-                </tr>
-
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-                {
-                    <tr>
-                        <td align="left">Configure Ldap</td>
-                        <td align="left">This will show you the best practices when configuring ldap on windows</td>
-                    </tr>
-                    <tr>
-                        <td align="left">Port Forwarding on Nat</td>
-                        <td align="left">This will explain to you how to port forward using NAT</td>
-                    </tr>
-
-                }
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
-                {
-                    <tr>
-                        <td align="left">NMAP</td>
-                        <td align="left"><a href="Documents/Tutorial/NMAP.pdf">This will show you how to run a stealth scan using NMAP</a></td>
-                    </tr>
-                    <tr>
-                        <td align="left">Windows SMB</td>
-                        <td align="left"><a href="Documents/Tutorial/SMB.docx">This should show you how to break into a broken SMB Windows Server</a></td>
-                    </tr>
-                    <tr>
-                        <td align="left">Metasploit</td>
-                        <td align="left">This is just general tutorial on how  to use metasploit</td>
-                    </tr>
-
-                }
-
-
-            </table>
-
-
-        </div>
-    </div>*@
-
-@*this is a start to uploading document in app*@
-
-@*<form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">
-        <div class="form-group">
-            <div class="col-md-10">
-                <p>Upload one or more files using this form:</p>
-                <input type="file" name="files" multiple />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-10">
-                <input type="submit" value="Upload" />
-            </div>
-        </div>
-    </form>*@
 
