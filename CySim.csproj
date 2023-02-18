@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>aspnet-CySim-2bd92663-6c2f-415f-a1a0-ebb1d054d4ec</UserSecretsId>
   </PropertyGroup>
 
@@ -18,8 +18,13 @@
     <None Remove="Views\TeamRegistration\" />
     <None Remove="Views\Tutorial\" />
     <None Remove="Models\Tutorial\" />
-    <None Remove="Documents\" />
     <None Remove="Extensions\" />
+    <None Remove="Views\Machine\" />
+    <None Remove="Controllers\ScenarioController\" />
+    <None Remove="Views\Scenario\" />
+    <None Remove="Views\MachineInfo\" />
+    <None Remove="Models\Scenario\" />
+    <None Remove="Views\MachineStatus\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -52,7 +57,22 @@
     <Folder Include="Views\TeamRegistration\" />
     <Folder Include="Views\Tutorial\" />
     <Folder Include="Models\Tutorial\" />
-    <Folder Include="Documents\" />
     <Folder Include="Extensions\" />
+    <Folder Include="wwwroot\Documents\" />
+    <Folder Include="Views\Machine\" />
+    <Folder Include="Controllers\ScenarioController\" />
+    <Folder Include="Views\Scenario\" />
+    <Folder Include="Views\MachineInfo\" />
+    <Folder Include="wwwroot\Documents\Tutorial\" />
+    <Folder Include="wwwroot\Documents\Images\" />
+    <Folder Include="wwwroot\Documents\Scenario\" />
+    <Folder Include="Models\Scenario\" />
+    <Folder Include="Views\MachineStatus\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\Documents\" />
+    <Content Remove="wwwroot\Documents\Tutorial\" />
+    <Content Remove="wwwroot\Documents\Images\" />
+    <Content Remove="wwwroot\Documents\Scenario\" />
   </ItemGroup>
 </Project>

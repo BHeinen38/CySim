@@ -1,57 +1,200 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<CySim.Models.Tutorial.Tutorial>
+@inject SignInManager<IdentityUser> signInManager
+
+@{
     ViewData["Title"] = "Tutorial Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using Microsoft.AspNetCore.Identity;
+<div class="row">
+    <div class="col-6">
+        <h2 class="text-center">Access the tutorials here</h2>
+    </div>
+    <br />
+    <div class="col-12">
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <div align="right" class="col-6">
+                <a class="btn btn-info" asp-action="Create">Add a Tutorial<i class="fa-solid fa-bicycle"></i></a>
+            </div>
+        }
+        <br />
+        <h4 class="text-info">Getting Started</h4>
+        <table class="table table-striped border">
+            <tr class="table-info">
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.FileName)
 
-
-@inject SignInManager<IdentityUser> signInManager;
- 
-
-<div class="text-center">
-    <h1 class="display-4"> Attack Tutorials</h1>
-    <h4>Below are all of the tutorial's available for a Red Team User</h4>
-    <br /> <br />
-    <div>
-        <table cellpadding="15">
-            <tr>
-                <th align="left">Type</th>
-                <th align="left"> Description </th>
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.Description)
+                </th>
             </tr>
 
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td align="left">Configure Ldap</td>
-                    <td align="left">This will show you the best practices when configuring ldap on windows</td>
-                </tr>
-                <tr>
-                    <td align="left">Port Forwarding on Nat</td>
-                    <td align="left">This will explain to you how to port forward using NAT</td>
-                </tr>
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+                {
+                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                }
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+                {
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+
+                }
+
 
             }
-            @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
-            {
-                <tr>
-                    <td align="left">NMAP</td>
-                    <td align="left">This will show you how to run a stealth scan using NMAP</td>
-                </tr>
-                <tr>
-                    <td align="left">Windows SMB</td>
-                    <td align="left">This should show you how to break into a broken SMB Windows Server</td>
-                </tr>
-                <tr>
-                    <td align="left">Metasploit</td>
-                    <td align="left">This is just general tutorial on how  to use metasploit</td>
-                </tr>
-
-            }
-
 
         </table>
 
+        <br />
+        <br />
+        <h4 class="text-info">Game Type</h4>
+        <table class="table table-striped border">
+            <tr class="table-info">
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.FileName)
+
+                </th>
+                <th colspan="2">
+                    @Html.DisplayNameFor(m => m.Description)
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+                {
+                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                }
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
+                {
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    {
+                        <tr>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.FileName)
+                            </td>
+                            <td colspan="2">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                        </tr>
+                    }
+
+                }
+
+
+            }
+
+        </table>
+         
+                
+
+        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <p>Upload one or more files using this form:</p>
+                        <input type="file" name="files" multiple />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Upload" />
+                    </div>
+                </div>
+            </form>
+        }
 
     </div>
 </div>
+
+
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using CySim.Data;
 using CySim.Models;
 using CySim.Models.TeamRegistration;
@@ -29,7 +30,7 @@ namespace CySim.Controllers.TeamRegistrationController
             _context = context;
             _signInManager = signInManager;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             return View(_context.TeamRegistrations.ToList());
@@ -74,6 +75,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         //HTTP GET
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -98,11 +100,20 @@ namespace CySim.Controllers.TeamRegistrationController
             return View(registration);
         }
 
-        
+
+        //HTTP GET
         [HttpGet]
-        public IActionResult Join()
+        public IActionResult Join(int id)
         {
-            return View();
+            var registration = _context.TeamRegistrations.Find(id);
+
+
+            if (registration == null)
+                return NotFound();
+
+
+            return View(registration);
+
         }
 
         [HttpPost]
@@ -112,12 +123,16 @@ namespace CySim.Controllers.TeamRegistrationController
             //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
             if (ModelState.IsValid)
             {
-                if(teamRegistration.Users.Count <= 6 && !teamRegistration.Users.Contains(User.Identity.Name))
+                var name = User.Identity.Name;
+
+                if (teamRegistration.Users == null)
+                    teamRegistration.Users = new List<string>();
+
+                if (teamRegistration.Users.Count() < 6 && !teamRegistration.Users.Contains(name))
                 {
                     _logger.LogInformation(User.Identity.Name + " just joined the team " + teamRegistration.TeamName);
-                    
-                    teamRegistration.Users.Append(User.Identity.Name);
-                    teamRegistration.SpotsTaken++;
+                    teamRegistration.Users.Append(name);
+                    teamRegistration.SpotsTaken = teamRegistration.SpotsTaken + 1;
                     _context.Update(teamRegistration);
                     _context.SaveChanges();
 
