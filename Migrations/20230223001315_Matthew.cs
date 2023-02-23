@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CySim.Migrations
 {
-    public partial class AddingIdentity : Migration
+    public partial class Matthew : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,11 +39,76 @@ namespace CySim.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Scenarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    isRed = table.Column<string>(maxLength: 10, nullable: false),
+                    FileName = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    FilePath = table.Column<string>(maxLength: 512, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Scenarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ScoreBoards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TeamName = table.Column<string>(maxLength: 50, nullable: false),
+                    Score = table.Column<int>(nullable: false),
+                    ProfilePicutre = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScoreBoards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeamRegistrations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TeamName = table.Column<string>(maxLength: 50, nullable: false),
+                    AvailableSpots = table.Column<int>(nullable: false),
+                    SpotsTaken = table.Column<int>(nullable: false),
+                    ProfilePicture = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeamRegistrations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tutorials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    isRed = table.Column<string>(maxLength: 10, nullable: false),
+                    FileName = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 256, nullable: false),
+                    FilePath = table.Column<string>(maxLength: 512, nullable: false),
+                    isGameType = table.Column<string>(maxLength: 10, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tutorials", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,8 +157,8 @@ namespace CySim.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -137,8 +202,8 @@ namespace CySim.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -208,6 +273,18 @@ namespace CySim.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Scenarios");
+
+            migrationBuilder.DropTable(
+                name: "ScoreBoards");
+
+            migrationBuilder.DropTable(
+                name: "TeamRegistrations");
+
+            migrationBuilder.DropTable(
+                name: "Tutorials");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
