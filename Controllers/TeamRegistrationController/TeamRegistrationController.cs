@@ -24,6 +24,7 @@ namespace CySim.Controllers.TeamRegistrationController
         private readonly SignInManager<IdentityUser> _signInManager;
 
 
+
         public TeamRegistrationController(ILogger<TeamRegistrationController> logger, ApplicationDbContext context, SignInManager<IdentityUser> signInManager)
         {
             _logger = logger;
