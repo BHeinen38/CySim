@@ -1,5 +1,5 @@
 # Clone CySim Files
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS restore
 WORKDIR /app
 COPY CySim.csproj .
 COPY CySim.sln .
@@ -21,6 +21,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet ef migrations add DockerInit
 
 # Running web server
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS run
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS run
+RUN apk add --no-cache curl
 WORKDIR /app
 COPY --from=build /app/out ./

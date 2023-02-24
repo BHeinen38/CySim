@@ -1,25 +1,35 @@
 version: "3"
 
 services:
-  # Test that the mssql service is running
-  mssql:
-    healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
-      interval: 60s
-      retries: 10
-      start_period: 10s
-      timeout: 3s
+  # Integration Testing by checking reachability of services once they are ready
+  integration-tests-mssql:
+    image: subfuzion/netcat
+    networks:
+      - main
+    entrypoint:
+      - nc 
+      - -z
+      - mssql
+      - "1433"
+    depends_on: # Check if mssql is reachable after it says it is up
+      mssql:
+        condition: service_healthy
 
-  # Curl the webpage to check that it is running
-  cysim:
-    healthcheck:
-      test: curl --fail http://localhost || exit 1
-      interval: 60s
-      retries: 3
-      start_period: 10s
-      timeout: 5s
+  integration-tests-cysim:
+    image: subfuzion/netcat
+    networks:
+      - main
+    entrypoint:
+      - nc 
+      - -z
+      - cysim
+      - "80"
+    depends_on: # Check if cysim is reachable after it says it is up
+      cysim:
+        condition: service_healthy
 
 
 
-# Integration tests and dotnet unit test service will be added below 
+
+# Unit test service will be added below 
 
