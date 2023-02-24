@@ -1,0 +1,22 @@
+name: "Zap-Baseline"
+
+on:
+  push:
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "master" ]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan the webapplication
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Add MSSQL Password
+        run: echo "MSSQL_PASSWD=$(openssl rand -base64 24)" >> .env
+      
+      - name: Docker Run
+        run: docker compose -f docker-compose.yml -f docker-compose.tests.yml up integration-tests-mssql integration-tests-cysim
+        
