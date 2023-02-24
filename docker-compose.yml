@@ -13,14 +13,19 @@ services:
       - sqldata:/var/opt/mssql
     networks:
       - main
+    healthcheck: # Test that the mssql service is running
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 60s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
 
   # Creates the needed base data/tables at start up 
   migrate-data:
     build:
-      context: ./  # https://github.com/BHeinen/CySim.git
+      context: ./  # https://github.com/BHeinen38/CySim.git
       target: migrate
-    depends_on:
-      - mssql
     restart: "no"
     networks:
       - main
@@ -31,16 +36,18 @@ services:
       - ef
       - database
       - update
+    depends_on: # Ensure migration occurs after mssql is up
+      mssql:
+        condition: service_healthy
+
 
   # Run the CySim Webserver
   cysim:
     build:
-      context: ./  # https://github.com/BHeinen/CySim.git
+      context: ./  # https://github.com/BHeinen38/CySim.git
       target: run
     ports:
       - "8080:80"
-    depends_on:
-      - mssql
     networks:
       - main
     environment:
@@ -49,11 +56,20 @@ services:
     entrypoint:
       - dotnet 
       - CySim.dll
+    healthcheck: # Curl the webpage to check that it is running
+      test: curl --fail http://localhost || exit 1
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    depends_on: # Ensures webserver is up after mssql is up 
+      mssql:
+        condition: service_healthy
+  
 
 volumes:
   sqldata:
 
 networks:
   main:
-
 
