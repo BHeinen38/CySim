@@ -7,9 +7,9 @@ on:
     branches: [ "master" ]
 
 jobs:
-  zap_scan:
+  integration-test:
     runs-on: ubuntu-latest
-    name: Scan the webapplication
+    name: Test connectivity of SQL and Website
     steps:
       - name: Checkout
         uses: actions/checkout@v3
