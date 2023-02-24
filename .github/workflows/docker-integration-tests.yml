@@ -1,4 +1,4 @@
-name: "Zap-Baseline"
+name: "Docker Integration Tests"
 
 on:
   push:
@@ -17,6 +17,6 @@ jobs:
       - name: Add MSSQL Password
         run: echo "MSSQL_PASSWD=$(openssl rand -base64 24)" >> .env
       
-      - name: Docker Run
+      - name: Run Tests with Docker Compose
         run: docker compose -f docker-compose.yml -f docker-compose.tests.yml up integration-tests-mssql integration-tests-cysim
         
