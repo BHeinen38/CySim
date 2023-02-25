@@ -24,7 +24,7 @@ services:
   # Creates the needed base data/tables at start up 
   migrate-data:
     build:
-      context: ./  # https://github.com/BHeinen38/CySim.git
+      context: ./src  # https://github.com/BHeinen38/CySim.git
       target: migrate
     restart: "no"
     networks:
@@ -44,7 +44,7 @@ services:
   # Run the CySim Webserver
   cysim:
     build:
-      context: ./  # https://github.com/BHeinen38/CySim.git
+      context: ./src  # https://github.com/BHeinen38/CySim.git
       target: run
     ports:
       - "8080:80"
