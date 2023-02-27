@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <UserSecretsId>aspnet-CySim-2bd92663-6c2f-415f-a1a0-ebb1d054d4ec</UserSecretsId>
   </PropertyGroup>
 
