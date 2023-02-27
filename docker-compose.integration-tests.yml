@@ -27,9 +27,4 @@ services:
     depends_on: # Check if cysim is reachable after it says it is up
       cysim:
         condition: service_healthy
-
-
-
-
-# Unit test service will be added below 
-
+  

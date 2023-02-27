@@ -44,7 +44,7 @@ namespace CySim.Controllers.TutorialController
             {
                 if (formFile.Length > 0)
                 {
-                    var filePath = Path.Combine("/Users/bailey/Desktop/CySim2/CySim/wwwroot/Documents/Tutorial", formFile.FileName);
+                    var filePath = Path.Combine("./wwwroot/Documents/Tutorial", formFile.FileName);
                     filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {

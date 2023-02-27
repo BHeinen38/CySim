@@ -24,14 +24,14 @@ services:
   # Creates the needed base data/tables at start up 
   migrate-data:
     build:
-      context: ./src  # https://github.com/BHeinen38/CySim.git
-      target: migrate
+      context: ./ # https://github.com/BHeinen38/CySim.git
+      target: migrate-src
     restart: "no"
     networks:
       - main
     environment:
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};MultipleActiveResultSets=true;Encrypt=false
     entrypoint:
       - dotnet 
       - ef
@@ -45,8 +45,8 @@ services:
   # Run the CySim Webserver
   cysim:
     build:
-      context: ./src  # https://github.com/BHeinen38/CySim.git
-      target: run
+      context: ./ # https://github.com/BHeinen38/CySim.git
+      target: run-src
     ports:
       - "8080:80"
     networks:
@@ -54,7 +54,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};MultipleActiveResultSets=true;Encrypt=false
     entrypoint:
       - dotnet 
       - CySim.dll

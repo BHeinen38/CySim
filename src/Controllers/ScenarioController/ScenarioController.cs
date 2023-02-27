@@ -42,7 +42,7 @@ namespace CySim.Controllers
             {
                 if (formFile.Length > 0)
                 {
-                    var filePath = Path.Combine("/Users/bailey/Desktop/CySim2/CySim/wwwroot/Documents/Scenario", formFile.FileName);
+                    var filePath = Path.Combine("./wwwroot/Documents/Scenario", formFile.FileName);
                     filePaths.Add(filePath);
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
@@ -81,7 +81,7 @@ namespace CySim.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            _logger.LogInformation("User made an error at Tutrial controller");
+            _logger.LogInformation("User made an error at scenario controller");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
