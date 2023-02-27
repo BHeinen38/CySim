@@ -1,5 +1,5 @@
 # Clone CySim Files
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS restore
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS restore
 WORKDIR /app
 COPY CySim.csproj .
 COPY CySim.sln .
