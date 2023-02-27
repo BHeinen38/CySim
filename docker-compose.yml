@@ -30,6 +30,7 @@ services:
     networks:
       - main
     environment:
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
       - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
     entrypoint:
       - dotnet 
@@ -52,6 +53,7 @@ services:
       - main
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
       - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
     entrypoint:
       - dotnet 

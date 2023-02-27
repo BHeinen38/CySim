@@ -22,6 +22,6 @@ RUN dotnet ef migrations add DockerInit
 
 # Running web server
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS run
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl icu-libs
 WORKDIR /app
 COPY --from=build /app/out ./
