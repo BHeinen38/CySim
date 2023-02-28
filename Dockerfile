@@ -36,7 +36,6 @@ COPY --from=build-src /app/out ./
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS run-tests
 WORKDIR /app
 COPY ./src ./src
-COPY --from=migrate-src /app/Migrations ./src/Migrations
 COPY ./tests ./tests
 WORKDIR /app/tests
 RUN dotnet restore

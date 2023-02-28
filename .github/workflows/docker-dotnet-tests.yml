@@ -2,9 +2,23 @@ name: "Docker Dotnet Tests"
 
 on:
   push:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docker-compose.dotnet-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-dotnet-tests.yml"
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docker-compose.dotnet-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-dotnet-tests.yml"
 
 jobs:
   dotnet-test:

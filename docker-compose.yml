@@ -40,7 +40,7 @@ services:
     depends_on: # Ensure migration occurs after mssql is up
       mssql:
         condition: service_healthy
-
+  
 
   # Run the CySim Webserver
   cysim:

@@ -3,7 +3,8 @@
 .env
 Dockerfile
 docker-compose.yml
-docker-compose.tests.yml
+docker-compose.dotnet-tests.yml
+docker-compose.integration-tests.yml
 
 # Ingore Migrations when copying
 src/Migrations

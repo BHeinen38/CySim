@@ -3,9 +3,12 @@ name: "Zap-Baseline"
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - ".dockerignore"
+      - ".github/workflows/zaproxy-baseline.yml"
 
 jobs:
   zap_scan:

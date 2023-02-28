@@ -2,9 +2,23 @@ name: "Docker Integration Tests"
 
 on:
   push:
+    paths:
+      - "src/**"
+      - "docker-compose.yml"
+      - "docker-compose.integration-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-integration-tests.yml"
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "docker-compose.yml"
+      - "docker-compose.integration-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-integration-tests.yml"
 
 jobs:
   integration-test:
