@@ -1,5 +1,5 @@
 # Clone CySim Files
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS restore-src
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS restore-src
 WORKDIR /app
 COPY ./src/CySim.csproj .
 # COPY ./src/CySim.sln .
@@ -26,14 +26,14 @@ RUN dotnet publish CySim.csproj -c Debug -o out
 
 
 # Running web server
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS run-src
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS run-src
 RUN apk add --no-cache curl icu-libs
 WORKDIR /app
 COPY --from=build-src /app/out ./
 
 
 # Restore CySim.Tests (Prepared to run)
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS run-tests
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS run-tests
 WORKDIR /app
 COPY ./src ./src
 COPY ./tests ./tests
