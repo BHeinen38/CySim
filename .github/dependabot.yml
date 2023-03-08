@@ -18,6 +18,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 16
+    ignore:
+      - dependency-name: ""
+        versions: ["7.x"]
+
 
   # Maintain dependencies for nuget tests
   - package-ecosystem: "nuget"
@@ -32,3 +36,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 8
+    ignore:
+      - dependency-name: "*"
+        versions: ["7.x"]
+
+
