@@ -69,6 +69,9 @@ namespace CySim.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<double>("Usability")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.ToTable("ScoreBoards");

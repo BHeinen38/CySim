@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CySim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230223001315_Matthew")]
+    [Migration("20230309164523_Matthew")]
     partial class Matthew
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,9 @@ namespace CySim.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<double>("Usability")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

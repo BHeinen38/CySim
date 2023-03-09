@@ -71,7 +71,8 @@ namespace CySim.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TeamName = table.Column<string>(maxLength: 50, nullable: false),
                     Score = table.Column<int>(nullable: false),
-                    ProfilePicutre = table.Column<bool>(nullable: false)
+                    ProfilePicutre = table.Column<bool>(nullable: false),
+                    Usability = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {

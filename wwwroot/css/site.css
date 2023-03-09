@@ -101,7 +101,7 @@ thead {
 }
 
 table, th, td {
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 
@@ -122,6 +122,12 @@ table, th, td {
 }
 
 .scoreboard-team {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scoreboard-usability {
     display: flex;
     justify-content: center;
     align-items: center;

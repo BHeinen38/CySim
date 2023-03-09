@@ -15,6 +15,10 @@ namespace CySim.Models.ScoreBoardModels
 		public int Score { get; set; }
 
 		public bool ProfilePicutre { get; set; }
-	}
+
+        public double Usability { get; set; }
+
+        public double Flags { get; set; }
+    }
 }
 

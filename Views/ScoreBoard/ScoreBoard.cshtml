@@ -34,58 +34,32 @@
             <table class="col-md-10 col-centered">
                 <thead>
                     <tr>
-                        <td>Team</td>
-                        <td>Rank</td>
-                        <td>Score</td>
+                        <td align="center">Rank</td>
+                        <td align="center">Team</td>
+                        <td align="center">Score</td>
+                        <td align="center">Flags</td>
+                        <td align="center">Usability</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="scoreboard-team">
-                            <div class="scoreboard-team"></div>
-                            <span class="scoreboard-team-logo">
-                                <img class="scoreboard-team-logo"
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <tr>
+
+                            <td class="scoreboard-score" align="center">1</td>
+                            <td class="scoreboard-team">
+                                <div class="scoreboard-team"></div>
+                                <span class="scoreboard-team-logo">
+                                    <img class="scoreboard-team-logo"
                                      src="https://www.svgrepo.com/show/31860/fox.svg" alt="Team Foxes" height="200" width="200">
-                            </span>
-                            <span class="scoreboard-team-logo-foxes scoreboard-team-logo-text">Foxes</span>
-        </div>
-        </td>
-        <td class="scoreboard-score" align="center">1</td>
-        <td class="scoreboard-score" align="center">21 797</td>
-        </tr>
-        <tr>
-            <td class="scoreboard-team">
-                <span class="scoreboard-team-logo">
-                    <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/163618/wolf.svg"
-                         alt="Team Wolves" height="200" width="200">
-                </span>
-                <span class="scoreboard-team-logo-text">Wolves</span>
-            </td>
-            <td class="scoreboard-score" align="center">2</td>
-            <td class="scoreboard-score" align="center">20 578</td>
-        </tr>
-        <tr>
-            <td class="scoreboard-team">
-                <span class="scoreboard-team-logo">
-                    <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/191396/lion.svg"
-                         alt="Team Lions" height="200" width="200">
-                </span>
-                <span class="scoreboard-team-logo-text">Lions</span>
-            </td>
-            <td class="scoreboard-score" align="center">3</td>
-            <td class="scoreboard-score" align="center">17 228</td>
-        </tr>
-        <tr>
-            <td class="scoreboard-team">
-                <span class="scoreboard-team-logo">
-                    <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/277718/unicorn.svg"
-                         alt="Team Unicorns" height="200" width="200">
-                </span>
-                <span class="scoreboard-team-logo-text">Unicorns</span>
-            </td>
-            <td class="scoreboard-score" align="center">4</td>
-            <td class="scoreboard-score" align="center">16 907</td>
-        </tr>
+                                </span>
+                                <span class="scoreboard-team-logo-foxes scoreboard-team-logo-text">Foxes</span>
+            
+                            </td>
+                            <td class="scoreboard-score" align="center">21 797</td>
+                            <td class="scoreboard-usability" align="center">0</td>
+                        </tr>
+                    }
         </tbody>
         </table>
     </article>
