@@ -43,6 +43,8 @@ updates:
         versions: ["7.*"]
       - dependency-name: "Microsoft.Data.*"
         versions: ["7.*"]
+      - dependency-name: "Microsoft.VisualStudio.*"
+        versions: ["7.*"]
 
   # Maintain dependencies for docker
   - package-ecosystem: "docker"
