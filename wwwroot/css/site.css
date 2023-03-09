@@ -101,7 +101,7 @@ thead {
 }
 
 table, th, td {
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 
@@ -122,21 +122,27 @@ table, th, td {
 }
 
 .scoreboard-team {
-    display: flex;
-    justify-content: center;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.scoreboard-flags {
     align-items: center;
 }
 
 .scoreboard-usability {
-    display: flex;
-    justify-content: center;
     align-items: center;
 }
 
+.scoreboard-ranking {
+    font-weight: bold;
+    font-size: 150%;
+}
 
 img.scoreboard-team-logo {
-    width: 22pt;
+    width: 125pt;
     padding-right: 0.5em;
+    padding-left: 0.5em;
 }
 
 @media only screen and (min-width: 850px) {
