@@ -35,28 +35,28 @@
                 <thead>
                     <tr>
                         <td colspan="3" align="center">Placement</td>
-                        <td align="center">Score</td>
-                        <td align="center">Flags</td>
-                        <td align="center">Usability</td>
+                        <td align="center" class="thead-secondary">Score</td>
+                        <td align="center" class="thead-secondary">Flags</td>
+                        <td align="center" class="thead-secondary">Usability</td>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 1; i < 6; i++) @* Right now this will print out 5 team fox placeholder rankings *@
+                    @for (int i = 1; i < 6; i++) @* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
                     {
                         <tr>
                             <td class="scoreboard-ranking">@(i)</td>                      
-                            <td class="scoreboard-team-logo" align="center">
+                            <td class="scoreboard-team-logo">
                                     <img class="scoreboard-team-logo"
                                  src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
                             </td>
-                            <td class="scoreboard-team" align="center">Team: Foxes</td>
-                            <td class="scoreboard-score" align="center">21 797</td>
-                            <td class="scoreboard-flags" align="center">0</td>
-                            <td class="scoreboard-usability" align="center">0</td>
+                            <td class="scoreboard-team">Team @(i): Foxes</td>
+                            <td class="scoreboard-score">797</td>
+                            <td class="scoreboard-flags">797</td>
+                            <td class="scoreboard-usability">0</td>
                         </tr>
                     }
         </tbody>
         </table>
-        <div> </div>
+        <br />
     </article>
 </div>

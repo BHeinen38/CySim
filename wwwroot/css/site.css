@@ -95,9 +95,17 @@ table {
 }
 
 thead {
-    background-color: black;
-    color: white;
-    font-size: 100%;
+    background-color: #DADBDD;
+    color: #4C4E52;
+    font-size: 160%;
+    font-weight: bold;
+}
+
+.thead-secondary {
+    background-color: #DADBDD;
+    color: #4C4E52;
+    font-size: 75%;
+    font-weight: bold;
 }
 
 table, th, td {
@@ -123,20 +131,22 @@ table, th, td {
 
 .scoreboard-team {
     font-weight: bold;
-    font-size: 120%;
+    font-size: 130%;
 }
 
 .scoreboard-flags {
     align-items: center;
+    font-size: 115%;
 }
 
 .scoreboard-usability {
     align-items: center;
+    font-size: 115%;
 }
 
 .scoreboard-ranking {
     font-weight: bold;
-    font-size: 150%;
+    font-size: 125%;
 }
 
 img.scoreboard-team-logo {
