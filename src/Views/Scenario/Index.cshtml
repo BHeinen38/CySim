@@ -18,6 +18,7 @@
             <div align="right" class="col-6">
                 <a class="btn btn-info" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
             </div>
+            <br>
         }
         <table class="table table-striped border">
             <tr class="table-info">
@@ -37,7 +38,7 @@
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -54,7 +55,7 @@
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -70,7 +71,7 @@
                     
                     <tr>
                         <td colspan="2">
-                            @Html.DisplayFor(w => item.FileName)
+                            <a href="@item.FilePath">@item.FileName</a>
                         </td>
                         <td colspan="2">
                             @Html.DisplayFor(w => item.Description)
@@ -81,23 +82,6 @@
             }
 
         </table>
-
-        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            <form method="post" enctype="multipart/form-data" asp-controller="Scenario" asp-action="Index">
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <p>Upload one or more files using this form:</p>
-                        <input type="file" name="files" multiple />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Upload" />
-                    </div>
-                </div>
-            </form>
-        }
 
     </div>
 </div>

@@ -32,7 +32,7 @@ namespace CySim.Controllers
             return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
         }
 
-        [HttpPost]
+  /*       [HttpPost]
         public async Task<IActionResult> Index(List<IFormFile> files)
         {
             long size = files.Sum(f => f.Length);
@@ -52,7 +52,7 @@ namespace CySim.Controllers
             }
             return Ok(new { count = files.Count, size, filePaths });
         }
-
+ */
         //we need two create becuase one  is to display form to user
         //other one is used as a submit to save data
         //HTTP Get Method
@@ -63,11 +63,46 @@ namespace CySim.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Scenario scenario)
+        public IActionResult Create(IFormFile file, String Description, String isRed)
         {
-            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
-            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
+            ViewData["errors"] = "";
 
+            if(file == null) 
+            {
+                ViewData["errors"] = "No file was uploaded"; 
+                return View();
+            }
+            if(Description == null) 
+            {
+                ViewData["errors"] = "No description was provided"; 
+                return View();
+            }
+            if(isRed == null || (isRed != "true" && isRed != "True" && isRed != "false" && isRed != "False"))
+            {
+                ViewData["errors"] = "isRed was not a boolean"; 
+                return View();
+            }
+            
+            var fileName = file.FileName; 
+            
+            if (_context.Scenarios.Any(x => x.FileName == fileName))
+            {
+                ViewData["errors"] = "Sorry this file name already exist";
+                return View();
+            }
+
+            using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            var scenario = new Scenario() 
+            {
+                FileName = fileName,
+                FilePath = Path.Combine("Documents/Scenario", fileName),
+                Description = Description,
+                isRed = isRed,
+            };
 
             if (ModelState.IsValid)
             {
@@ -75,7 +110,8 @@ namespace CySim.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(scenario);
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -6,46 +6,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">
-        <div class="form-group">
-            <div class="col-md-10">
-                <p>Upload one or more files using this form:</p>
-                <input type="file" name="files" multiple />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-10">
-                <input type="submit" value="Upload" />
-            </div>
-        </div>
-    </form>*@
+
 
 <h2 class="text-info">Add a new Scenario</h2>
-<form method="post" action="Create">
+@if (ViewData["errors"] != null && !ViewData["errors"].Equals(""))
+{
+    <p style="color:red;">@ViewData["errors"]</p>
+}
+<form method="post" action="Create" enctype="multipart/form-data">
     <div class="form-group row">
-        <div class="col-2">
-            <label asp-for="FileName"></label>
+         <div class="col-2">
+            <label for="file">Select Scenario to Upload:</label>
         </div>
         <div class="col-4">
-            <input asp-for="FileName" class="form-control" />
+            <input type="file" class="form-control" name="file"/>
         </div>
         <div class="col-2">
-            <label asp-for="Description"></label>
+            <label for="Description">Description:</label>
         </div>
         <div class="col-4">
-            <input asp-for="Description" class="form-control" />
+            <input type="text" class="form-control" name="Description" />
         </div>
         <div class="col-2">
-            <label asp-for="FilePath"></label>
+            <label for="isRed">Is this for red team?</label>
         </div>
         <div class="col-4">
-            <input asp-for="FilePath" class="form-control" />
-        </div>
-        <div class="col-2">
-            <label asp-for="isRed"></label>
-        </div>
-        <div class="col-4">
-            <input asp-for="isRed" class="form-control" />
+            <input type="text" class="form-control" name="isRed"  />
         </div>
 
         <div class="form-group">

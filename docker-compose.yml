@@ -67,10 +67,12 @@ services:
     depends_on: # Ensures webserver is up after mssql is up 
       mssql:
         condition: service_healthy
-  
+    volumes:
+      - webdata:/app/wwwroot
 
 volumes:
   sqldata:
+  webdata:
 
 networks:
   main:
