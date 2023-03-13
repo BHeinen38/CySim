@@ -32,27 +32,6 @@ namespace CySim.Controllers
             return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
         }
 
-  /*       [HttpPost]
-        public async Task<IActionResult> Index(List<IFormFile> files)
-        {
-            long size = files.Sum(f => f.Length);
-
-            var filePaths = new List<string>();
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
-                    var filePath = Path.Combine("./wwwroot/Documents/Scenario", formFile.FileName);
-                    filePaths.Add(filePath);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
-                }
-            }
-            return Ok(new { count = files.Count, size, filePaths });
-        }
- */
         //we need two create becuase one  is to display form to user
         //other one is used as a submit to save data
         //HTTP Get Method
@@ -63,7 +42,7 @@ namespace CySim.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(IFormFile file, String Description, String isRed)
+        public IActionResult Create(IFormFile file, String Description, bool isRed)
         {
             ViewData["errors"] = "";
 
@@ -75,11 +54,6 @@ namespace CySim.Controllers
             if(Description == null) 
             {
                 ViewData["errors"] = "No description was provided"; 
-                return View();
-            }
-            if(isRed == null || (isRed != "true" && isRed != "True" && isRed != "false" && isRed != "False"))
-            {
-                ViewData["errors"] = "isRed was not a boolean"; 
                 return View();
             }
             

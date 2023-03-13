@@ -9,8 +9,7 @@ namespace CySim.Models.Scenario
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(10)]
-        public string isRed { get; set; }
+        public bool isRed { get; set; }
 
         [Required]
         [MaxLength(50)]
