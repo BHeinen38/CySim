@@ -1,12 +1,12 @@
 ﻿@model int
 
-<td>
+<td colspan="2">
     <div class="btn-group" role="group">
         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = Model})"><i class="fa-regular fa-pen-to-square"></i></a>
     </div>
 </td>
 
-<td align="right">
+<td align="right" colspan="2">
     <div class="btn-group" role="group">
         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = Model})"><i class="fa-regular fa-pen-to-square"></i></a>
         @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
@@ -15,4 +15,3 @@
         </form>
     </div>
 </td>
-

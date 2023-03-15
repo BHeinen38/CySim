@@ -41,14 +41,10 @@
         <table class="table table-striped border">
             <tr class="table-info">
                 <th colspan="2">
-                    @Html.DisplayNameFor(m => m.TeamName)
-
+                    Team Name
                 </th>
                 <th colspan="2">
-                    @Html.DisplayNameFor(m => m.AvailableSpots)
-                </th>
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.SpotsTaken)
+                    Spots Taken
                 </th>
                 <th colspan="2">
                     Join Team
@@ -56,16 +52,12 @@
                 <th align="right">
                     Edit/Delete
                 </th>
-                @*<th></th>*@
             </tr>
             @foreach (var item in Model)
             {
                 <tr>
                     <td colspan="2">
                         @Html.DisplayFor(w => item.TeamName)
-                    </td>
-                    <td colspan="2">
-                        @Html.DisplayFor(w => item.AvailableSpots)
                     </td>
                     <td colspan="2">
                         @Html.DisplayFor(w => item.SpotsTaken)
