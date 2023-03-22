@@ -13,8 +13,10 @@ namespace CySim.Models.TeamRegistration
 
         [Required]
         [MaxLength(50)]
+        [Display(Name ="Team Name")]
         public string TeamName { get; set; }
 
+        [Display(Name ="Spots Taken")]
         public int SpotsTaken { get; set; }
 
         public bool ProfilePicture { get; set; }
