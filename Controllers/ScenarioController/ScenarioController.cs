@@ -32,27 +32,6 @@ namespace CySim.Controllers
             return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(List<IFormFile> files)
-        {
-            long size = files.Sum(f => f.Length);
-
-            var filePaths = new List<string>();
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
-                    var filePath = Path.Combine("/Users/bailey/Desktop/CySim2/CySim/wwwroot/Documents/Scenario", formFile.FileName);
-                    filePaths.Add(filePath);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
-                }
-            }
-            return Ok(new { count = files.Count, size, filePaths });
-        }
-
         //we need two create becuase one  is to display form to user
         //other one is used as a submit to save data
         //HTTP Get Method
@@ -63,11 +42,41 @@ namespace CySim.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Scenario scenario)
+        public IActionResult Create(IFormFile file, String Description, bool isRed)
         {
-            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
-            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
+            ViewData["errors"] = "";
 
+            if (file == null)
+            {
+                ViewData["errors"] = "No file was uploaded";
+                return View();
+            }
+            if (Description == null)
+            {
+                ViewData["errors"] = "No description was provided";
+                return View();
+            }
+
+            var fileName = file.FileName;
+
+            if (_context.Scenarios.Any(x => x.FileName == fileName))
+            {
+                ViewData["errors"] = "Sorry this file name already exist";
+                return View();
+            }
+
+            using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            var scenario = new Scenario()
+            {
+                FileName = fileName,
+                FilePath = Path.Combine("Documents/Scenario", fileName),
+                Description = Description,
+                isRed = isRed,
+            };
 
             if (ModelState.IsValid)
             {
@@ -75,15 +84,15 @@ namespace CySim.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(scenario);
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            _logger.LogInformation("User made an error at Tutrial controller");
+            _logger.LogInformation("User made an error at scenario controller");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
-
