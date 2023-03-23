@@ -94,9 +94,17 @@ table {
 }
 
 thead {
-    background-color: black;
-    color: white;
-    font-size: 100%;
+    background-color: #DADBDD;
+    color: #4C4E52;
+    font-size: 160%;
+    font-weight: bold;
+}
+
+.thead-secondary {
+    background-color: #DADBDD;
+    color: #4C4E52;
+    font-size: 75%;
+    font-weight: bold;
 }
 
 table, th, td {
@@ -106,10 +114,10 @@ table, th, td {
 
 .article {
     background-color: aliceblue;
-    text-align: center
+    text-align: center;
 }
 
-footer {
+.footer {
     width: 100%;
     background-color: lightgray;
     text-align: center;
@@ -118,22 +126,35 @@ footer {
     white-space: nowrap;
     line-height: 60px;
 }
-
 .scoreboard-score {
     font-weight: bold;
     font-size: 120%;
 }
 
 .scoreboard-team {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-weight: bold;
+    font-size: 130%;
 }
 
+.scoreboard-flags {
+    align-items: center;
+    font-size: 115%;
+}
+
+.scoreboard-usability {
+    align-items: center;
+    font-size: 115%;
+}
+
+.scoreboard-ranking {
+    font-weight: bold;
+    font-size: 125%;
+}
 
 img.scoreboard-team-logo {
-    width: 22pt;
+    width: 125pt;
     padding-right: 0.5em;
+    padding-left: 0.5em;
 }
 
 @media only screen and (min-width: 850px) {
