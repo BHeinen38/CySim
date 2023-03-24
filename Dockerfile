@@ -1,26 +1,42 @@
 # Clone CySim Files
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS restore
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS restore-src
 WORKDIR /app
-COPY CySim.csproj .
-COPY CySim.sln .
-RUN dotnet restore
+COPY ./src/CySim.csproj .
+# COPY ./src/CySim.sln .
+RUN dotnet restore CySim.csproj 
 
-FROM restore AS clone
-COPY . ./
 
-# Build CySim project
-FROM clone AS build
+FROM restore-src AS clone-src
 WORKDIR /app
-RUN dotnet publish CySim.csproj -c Debug -o out
+COPY ./src .
+
 
 # Migrate data using ef
-FROM clone AS migrate
+FROM clone-src AS migrate-src
 WORKDIR /app
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet ef migrations add DockerInit
 
-# Running web server
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS run
+
+# Build CySim project
+FROM migrate-src AS build-src
 WORKDIR /app
-COPY --from=build /app/out ./
+RUN dotnet publish CySim.csproj -c Debug -o out
+
+
+# Running web server
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS run-src
+RUN apk add --no-cache curl icu-libs
+WORKDIR /app
+COPY --from=build-src /app/out ./
+
+
+# Restore CySim.Tests (Prepared to run)
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS run-tests
+WORKDIR /app
+COPY ./src ./src
+COPY ./tests ./tests
+WORKDIR /app/tests
+RUN dotnet restore
+

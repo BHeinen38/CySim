@@ -11,38 +11,69 @@ services:
       - "1433:1433"
     volumes:
       - sqldata:/var/opt/mssql
-  
+    networks:
+      - main
+    healthcheck: # Test that the mssql service is running
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 60s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
+
   # Creates the needed base data/tables at start up 
   migrate-data:
     build:
-      context: ./  # https://github.com/BHeinen/CySim.git
-      target: migrate
-    depends_on:
-      - mssql
+      context: ./ # https://github.com/BHeinen38/CySim.git
+      target: migrate-src
     restart: "no"
+    networks:
+      - main
     environment:
-      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};MultipleActiveResultSets=true;Encrypt=false
     entrypoint:
       - dotnet 
       - ef
       - database
       - update
+    depends_on: # Ensure migration occurs after mssql is up
+      mssql:
+        condition: service_healthy
+  
 
   # Run the CySim Webserver
   cysim:
     build:
-      context: ./  # https://github.com/BHeinen/CySim.git
-      target: run
+      context: ./ # https://github.com/BHeinen38/CySim.git
+      target: run-src
     ports:
       - "8080:80"
-    depends_on:
-      - mssql
+    networks:
+      - main
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENV}
-      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+      - ConnectionStrings__Default=Server=mssql;Database=CySim;User Id=sa;Password=${MSSQL_PASSWD};MultipleActiveResultSets=true;Encrypt=false
     entrypoint:
       - dotnet 
       - CySim.dll
+    healthcheck: # Curl the webpage to check that it is running
+      test: curl --fail http://localhost || exit 1
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    depends_on: # Ensures webserver is up after mssql is up 
+      mssql:
+        condition: service_healthy
+    volumes:
+      - webdata:/app/wwwroot
 
 volumes:
   sqldata:
+  webdata:
+
+networks:
+  main:
+
