@@ -23,7 +23,6 @@ namespace CySim.Controllers.TeamRegistrationController
 
         private readonly SignInManager<IdentityUser> _signInManager;
 
-
         public TeamRegistrationController(ILogger<TeamRegistrationController> logger, ApplicationDbContext context, SignInManager<IdentityUser> signInManager)
         {
             _logger = logger;
@@ -124,24 +123,78 @@ namespace CySim.Controllers.TeamRegistrationController
             if (ModelState.IsValid)
             {
                 var name = User.Identity.Name;
+                var registration = _context.TeamRegistrations.Find(teamRegistration.Id);
 
-                if (teamRegistration.Users == null)
-                    teamRegistration.Users = new List<string>();
 
-                if (teamRegistration.Users.Count() < 6 && !teamRegistration.Users.Contains(name))
+                if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||
+                    name == registration.User5 || name == registration.User6)
                 {
-                    _logger.LogInformation(User.Identity.Name + " just joined the team " + teamRegistration.TeamName);
-                    teamRegistration.Users.Append(name);
-                    teamRegistration.SpotsTaken = teamRegistration.SpotsTaken + 1;
-                    _context.Update(teamRegistration);
+                    _logger.LogInformation(name + " is already in " + teamRegistration.TeamName);
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (registration.User1 == null)
+                {
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User1 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
                     _context.SaveChanges();
 
                     return RedirectToAction(nameof(Index));
                 }
-
-                if (teamRegistration.Users.Contains(User.Identity.Name))
+                else if (registration.User2 == null)
                 {
-                    _logger.LogInformation(User.Identity.Name + " is already in " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User2 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (registration.User3 == null)
+                {
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User3 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (registration.User4 == null)
+                {
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User4 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (registration.User5 == null)
+                {
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User5 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (registration.User6 == null)
+                {
+                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    registration.User6 = name;
+                    registration.SpotsTaken++;
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    _logger.LogInformation("Sorry this team already has 6 users");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -157,4 +210,3 @@ namespace CySim.Controllers.TeamRegistrationController
         }
     }
 }
-

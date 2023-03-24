@@ -15,18 +15,18 @@
 <form method="post" action="Create" enctype="multipart/form-data">
     <div class="form-group">
         <label for="file">Select Scenario to Upload</label>
-        <input type="file" class="form-control" name="file"/>
+        <input type="file" class="form-control" name="file" />
     </div>
-    
+
     <br>
-    
+
     <div class="form-group">
         <label for="Description">Description:</label>
         <input type="text" class="form-control" name="Description" />
     </div>
-    
+
     <br>
-    
+
     <div class="form-check">
         <label class="form-check-label" for="isRed">Is this for red team?</label>
         <input type="checkbox" class="form-check-input" name="isRed" value="false" onchange="this.value=this.checked" />
@@ -39,4 +39,3 @@
         <a asp-action="Index" class="btn btn-success">Back</a>
     </div>
 </form>
-

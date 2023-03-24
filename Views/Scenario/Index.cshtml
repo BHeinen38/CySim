@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if(signInManager.IsSignedIn(User))
+@if (signInManager.IsSignedIn(User))
 {
     <div class="row">
         <div class="col-6">
@@ -70,8 +70,7 @@
                 {
                     @foreach (var item in Model)
                     {
-                        
-                        <tr>
+                       <tr>
                             <td colspan="2">
                                 <a href="@item.FilePath">@item.FileName</a>
                             </td>
@@ -79,8 +78,7 @@
                                 @Html.DisplayFor(w => item.Description)
                             </td>
                         </tr>
-                        
-                    }
+                   }
                 }
 
             </table>
@@ -88,4 +86,3 @@
         </div>
     </div>
 }
-
