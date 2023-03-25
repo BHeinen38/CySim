@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  # Integration Testing by checking reachability of services once they are ready
+  integration-tests-mssql:
+    image: subfuzion/netcat
+    networks:
+      - main
+    entrypoint:
+      - nc 
+      - -z
+      - mssql
+      - "1433"
+    depends_on: # Check if mssql is reachable after it says it is up
+      mssql:
+        condition: service_healthy
+
+  integration-tests-cysim:
+    image: subfuzion/netcat
+    networks:
+      - main
+    entrypoint:
+      - nc 
+      - -z
+      - cysim
+      - "80"
+    depends_on: # Check if cysim is reachable after it says it is up
+      cysim:
+        condition: service_healthy
+  

@@ -1,0 +1,36 @@
+name: "Docker Integration Tests"
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "docker-compose.yml"
+      - "docker-compose.integration-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-integration-tests.yml"
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "docker-compose.yml"
+      - "docker-compose.integration-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-integration-tests.yml"
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    name: Test connectivity of SQL and Website
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Add MSSQL Password
+        run: echo "MSSQL_PASSWD=$(openssl rand -base64 24)" >> .env
+      
+      - name: Run Tests with Docker Compose
+        run: docker compose -f docker-compose.yml -f docker-compose.integration-tests.yml up integration-tests-mssql integration-tests-cysim
+        

@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  # Runs `dotnet test` command to run integration and unit tests
+  dotnet-internal-tests:
+    build:
+      context: ./  # https://github.com/BHeinen38/CySim.git
+      target: run-tests
+    networks:
+      - test
+    entrypoint:
+      - dotnet
+      - test
+
+networks:
+  test:
+

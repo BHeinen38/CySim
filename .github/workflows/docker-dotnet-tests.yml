@@ -1,0 +1,32 @@
+name: "Docker Dotnet Tests"
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docker-compose.dotnet-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-dotnet-tests.yml"
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docker-compose.dotnet-tests.yml"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/docker-dotnet-tests.yml"
+
+jobs:
+  dotnet-test:
+    runs-on: ubuntu-latest
+    name: Run dotnet tests project for unit and integration tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Run Tests with Docker Compose
+        run: docker compose -f docker-compose.dotnet-tests.yml up       
