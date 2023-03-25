@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CySim.Models.Tutorial
 {
-	public class Tutorial
-	{
+    public class Tutorial
+    {
         [Required]
-        public  int Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        [MaxLength(10)]
-        public string isRed { get; set; }
+        public bool isRed { get; set; }
 
         [Required]
         [MaxLength(50)]
+        [Display(Name = "File Name")]
         public string FileName { get; set; }
 
         [Required]
@@ -25,8 +25,7 @@ namespace CySim.Models.Tutorial
         public string FilePath { get; set; }
 
         [Required]
-        [MaxLength(10)]
-        public string isGameType { get; set; }
+        public bool isGameType { get; set; }
         //if true then it will be a game tutorial
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CySim.Controllers.TeamRegistrationController;
 using CySim.Data;
 using CySim.Models;
+using CySim.Models.Scenario;
 using CySim.Models.Tutorial;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,10 @@ using Microsoft.Extensions.Logging;
 
 
 
-namespace CySim.Controllers.TutorialController
+namespace CySim.Controllers
 {
-	public class TutorialController : Controller
-	{
+    public class TutorialController : Controller
+    {
 
         private readonly ILogger<TutorialController> _logger;
         private readonly ApplicationDbContext _context;
@@ -31,28 +32,7 @@ namespace CySim.Controllers.TutorialController
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_context.Tutorials.OrderBy(x => x.isRed).ToList());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Index(List<IFormFile> files)
-        {
-            long size = files.Sum(f => f.Length);
-
-            var filePaths = new List<string>();
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
-                    var filePath = Path.Combine("./wwwroot/Documents/Tutorial", formFile.FileName);
-                    filePaths.Add(filePath);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
-                }
-            }
-            return Ok(new { count = files.Count, size, filePaths });
+            return View(_context.Tutorials.ToList());
         }
 
         //we need two create becuase one  is to display form to user
@@ -65,11 +45,43 @@ namespace CySim.Controllers.TutorialController
         }
 
         [HttpPost]
-        public IActionResult Create(Tutorial tutorial)
-        {
-            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
-            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
 
+        public IActionResult Create(IFormFile file, String Description, bool isRed, bool isGameType)
+        {
+            ViewData["errors"] = "";
+
+            if (file == null)
+            {
+                ViewData["errors"] = "No file was uploaded";
+                return View();
+            }
+            if (Description == null)
+            {
+                ViewData["errors"] = "No description was provided";
+                return View();
+            }
+
+            var fileName = file.FileName;
+
+            if (_context.Tutorials.Any(x => x.FileName == fileName))
+            {
+                ViewData["errors"] = "Sorry this file name already exists";
+                return View();
+            }
+
+            using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Tutorial", fileName), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            var tutorial = new Tutorial()
+            {
+                FileName = fileName,
+                FilePath = Path.Combine("Documents/Tutorial", fileName),
+                Description = Description,
+                isRed = isRed,
+                isGameType = isGameType,
+            };
 
             if (ModelState.IsValid)
             {
@@ -77,16 +89,16 @@ namespace CySim.Controllers.TutorialController
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tutorial);
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            _logger.LogInformation("User made an error at Tutrial controller");
+            _logger.LogInformation("User made an error at tutorial controller");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
     }
 }
-

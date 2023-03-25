@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CySim.Models.Scenario
 {
-	public class Scenario
-	{
+    public class Scenario
+    {
         [Required]
         public int Id { get; set; }
 
