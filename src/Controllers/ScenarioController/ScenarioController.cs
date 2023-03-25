@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CySim.Data;
 using CySim.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ using CySim.Models.Scenario;
 
 namespace CySim.Controllers
 {
+    [Authorize]
     public class ScenarioController : Controller
     {
         private readonly ILogger<ScenarioController> _logger;
@@ -32,15 +34,14 @@ namespace CySim.Controllers
             return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
         }
 
-        //we need two create becuase one  is to display form to user
-        //other one is used as a submit to save data
-        //HTTP Get Method
+        [Authorize(Roles="Admin")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles="Admin")]
         [HttpPost]
         public IActionResult Create(IFormFile file, String Description, bool isRed)
         {
@@ -87,6 +88,32 @@ namespace CySim.Controllers
 
             return View();
         }
+
+
+        [Authorize(Roles="Admin")]
+        [HttpPost("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+
+            ViewData["errors"] = "";
+            var scenario = _context.Scenarios.Find(id);
+            if(scenario == null) 
+            { 
+                return RedirectToAction(nameof(Index));
+            }
+            
+            var fileName = Path.Combine("wwwroot/", scenario.FilePath);
+            
+            if (ModelState.IsValid && System.IO.File.Exists(fileName))
+            {
+                System.IO.File.Delete(fileName);
+                _context.Scenarios.Remove(scenario);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
