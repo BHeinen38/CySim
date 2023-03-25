@@ -8,19 +8,20 @@
 }
 
 <div class="row">
-    <div class="col-6">
-        <h2 class="text-center">Access the tutorials here</h2>
+    <div class="col-6" align="center">
+        <h2 class="text-center" align="center">Welcome to the Tutorial Page!</h2>
     </div>
     <br />
     <div class="col-12">
+        <br /><br /><br />
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
-            <div align="right" class="col-6">
-                <a class="btn btn-info" asp-action="Create">Add a Tutorial<i class="fa-solid fa-bicycle"></i></a>
+            <div align="left" class="col-6">
+                <a class="btn btn-info" asp-action="Create">Add a Tutorial</a>
             </div>
         }
         <br />
-        <h4 class="text-info">Getting Started</h4>
+        <h4>Getting Started Tutorials</h4>
         <table class="table table-striped border">
             <tr class="table-info">
                 <th colspan="2">
@@ -36,11 +37,11 @@
             {
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
                 {
-                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    @if (item.isRed && !item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -50,11 +51,11 @@
                 }
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
-                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    @if (item.isRed && !item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -66,22 +67,22 @@
 
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
-                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    @if (item.isRed && !item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
                             </td>
                         </tr>
                     }
-                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("False") || item.isGameType.Equals("false")))
+                    @if (!item.isRed && !item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -98,7 +99,7 @@
 
         <br />
         <br />
-        <h4 class="text-info">Game Type</h4>
+        <h4>Game Tutorials</h4>
         <table class="table table-striped border">
             <tr class="table-info">
                 <th colspan="2">
@@ -114,11 +115,11 @@
             {
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
                 {
-                    @if ((item.isRed.Equals("True") || item.isRed.Equals("true")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    @if (item.isRed && item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -128,11 +129,11 @@
                 }
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
-                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    @if (item.isRed && item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -144,22 +145,22 @@
 
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
-                    @if ((item.isRed.Equals("true") || item.isRed.Equals("True")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    @if (item.isRed && item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
                             </td>
                         </tr>
                     }
-                    @if ((item.isRed.Equals("false") || item.isRed.Equals("False")) && (item.isGameType.Equals("True") || item.isGameType.Equals("true")))
+                    @if (!item.isRed && item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
-                                @Html.DisplayFor(w => item.FileName)
+                                <a href="@item.FilePath">@item.FileName</a>
                             </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.Description)
@@ -173,28 +174,6 @@
             }
 
         </table>
-         
-                
-
-        @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            <form method="post" enctype="multipart/form-data" asp-controller="Tutorial" asp-action="Index">
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <p>Upload one or more files using this form:</p>
-                        <input type="file" name="files" multiple />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-10">
-                        <input type="submit" value="Upload" />
-                    </div>
-                </div>
-            </form>
-        }
 
     </div>
 </div>
-
-
-
