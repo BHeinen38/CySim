@@ -11,14 +11,14 @@
 {
     <div class="row">
         <div class="col-6">
-            <h2 class="text-info">Access the sceanrios here</h2>
+            <h2 class="text-primary">Access the sceanrios here</h2>
         </div>
         <br />
         <div class="col-12">
             @if (User.IsInRole("Admin"))
             {
-                <div align="right" class="col-6">
-                    <a class="btn btn-info" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
+                <div align="left" class="col-6">
+                    <a class="btn btn-primary" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
                 </div>
                 <br>
             }
@@ -86,11 +86,13 @@
                             </td>
                             
                             <td colspan="1">
-                                <form asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario?")'>
-                                    <button type="submit" class="btn btn-primary">
+                                <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario?")'>
+                                    <button type="submit" class="btn btn-danger">
                                         <i class="bi bi-trash"></i>
                                     </button>
-                                    
                                 </form>
                             </td>
                         </tr>

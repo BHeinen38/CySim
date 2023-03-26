@@ -1,0 +1,48 @@
+﻿@model CySim.Models.Scenario.Scenario
+
+@{
+
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 class="text-info">Edit the values of the @Model.FileName scenario below</h2>
+@if (ViewData["errors"] != null && !ViewData["errors"].Equals(""))
+{
+    <p class="text-danger">@ViewData["errors"]</p>
+}
+<form method="post" asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Scenario file to replace @Model.FileName (Optional):</label>
+        <input type="file" class="form-control" name="file" />
+    </div>
+
+    <br>
+    
+    <div class="form-group">
+        <label for="FileName">FileName:</label>
+        <input type="text" class="form-control" name="FileName" value="@Model.FileName" />
+    </div>
+
+    <br>
+
+    <div class="form-group">
+        <label for="Description">Description:</label>
+        <input type="text" class="form-control" name="Description" value="@Model.Description" />
+    </div>
+
+    <br>
+
+    <div class="form-check">
+        <label class="form-check-label" for="isRed">Is this for red team?</label>
+        <input type="checkbox" class="form-check-input" name="isRed" value=@(Model.isRed?"true":"false") @(Model.isRed?"checked='checked'":"") onchange="this.value=this.checked" />
+    </div>
+
+    <br>
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Update" />
+        <a asp-action="Index" class="btn btn-success">Back</a>
+    </div>
+</form>

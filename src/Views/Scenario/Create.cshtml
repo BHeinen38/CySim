@@ -10,7 +10,7 @@
 <h2 class="text-info">Add a new Scenario</h2>
 @if (ViewData["errors"] != null && !ViewData["errors"].Equals(""))
 {
-    <p style="color:red;">@ViewData["errors"]</p>
+    <p class="text-danger">@ViewData["errors"]</p>
 }
 <form method="post" action="Create" enctype="multipart/form-data">
     <div class="form-group">

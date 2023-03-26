@@ -91,11 +91,9 @@ namespace CySim.Controllers
 
 
         [Authorize(Roles="Admin")]
-        [HttpPost("{id}")]
+        [HttpPost]
         public IActionResult Delete([FromRoute] int id)
         {
-
-            ViewData["errors"] = "";
             var scenario = _context.Scenarios.Find(id);
             if(scenario == null) 
             { 
@@ -114,11 +112,100 @@ namespace CySim.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles="Admin")]
+        [HttpGet]
+        public IActionResult Edit([FromRoute] int id)
+        {
+            var scenario = _context.Scenarios.Find(id);
+            if(scenario == null) 
+            { 
+                _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(scenario);
+        }
+
+        [Authorize(Roles="Admin")]
+        [HttpPost]
+        public IActionResult Edit([FromRoute]int id, IFormFile file, String FileName, String Description, bool isRed)
+        {
+            // HTML Form Error Handling 
+            ViewData["errors"] = "";
+
+            var scenario = _context.Scenarios.Find(id);
+            if(scenario == null) 
+            { 
+                _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Scenario Edit on id of " + id + ": Model state was invalid");
+                
+                var errorMessage = string.Join("; ", ModelState.Values
+                                    .SelectMany(x => x.Errors)
+                                    .Select(x => x.ErrorMessage));
+                _logger.LogError("Model state errors messages: " + errorMessage);
+
+                ViewData["errors"] = "Model state is invalid";
+                return RedirectToAction(nameof(Edit), new { id = id });
+            }
+
+            if(FileName == null) 
+            {
+                _logger.LogError("Scenario Edit on id of " + id + ": No FileName was entered");
+                ViewData["errors"] = "No file name was provided"; 
+                return RedirectToAction(nameof(Edit), new { id = id });
+            }
+          
+            if (_context.Scenarios.Any(x => x.Id != id && x.FileName == FileName))
+            {
+                _logger.LogError("Scenario Edit on id of " + id + ": FileName matched another scenario");
+                ViewData["errors"] = "Sorry this file name is already used by another scenario";
+                return RedirectToAction(nameof(Edit), new { id = id });
+            }
+
+            if(Description == null) 
+            {
+                _logger.LogError("Scenario Edit on id of " + id + ": No Description was entered");
+                ViewData["errors"] = "No description was provided"; 
+                return RedirectToAction(nameof(Edit), new { id = id });
+            }
+            
+
+            var CurrFile = Path.Combine("wwwroot", scenario.FilePath);
+            var NewFile = Path.Combine("wwwroot/Documents/Scenario", FileName);
+
+            // Replace file contents
+            if (file != null) 
+            {
+                using (var stream = new FileStream(CurrFile, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+
+            // Rename file
+            System.IO.File.Move(CurrFile, NewFile);
+
+            // Update scenario variable
+            scenario.FileName = FileName;
+            scenario.FilePath = Path.Combine("Documents/Scenario", FileName); 
+            scenario.Description = Description;
+            scenario.isRed = isRed;
+            
+            _context.Scenarios.Update(scenario);
+            _context.SaveChanges();
+            
+            return RedirectToAction(nameof(Index));
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            _logger.LogInformation("User made an error at scenario controller");
+            _logger.LogError("User made an error at scenario controller");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
