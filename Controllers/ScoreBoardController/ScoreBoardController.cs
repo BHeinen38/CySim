@@ -28,7 +28,7 @@ namespace CySim.Controllers.ScoreBoardController
         [HttpGet]
         public IActionResult ScoreBoard()
         {
-            return View(_context);
+            return View(_context.TeamRegistrations.ToList().OrderByDescending(x => x.Score));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

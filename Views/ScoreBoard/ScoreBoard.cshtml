@@ -1,7 +1,47 @@
-﻿@model CySim.Data.ApplicationDbContext;
-@{
-    ViewData["Title"] = "ScoreBoard Page";
-}
+﻿@model IEnumerable<CySim.Models.TeamRegistration.TeamRegistration>
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @* Forces reset of CSS file to prevent caching and not updating during development *@
+<div class="container">
+    <header>
+        <br />
+    </header>
+    <article>
+        <div class="col-md-10 col-centered">
+            <table class="col-md-10 col-centered">
+                <thead>
+                    <tr>
+                        <td colspan="3" align="center">Placement</td>
+                        <td align="center" class="thead-secondary">Score</td>
+                        <td align="center" class="thead-secondary">Flags</td>
+                        <td align="center" class="thead-secondary">Usability</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int iter = 1; }
+                    @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        {
+                        <tr>
+                            <td class="scoreboard-ranking">@(iter)</td>
+                            <td class="scoreboard-team-logo">
+                                <img class="scoreboard-team-logo"
+                                     src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
+                            </td>
+                            <td class="scoreboard-team">@item.TeamName</td>
+                            <td class="scoreboard-score">@item.Score</td>
+                            <td class="scoreboard-flags">@item.Usability</td>
+                            <td class="scoreboard-usability">@item.Flags</td>
+                            
+                        </tr>
+                            ++iter;
+                        }
+                </tbody>
+            </table>
+            <br />
+        </div>
+    </article>
+</div>
+
+
 
 @*<!DOCTYPE html>
     <html>
@@ -24,105 +64,3 @@
         </div>
     </body>
     </html>*@
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @* Forces reset of CSS file to prevent caching and not updating during development *@
-<div class="container">
-    <header>
-        <h1>Scoreboard</h1>
-    </header>
-    <article>
-        <div class="col-md-10 col-centered">
-            <table class="col-md-10 col-centered">
-                <thead>
-                    <tr>
-                        <td colspan="3" align="center">Placement</td>
-                        <td align="center" class="thead-secondary">Score</td>
-                        <td align="center" class="thead-secondary">Flags</td>
-                        <td align="center" class="thead-secondary">Usability</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 1; i < 6; i++)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
-                    {
-                        <tr>
-                            <td class="scoreboard-ranking">@(i)</td>
-                            <td class="scoreboard-team-logo">
-                                <img class="scoreboard-team-logo"
-                                     src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
-                            </td>
-                            <td class="scoreboard-team">Team @(i): Foxes</td>
-                            <td class="scoreboard-score">797</td>
-                            <td class="scoreboard-flags">797</td>
-                            <td class="scoreboard-usability">0</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <br />
-    </article>
-</div>
-
-@*<div class="container">
-        <header>
-            <h1>Scoreboard</h1>
-        </header>
-        <article>
-            <div class="col-md-10 col-centered">
-                <table class="col-md-10 col-centered">
-                    <thead>
-                        <tr>
-                            <td>Team</td>
-                            <td>Rank</td>
-                            <td>Score</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="scoreboard-team">
-                                <div class="scoreboard-team"></div>
-                                <span class="scoreboard-team-logo">
-                                    <img class="scoreboard-team-logo"
-                                         src="https://www.svgrepo.com/show/31860/fox.svg" alt="Team Foxes" height="200" width="200">
-                                </span>
-                                <span class="scoreboard-team-logo-foxes scoreboard-team-logo-text">Foxes</span>
-            </div>
-            </td>
-            <td class="scoreboard-score" align="center">1</td>
-            <td class="scoreboard-score" align="center">21 797</td>
-            </tr>
-            <tr>
-                <td class="scoreboard-team">
-                    <span class="scoreboard-team-logo">
-                        <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/163618/wolf.svg"
-                             alt="Team Wolves" height="200" width="200">
-                    </span>
-                    <span class="scoreboard-team-logo-text">Wolves</span>
-                </td>
-                <td class="scoreboard-score" align="center">2</td>
-                <td class="scoreboard-score" align="center">20 578</td>
-            </tr>
-            <tr>
-                <td class="scoreboard-team">
-                    <span class="scoreboard-team-logo">
-                        <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/191396/lion.svg"
-                             alt="Team Lions" height="200" width="200">
-                    </span>
-                    <span class="scoreboard-team-logo-text">Lions</span>
-                </td>
-                <td class="scoreboard-score" align="center">3</td>
-                <td class="scoreboard-score" align="center">17 228</td>
-            </tr>
-            <tr>
-                <td class="scoreboard-team">
-                    <span class="scoreboard-team-logo">
-                        <img class="scoreboard-team-logo" src="https://www.svgrepo.com/show/277718/unicorn.svg"
-                             alt="Team Unicorns" height="200" width="200">
-                    </span>
-                    <span class="scoreboard-team-logo-text">Unicorns</span>
-                </td>
-                <td class="scoreboard-score" align="center">4</td>
-                <td class="scoreboard-score" align="center">16 907</td>
-            </tr>
-            </tbody>
-            </table>
-        </article>
-    </div>*@

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,14 @@ namespace CySim.Models.TeamRegistration
 
         [MaxLength(50)]
         public string User6 { get; set; }
+
+        [DefaultValue(0)]
+        public int Usability { get; set; }
+
+        [DefaultValue(0)]
+        public int Score { get; set; }
+
+        [DefaultValue(0)]
+        public int Flags { get; set; }
     }
 }
-
