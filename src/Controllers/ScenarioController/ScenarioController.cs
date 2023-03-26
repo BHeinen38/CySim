@@ -45,16 +45,18 @@ namespace CySim.Controllers
         [HttpPost]
         public IActionResult Create(IFormFile file, String Description, bool isRed)
         {
-            ViewData["errors"] = "";
+            TempData["errors"] = "";
 
             if(file == null) 
             {
-                ViewData["errors"] = "No file was uploaded"; 
+                _logger.LogError("Scenario Create: No file was uploaded");
+                TempData["errors"] = "No file was uploaded"; 
                 return View();
             }
             if(Description == null) 
             {
-                ViewData["errors"] = "No description was provided"; 
+                _logger.LogError("Scenario Create: No Description was entered");
+                TempData["errors"] = "No description was provided"; 
                 return View();
             }
             
@@ -62,13 +64,15 @@ namespace CySim.Controllers
             
             if (_context.Scenarios.Any(x => x.FileName == fileName))
             {
-                ViewData["errors"] = "Sorry this file name already exist";
+                _logger.LogError("Scenario Create: FileName of uploaded file matched another scenario");
+                TempData["errors"] = "Sorry this file name already exist";
                 return View();
             }
 
             using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
             {
                 file.CopyTo(stream);
+                _logger.LogInformation("Scenario Create: File was uploaded to Documents/Scenario");
             }
 
             var scenario = new Scenario() 
@@ -83,6 +87,9 @@ namespace CySim.Controllers
             {
                 _context.Add(scenario);
                 _context.SaveChanges();
+                
+                _logger.LogInformation("Scenario Create: New database entry created");
+                
                 return RedirectToAction(nameof(Index));
             }
 
@@ -97,6 +104,7 @@ namespace CySim.Controllers
             var scenario = _context.Scenarios.Find(id);
             if(scenario == null) 
             { 
+                _logger.LogError("Scenario Delete on id = " + id + ": No scenario has id = " + id);
                 return RedirectToAction(nameof(Index));
             }
             
@@ -131,7 +139,7 @@ namespace CySim.Controllers
         public IActionResult Edit([FromRoute]int id, IFormFile file, String FileName, String Description, bool isRed)
         {
             // HTML Form Error Handling 
-            ViewData["errors"] = "";
+            TempData["errors"] = "";
 
             var scenario = _context.Scenarios.Find(id);
             if(scenario == null) 
@@ -149,28 +157,28 @@ namespace CySim.Controllers
                                     .Select(x => x.ErrorMessage));
                 _logger.LogError("Model state errors messages: " + errorMessage);
 
-                ViewData["errors"] = "Model state is invalid";
+                TempData["errors"] = "Model state is invalid";
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
 
             if(FileName == null) 
             {
                 _logger.LogError("Scenario Edit on id of " + id + ": No FileName was entered");
-                ViewData["errors"] = "No file name was provided"; 
+                TempData["errors"] = "No file name was provided"; 
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
           
             if (_context.Scenarios.Any(x => x.Id != id && x.FileName == FileName))
             {
                 _logger.LogError("Scenario Edit on id of " + id + ": FileName matched another scenario");
-                ViewData["errors"] = "Sorry this file name is already used by another scenario";
+                TempData["errors"] = "Sorry this file name is already used by another scenario";
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
 
             if(Description == null) 
             {
                 _logger.LogError("Scenario Edit on id of " + id + ": No Description was entered");
-                ViewData["errors"] = "No description was provided"; 
+                TempData["errors"] = "No description was provided"; 
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
             
@@ -185,11 +193,16 @@ namespace CySim.Controllers
                 {
                     file.CopyTo(stream);
                 }
+                _logger.LogInformation("Scenario Edit on id = " + id + ": File contents were replaced by uploaded file");
             }
 
             // Rename file
-            System.IO.File.Move(CurrFile, NewFile);
-
+            if(CurrFile != NewFile) 
+            {
+                System.IO.File.Move(CurrFile, NewFile);
+                _logger.LogInformation("Scenario Edit on id = " + id + ": File was renamed");
+            }
+            
             // Update scenario variable
             scenario.FileName = FileName;
             scenario.FilePath = Path.Combine("Documents/Scenario", FileName); 
@@ -198,6 +211,8 @@ namespace CySim.Controllers
             
             _context.Scenarios.Update(scenario);
             _context.SaveChanges();
+            
+            _logger.LogInformation("Scenario Edit on id = " + id + ": Database entry was updated");
             
             return RedirectToAction(nameof(Index));
         }

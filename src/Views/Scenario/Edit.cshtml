@@ -8,9 +8,9 @@
 
 
 <h2 class="text-info">Edit the values of the @Model.FileName scenario below</h2>
-@if (ViewData["errors"] != null && !ViewData["errors"].Equals(""))
+@if (TempData["errors"] != null && !TempData["errors"].Equals(""))
 {
-    <p class="text-danger">@ViewData["errors"]</p>
+    <p class="text-danger">@TempData["errors"]</p>
 }
 <form method="post" asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data">
     <div class="form-group">
