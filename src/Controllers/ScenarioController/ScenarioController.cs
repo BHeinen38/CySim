@@ -150,34 +150,33 @@ namespace CySim.Controllers
 
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Scenario Edit on id of " + id + ": Model state was invalid");
+                _logger.LogError("Scenario Edit on id = " + id + ": Model state was invalid");
                 
                 var errorMessage = string.Join("; ", ModelState.Values
                                     .SelectMany(x => x.Errors)
                                     .Select(x => x.ErrorMessage));
                 _logger.LogError("Model state errors messages: " + errorMessage);
-
-                TempData["errors"] = "Model state is invalid";
+ 
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
 
             if(FileName == null) 
             {
-                _logger.LogError("Scenario Edit on id of " + id + ": No FileName was entered");
+                _logger.LogError("Scenario Edit on id = " + id + ": No FileName was entered");
                 TempData["errors"] = "No file name was provided"; 
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
           
             if (_context.Scenarios.Any(x => x.Id != id && x.FileName == FileName))
             {
-                _logger.LogError("Scenario Edit on id of " + id + ": FileName matched another scenario");
-                TempData["errors"] = "Sorry this file name is already used by another scenario";
+                _logger.LogError("Scenario Edit on id = " + id + ": FileName matched another scenario");
+                TempData["errors"] = "This file name is already used by another scenario";
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
 
             if(Description == null) 
             {
-                _logger.LogError("Scenario Edit on id of " + id + ": No Description was entered");
+                _logger.LogError("Scenario Edit on id = " + id + ": No Description was entered");
                 TempData["errors"] = "No description was provided"; 
                 return RedirectToAction(nameof(Edit), new { id = id });
             }

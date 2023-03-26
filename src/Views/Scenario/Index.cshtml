@@ -3,7 +3,7 @@
 @inject SignInManager<IdentityUser> signInManager
 
 @{
-    ViewData["Title"] = "Scenario Page";
+    ViewData["Title"] = "Scenario Documents";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,14 +11,14 @@
 {
     <div class="row">
         <div class="col-6 mb-4">
-            <h2 class="text">Access the scenarios here</h2>
+            <h2 class="text">Access CySim's Scenario Documents</h2>
         </div>
         <br>
 
         @if (User.IsInRole("Admin"))
         {
             <div align="left" class="col-6 mb-4">
-                <a class="btn btn-primary" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
+                <a class="btn btn-primary" asp-action="Create">Add a Scanario Document<i class="fa-solid fa-bicycle"></i></a>
             </div>
         }
 
@@ -26,7 +26,7 @@
             @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
             {
             <div class="col-6">
-                <h4 class="text-danger">Red Team Scenarios</h4>
+                <h4 class="text-danger">Red Team Scenario Documents</h4>
             </div>
             <table class="table table-striped border">
                 <tr class="table-danger">
@@ -61,7 +61,7 @@
                                     <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario?")'>
+                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario document?")'>
                                         <button type="submit" class="btn btn-danger">
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -78,7 +78,7 @@
             @if (User.IsInRole("Blue Team") || User.IsInRole("Admin"))
             {
             <div class="col-6">
-                <h4 class="text-primary">Blue Team Scenarios</h4>
+                <h4 class="text-primary">Blue Team Scenario Documents</h4>
             </div>
             <table class="table table-striped border">
                 <tr class="table-primary">

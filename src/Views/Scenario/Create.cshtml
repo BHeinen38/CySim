@@ -1,33 +1,33 @@
 ﻿@model CySim.Models.Scenario.Scenario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Scenario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
-<h2 class="text-info">Add a new Scenario</h2>
+<h2 class="text-primary mb-4">Add a New Scenario Document</h2>
 @if (TempData["errors"] != null && !TempData["errors"].Equals(""))
 {
-    <p class="text-danger">@TempData["errors"]</p>
+    <p class="text-danger mb-4">@TempData["errors"]</p>
 }
-<form method="post" action="Create" enctype="multipart/form-data">
+<form method="post" asp-action="Create" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="file">Select Scenario to Upload</label>
+        <label for="file">Select Scenario Document to Upload</label>
         <input type="file" class="form-control" name="file" />
     </div>
 
     <br>
 
     <div class="form-group">
-        <label for="Description">Description:</label>
+        <label for="Description">Provide the description for the document:</label>
         <input type="text" class="form-control" name="Description" />
     </div>
 
     <br>
 
     <div class="form-check">
-        <label class="form-check-label" for="isRed">Is this for red team?</label>
+        <label class="form-check-label" for="isRed">Is this a red team document?</label>
         <input type="checkbox" class="form-check-input" name="isRed" value="false" onchange="this.value=this.checked" />
     </div>
 
