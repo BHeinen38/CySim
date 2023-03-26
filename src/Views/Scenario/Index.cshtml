@@ -10,19 +10,18 @@
 @if (signInManager.IsSignedIn(User))
 {
     <div class="row">
-        <div class="col-6">
+        <div class="col-6 mb-4">
             <h2 class="text">Access the scenarios here</h2>
         </div>
-        <br />
-        <div class="col-12">
-            @if (User.IsInRole("Admin"))
-            {
-                <div align="left" class="col-6">
-                    <a class="btn btn-primary" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
-                </div>
-                <br>
-            }
+        
+        @if (User.IsInRole("Admin"))
+        {
+            <div align="left" class="col-6 mb-4">
+                <a class="btn btn-primary" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
+            </div>
+        }
 
+        <div class="col-12">
             @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
             {
             <div class="col-6">
