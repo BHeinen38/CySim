@@ -44,20 +44,20 @@ namespace CySim.Controllers
             return View();
         }
 
+        [Authorize(Roles="Admin")]
         [HttpPost]
-
         public IActionResult Create(IFormFile file, String Description, bool isRed, bool isGameType)
         {
-            ViewData["errors"] = "";
+            TempData["errors"] = "";
 
             if (file == null)
             {
-                ViewData["errors"] = "No file was uploaded";
+                TempData["errors"] = "No file was uploaded";
                 return View();
             }
             if (Description == null)
             {
-                ViewData["errors"] = "No description was provided";
+                TempData["errors"] = "No description was provided";
                 return View();
             }
 
@@ -65,7 +65,7 @@ namespace CySim.Controllers
 
             if (_context.Tutorials.Any(x => x.FileName == fileName))
             {
-                ViewData["errors"] = "Sorry this file name already exists";
+                TempData["errors"] = "Sorry this file name already exists";
                 return View();
             }
 
