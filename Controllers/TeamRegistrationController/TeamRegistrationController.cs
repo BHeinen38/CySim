@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using CySim.Data;
 using CySim.Models;
+using CySim.Models.Scenario;
 using CySim.Models.TeamRegistration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,17 +47,63 @@ namespace CySim.Controllers.TeamRegistrationController
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Create(TeamRegistration teamRegistration)
-        {
-            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
-            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
+        //[HttpPost]
+        //public IActionResult Create(TeamRegistration teamRegistration)
+        //{
 
+        //    if (ModelState.IsValid)
+        //    {
+        //        teamRegistration.TeamCreator = User.Identity.Name;
+        //        _context.Add(teamRegistration);
+        //        _context.SaveChanges();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(teamRegistration);
+        //}
+
+        [HttpPost]
+        public IActionResult Create(TeamRegistration teamRegistration, IFormFile file)
+        {
+
+            var fileName = "";
+
+            if (file == null)
+                fileName = "DefaultImage.png";
+            else
+                fileName = file.FileName;
+
+
+            if (_context.TeamRegistrations.Any(x => x.FileName == fileName))
+            {
+                ViewData["errors"] = "Sorry this file name already exist";
+                return View();
+            }
+            if(file != null)
+            {
+                using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Images", fileName), FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
+            var registration = new TeamRegistration();
+
+            //var registration = new TeamRegistration()
+            //{
+            //    FileName = fileName,
+            //    FilePath = Path.Combine("Documents/Images", fileName),
+            //    IsRed = teamRegistration.IsRed,
+            //    TeamName = teamRegistration.TeamName
+            //};
+
+            registration.FileName = fileName;
+            registration.FilePath = Path.Combine("Documents/Images", fileName);
+            registration.IsRed = teamRegistration.IsRed;
+            registration.TeamName = teamRegistration.TeamName;
 
             if (ModelState.IsValid)
             {
-                teamRegistration.TeamCreator = User.Identity.Name;
-                _context.Add(teamRegistration);
+                registration.TeamCreator = User.Identity.Name;
+                _context.Add(registration);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -129,6 +178,8 @@ namespace CySim.Controllers.TeamRegistrationController
                 var name = User.Identity.Name;
                 var registration = _context.TeamRegistrations.Find(teamRegistration.Id);
 
+
+                //one user can only join one team
                 foreach(var item in _context.TeamRegistrations)
                 {
                     if(item.User1 == name || item.User2 == name || item.User3 == name || item.User4 == name || item.User5 == name

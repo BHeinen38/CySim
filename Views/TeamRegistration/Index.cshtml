@@ -45,6 +45,9 @@
             <table class="table table-striped border">
                 <tr class="table-info">
                     <th colspan="2">
+                        @Html.DisplayNameFor(m => m.FilePath)
+                    </th>
+                    <th colspan="2">
                         @Html.DisplayNameFor(m => m.TeamName)
                     </th>
                     <th colspan="2">
@@ -62,6 +65,13 @@
                     @if (item.IsRed && User.IsInRole("Red Team"))
                     {
                         <tr>
+                            @*<td colspan="2">
+                                <a href="@item.FilePath">@item.FileName</a>
+                            </td>*@
+                            <td class="scoreboard-team-logo">
+                                <img class="scoreboard-team-logo"
+                                     src="@item.FilePath" height="100" width="100">
+                            </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.TeamName)
                             </td>
@@ -82,7 +92,7 @@
                                         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
                                         @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
                                         <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@Model"> <i class="fa-solid fa-trash"></i> </button>
+                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
                                         </form>
                                     </div>
                                 </td>
@@ -92,6 +102,13 @@
                     @if (!item.IsRed && User.IsInRole("Blue Team"))
                     {
                         <tr>
+                            @*<td colspan="2">
+                                <a href="@item.FilePath">@item.FileName</a>
+                            </td>*@
+                            <td class="scoreboard-team-logo">
+                                <img class="scoreboard-team-logo"
+                                     src="@item.FilePath" height="100" width="100">
+                            </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.TeamName)
                             </td>
@@ -112,7 +129,7 @@
                                         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
                                         @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
                                         <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@Model"> <i class="fa-solid fa-trash"></i> </button>
+                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
                                         </form>
                                     </div>
                                 </td>
@@ -128,6 +145,9 @@
             <table class="table table-striped border">
                 <tr class="table-info">
                     <th colspan="2">
+                        @Html.DisplayNameFor(m => m.FilePath)
+                    </th>
+                    <th colspan="2">
                         @Html.DisplayNameFor(m => m.TeamName)
                     </th>
                     <th colspan="2">
@@ -142,6 +162,13 @@
                     @if (item.IsRed)
                     {
                         <tr>
+                            @*<td colspan="2">
+                                <a href="@item.FilePath">@item.FileName</a>
+                             </td>*@
+                            <td class="scoreboard-team-logo">
+                                <img class="scoreboard-team-logo"
+                                     src="@item.FilePath" height="100" width="100">
+                            </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.TeamName)
                             </td>
@@ -155,7 +182,7 @@
                                     <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
                                     @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
                                     <form method="post" action="Delete">
-                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@Model"> <i class="fa-solid fa-trash"></i> </button>
+                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
                                     </form>
                                 </div>
                             </td>
@@ -167,6 +194,9 @@
             <h4>Blue Team Table</h4>
             <table class="table table-striped border">
                 <tr class="table-info">
+                    <th colspan="2">
+                        @Html.DisplayNameFor(m => m.FilePath)
+                    </th>
                     <th colspan="2">
                         @Html.DisplayNameFor(m => m.TeamName)
                     </th>
@@ -182,6 +212,14 @@
                     @if (!item.IsRed)
                     {
                         <tr>
+                            @*<td colspan="2">
+                                <a href="@item.FilePath">@item.FileName</a>
+                            </td>*@
+
+                            <td class="scoreboard-team-logo">
+                                <img class="scoreboard-team-logo"
+                                     src="@item.FilePath" height="100" width="100">
+                            </td>
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.TeamName)
                             </td>
@@ -195,7 +233,7 @@
                                     <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
                                     @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
                                     <form method="post" action="Delete">
-                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@Model"> <i class="fa-solid fa-trash"></i> </button>
+                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
                                     </form>
                                 </div>
                             </td>

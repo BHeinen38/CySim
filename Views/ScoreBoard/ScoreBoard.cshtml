@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<CySim.Models.TeamRegistration.TeamRegistration>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
 
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @* Forces reset of CSS file to prevent caching and not updating during development *@
 <div class="container">
@@ -7,35 +9,137 @@
     </header>
     <article>
         <div class="col-md-10 col-centered">
-            <table class="col-md-10 col-centered">
-                <thead>
-                    <tr>
-                        <td colspan="3" align="center">Placement</td>
-                        <td align="center" class="thead-secondary">Score</td>
-                        <td align="center" class="thead-secondary">Flags</td>
-                        <td align="center" class="thead-secondary">Usability</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{int iter = 1; }
-                    @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
-                        {
+            @if (User.IsInRole("Red Team") || User.IsInRole("Blue Team"))
+            {
+                <table class="col-md-10 col-centered">
+                    <thead>
                         <tr>
-                            <td class="scoreboard-ranking">@(iter)</td>
-                            <td class="scoreboard-team-logo">
-                                <img class="scoreboard-team-logo"
-                                     src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
-                            </td>
-                            <td class="scoreboard-team">@item.TeamName</td>
-                            <td class="scoreboard-score">@item.Score</td>
-                            <td class="scoreboard-flags">@item.Usability</td>
-                            <td class="scoreboard-usability">@item.Flags</td>
-                            
+                            <th align="center">Placement</th>
+                            <th align="center" class="thead-secondary">Profile Picture</th>
+                            <th align="center" class="thead-secondary">Team Name</th>
+                            <th align="center" class="thead-secondary">Score</th>
+                            <th align="center" class="thead-secondary">Flags</th>
+                            <th align="center" class="thead-secondary">Usability</th>
                         </tr>
-                            ++iter;
+                    </thead>
+                    <tbody>
+                        @{int iter = 1; }
+                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        {
+                            @if (User.IsInRole("Red Team") && item.IsRed)
+                            {
+                                <tr>
+                                    <td class="scoreboard-ranking">@(iter)</td>
+
+                                    <td class="scoreboard-team-logo">
+                                        <img class="scoreboard-team-logo"
+                                             src="~/@item.FilePath" height="100" width="100">
+                                    </td>
+                                    <td class="scoreboard-team">@item.TeamName</td>
+                                    <td class="scoreboard-score">@item.Score</td>
+                                    <td class="scoreboard-flags">@item.Usability</td>
+                                    <td class="scoreboard-usability">@item.Flags</td>
+
+                                </tr>
+                                ++iter;
+                            }
+                            @if (User.IsInRole("Blue Team") && !item.IsRed)
+                            {
+                                <tr>
+                                    <td class="scoreboard-ranking">@(iter)</td>
+
+                                    <td class="scoreboard-team-logo">
+                                        <img class="scoreboard-team-logo"
+                                             src="~/@item.FilePath" height="100" width="100">
+                                    </td>
+                                    <td class="scoreboard-team">@item.TeamName</td>
+                                    <td class="scoreboard-score">@item.Score</td>
+                                    <td class="scoreboard-flags">@item.Usability</td>
+                                    <td class="scoreboard-usability">@item.Flags</td>
+
+                                </tr>
+                                ++iter;
+                            }
                         }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            }
+
+            @if (User.IsInRole("Admin"))
+            {
+                <h4>This is the Red Team Scoreboard</h4>
+                <table class="col-md-10 col-centered">
+                    <thead>
+                        <tr>
+                            <th align="center">Placement</th>
+                            <th align="center" class="thead-secondary">Profile Picture</th>
+                            <th align="center" class="thead-secondary">Team Name</th>
+                            <th align="center" class="thead-secondary">Score</th>
+                            <th align="center" class="thead-secondary">Flags</th>
+                            <th align="center" class="thead-secondary">Usability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int iter = 1; }
+                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        {
+                            @if (item.IsRed)
+                            {
+                                <tr>
+                                    <td class="scoreboard-ranking">@(iter)</td>
+                                    <td class="scoreboard-team-logo">
+                                        <img class="scoreboard-team-logo"
+                                             src="~/@item.FilePath" height="100" width="100">
+                                    </td>
+                                    <td class="scoreboard-team">@item.TeamName</td>
+                                    <td class="scoreboard-score">@item.Score</td>
+                                    <td class="scoreboard-flags">@item.Usability</td>
+                                    <td class="scoreboard-usability">@item.Flags</td>
+
+                                </tr>
+                                ++iter;
+                            }
+                        }
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <h4>This is the Blue Team Scoreboard</h4>
+                <table class="col-md-10 col-centered">
+                    <thead>
+                        <tr>
+                            <th align="center">Placement</th>
+                            <th align="center" class="thead-secondary">Profile Picture</th>
+                            <th align="center" class="thead-secondary">Team Name</th>
+                            <th align="center" class="thead-secondary">Score</th>
+                            <th align="center" class="thead-secondary">Flags</th>
+                            <th align="center" class="thead-secondary">Usability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{iter = 1; }
+                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        {
+                            @if (!item.IsRed)
+                            {
+                                <tr>
+                                    <td class="scoreboard-ranking">@(iter)</td>
+                                    <td class="scoreboard-team-logo">
+                                        <img class="scoreboard-team-logo"
+                                             src="~/@item.FilePath" height="100" width="100">
+                                    </td>
+                                    <td class="scoreboard-team">@item.TeamName</td>
+                                    <td class="scoreboard-score">@item.Score</td>
+                                    <td class="scoreboard-flags">@item.Usability</td>
+                                    <td class="scoreboard-usability">@item.Flags</td>
+
+                                </tr>
+                                ++iter;
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
             <br />
         </div>
     </article>
@@ -43,24 +147,7 @@
 
 
 
-@*<!DOCTYPE html>
-    <html>
-    <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10 col-centered">
-                    <h1 class="text-centered">Leaderboard</h1>
-                    <table class="table table-striped">
-                        <tr><th>Rank</th><th>Name</th><th>Score</th></tr>
-                        @{int i = 1; }
-                        @foreach (var item in Model.Leaders())
-                        {
-                            <tr><td width="50px">@i</td><td>@item.TeamName</td><td>@item.Score</td></tr>
-                            ++i;
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>*@
+@*<td class="scoreboard-team-logo">
+        <img class="scoreboard-team-logo"
+             src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
+    </td>*@

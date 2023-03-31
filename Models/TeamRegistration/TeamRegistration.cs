@@ -20,9 +20,15 @@ namespace CySim.Models.TeamRegistration
         [Display(Name ="Spots Taken")]
         public int SpotsTaken { get; set; }
 
-        public bool ProfilePicture { get; set; }
-
         public string TeamCreator { get; set; }
+
+        [MaxLength(512)]
+        [DisplayName("Profile Picture")]
+        public string FilePath { get; set; }
+
+        [MaxLength(50)]
+        [DefaultValue("DefaultImage.png")]
+        public string FileName { get; set; }
 
         public bool IsRed { get; set; }
 
