@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace CySim
 {
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
