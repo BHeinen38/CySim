@@ -91,9 +91,11 @@ namespace CySim.Controllers.TeamRegistrationController
         [HttpPost]
         public IActionResult Edit(TeamRegistration registration)
         {
+            var teamRegistration = _context.TeamRegistrations.Find(registration.Id);
+
             if (ModelState.IsValid)
             {
-                var teamRegistration = _context.TeamRegistrations.Find(registration.Id);
+                teamRegistration.TeamName = registration.TeamName;
                 _context.Update(teamRegistration);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
