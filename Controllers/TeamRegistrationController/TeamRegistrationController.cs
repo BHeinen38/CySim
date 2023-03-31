@@ -53,6 +53,7 @@ namespace CySim.Controllers.TeamRegistrationController
 
             if (ModelState.IsValid)
             {
+                teamRegistration.TeamCreator = User.Identity.Name;
                 _context.Add(teamRegistration);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -92,7 +93,8 @@ namespace CySim.Controllers.TeamRegistrationController
         {
             if (ModelState.IsValid)
             {
-                _context.Update(registration);
+                var teamRegistration = _context.TeamRegistrations.Find(registration.Id);
+                _context.Update(teamRegistration);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -124,6 +126,16 @@ namespace CySim.Controllers.TeamRegistrationController
             {
                 var name = User.Identity.Name;
                 var registration = _context.TeamRegistrations.Find(teamRegistration.Id);
+
+                foreach(var item in _context.TeamRegistrations)
+                {
+                    if(item.User1 == name || item.User2 == name || item.User3 == name || item.User4 == name || item.User5 == name
+                        || item.User6 == name)
+                    {
+                        _logger.LogInformation(name + " is already in " + item.TeamName);
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
 
 
                 if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||

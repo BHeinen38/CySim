@@ -22,6 +22,8 @@ namespace CySim.Models.TeamRegistration
 
         public bool ProfilePicture { get; set; }
 
+        public string TeamCreator { get; set; }
+
         [MaxLength(50)]
         public string User1 { get; set; }
 

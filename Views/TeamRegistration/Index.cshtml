@@ -38,7 +38,7 @@
     </div>
     <br />
     <div class="col-12">
-        <table class="table table-striped border">
+        <table class="table table-striped border">  
             <tr class="table-info">
                 <th colspan="2">
                     @Html.DisplayNameFor(m => m.TeamName)
@@ -62,8 +62,25 @@
                     <td colspan="2">
                         @Html.DisplayFor(w => item.SpotsTaken)
                     </td>
-                    <partial name="_TableButtonPartial" model="item.Id" />
+                    @*<partial name="_TableButtonPartial" model="item.Id" />*@
+                    <td colspan="2">
+                        <div class="btn-group" role="group">
+                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i></a>
+                        </div>
+                    </td>
 
+                    @if (item.TeamCreator == User.Identity.Name)
+                    {
+                        <td align="left" colspan="2">
+                            <div class="btn-group" role="group">
+                                <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
+                                @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                <form method="post" action="Delete">
+                                    <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@Model"> <i class="fa-solid fa-trash"></i> </button>
+                                </form>
+                            </div>
+                        </td>
+                    }
                 </tr>
             }
         </table>
