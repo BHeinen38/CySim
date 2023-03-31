@@ -77,6 +77,7 @@
                             <th align="center" class="thead-secondary">Score</th>
                             <th align="center" class="thead-secondary">Flags</th>
                             <th align="center" class="thead-secondary">Usability</th>
+                            <th align="center" class="thead-secondary">Edit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,7 +96,11 @@
                                     <td class="scoreboard-score">@item.Score</td>
                                     <td class="scoreboard-flags">@item.Usability</td>
                                     <td class="scoreboard-usability">@item.Flags</td>
-
+                                    <td align="left" class="scoreboard-usability">
+                                        <div class="btn-group" role="group">
+                                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        </div>
+                                    </td>
                                 </tr>
                                 ++iter;
                             }
@@ -114,6 +119,7 @@
                             <th align="center" class="thead-secondary">Score</th>
                             <th align="center" class="thead-secondary">Flags</th>
                             <th align="center" class="thead-secondary">Usability</th>
+                            <th align="center" class="thead-secondary">Edit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,7 +138,11 @@
                                     <td class="scoreboard-score">@item.Score</td>
                                     <td class="scoreboard-flags">@item.Usability</td>
                                     <td class="scoreboard-usability">@item.Flags</td>
-
+                                    <td align="left" class="scoreboard-usability">
+                                        <div class="btn-group" role="group">
+                                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        </div>
+                                    </td>
                                 </tr>
                                 ++iter;
                             }
