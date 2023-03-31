@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS restore-src
 WORKDIR /app
 COPY ./src/CySim.csproj .
 # COPY ./src/CySim.sln .
-RUN dotnet restore CySim.csproj 
+RUN dotnet restore CySim.csproj -v d 
 
 
 FROM restore-src AS clone-src
@@ -16,13 +16,13 @@ FROM clone-src AS migrate-src
 WORKDIR /app
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
-RUN dotnet ef migrations add DockerInit
+RUN dotnet ef migrations add DockerInit -v
 
 
 # Build CySim project
 FROM migrate-src AS build-src
 WORKDIR /app
-RUN dotnet publish CySim.csproj -c Debug -o out
+RUN dotnet publish CySim.csproj -v d -c Debug -o out
 
 
 # Running web server

@@ -3,8 +3,16 @@
 .env
 Dockerfile
 docker-compose.yml
-docker-compose.tests.yml
+docker-compose.dotnet-tests.yml
+docker-compose.integration-tests.yml
 
 # Ingore Migrations when copying
-Migrations
+src/Migrations
+
+# Ignore obj and bin
+src/obj
+src/bin
+tests/obj
+tests/bin
+
 
