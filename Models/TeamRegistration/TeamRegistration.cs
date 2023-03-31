@@ -24,6 +24,8 @@ namespace CySim.Models.TeamRegistration
 
         public string TeamCreator { get; set; }
 
+        public bool IsRed { get; set; }
+
         [MaxLength(50)]
         public string User1 { get; set; }
 
