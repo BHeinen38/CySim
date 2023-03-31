@@ -51,7 +51,7 @@
                 }
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
-                    @if (item.isRed && !item.isGameType)
+                    @if (!item.isRed && !item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
@@ -129,7 +129,7 @@
                 }
                 @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
                 {
-                    @if (item.isRed && item.isGameType)
+                    @if (!item.isRed && item.isGameType)
                     {
                         <tr>
                             <td colspan="2">
