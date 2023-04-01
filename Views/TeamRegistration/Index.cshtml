@@ -39,6 +39,8 @@
         <a class="btn btn-info" asp-action="Create">Register or Add a Team <i class="fa-solid fa-bicycle"></i></a>
     </div>
     <br />
+    <br />
+    <br />
     <div class="col-12">
         @if (User.IsInRole("Red Team") || User.IsInRole("Blue Team"))
         {
@@ -139,9 +141,9 @@
         }
         @if (User.IsInRole("Admin"))
         {
-            <h4>Red Team Table</h4>
+            <h4 class="text-danger">Red Team Table</h4>
             <table class="table table-striped border">
-                <tr class="table-info">
+                <tr class="table-danger">
                     <th colspan="2">
                         @Html.DisplayNameFor(m => m.FilePath)
                     </th>
@@ -193,9 +195,11 @@
                     }
                 }
             </table>
-            <h4>Blue Team Table</h4>
+            <br />
+            <br />
+            <h4 class="text-primary">Blue Team Table</h4>
             <table class="table table-striped border">
-                <tr class="table-info">
+                <tr class="table-primary">
                     <th colspan="2">
                         @Html.DisplayNameFor(m => m.FilePath)
                     </th>

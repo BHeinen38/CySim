@@ -3,87 +3,128 @@
 @inject SignInManager<IdentityUser> signInManager
 
 @{
-    ViewData["Title"] = "Scenario Page";
+    ViewData["Title"] = "Scenario Documents";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @if (signInManager.IsSignedIn(User))
 {
     <div class="row">
-        <div class="col-6">
-            <h2 class="text-info">Access the sceanrios here</h2>
+        <div class="col-6 mb-4">
+            <h2 class="text">Access CySim's Scenario Documents</h2>
         </div>
-        <br />
-        <div class="col-12">
-            @if (User.IsInRole("Admin"))
-            {
-                <div align="right" class="col-6">
-                    <a class="btn btn-info" asp-action="Create">Add a Scanario<i class="fa-solid fa-bicycle"></i></a>
-                </div>
-                <br>
-            }
-            <table class="table table-striped border">
-                <tr class="table-info">
-                    <th colspan="2">
-                        @Html.DisplayNameFor(m => m.FileName)
+        <br>
 
-                    </th>
-                    <th colspan="2">
-                        @Html.DisplayNameFor(m => m.Description)
-                    </th>
-                </tr>
-                @if (User.IsInRole("Red Team"))
-                {
+        @if (User.IsInRole("Admin"))
+        {
+            <div align="left" class="col-6 mb-4">
+                <a class="btn btn-primary" asp-action="Create">Add a Scanario Document<i class="fa-solid fa-bicycle"></i></a>
+            </div>
+        }
+
+        <div class="col-12">
+            @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
+            {
+                <div class="col-6">
+                    <h4 class="text-danger">Red Team Scenario Documents</h4>
+                </div>
+                <table class="table table-striped border">
+                    <tr class="table-danger">
+                        <th class="col-3">
+                            @Html.DisplayNameFor(m => m.FileName)
+
+                        </th>
+                        <th class="col-6">
+                            @Html.DisplayNameFor(m => m.Description)
+                        </th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="col-1">
+                                Actions
+                            </th>
+                        }
+                    </tr>
                     @foreach (var item in Model)
                     {
                         @if (item.isRed)
                         {
                             <tr>
-                                <td colspan="2">
+                                <td class="col-3">
                                     <a href="@item.FilePath">@item.FileName</a>
                                 </td>
-                                <td colspan="2">
+                                <td class="col-6">
                                     @Html.DisplayFor(w => item.Description)
                                 </td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td class="col-1">
+                                        <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="bi bi-pencil-square">Edit</i>
+                                        </a>
+                                        <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario document?")'>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash"></i>Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                }
                             </tr>
                         }
                     }
-                }
-                @if (User.IsInRole("Blue Team"))
-                {
+                </table>
+                <br>
+            }
+
+            @if (User.IsInRole("Blue Team") || User.IsInRole("Admin"))
+            {
+                <div class="col-6">
+                    <h4 class="text-primary">Blue Team Scenario Documents</h4>
+                </div>
+                <table class="table table-striped border">
+                    <tr class="table-primary">
+                        <th class="col-3">
+                            @Html.DisplayNameFor(m => m.FileName)
+
+                        </th>
+                        <th class="col-6">
+                            @Html.DisplayNameFor(m => m.Description)
+                        </th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="col-1">
+                                Actions
+                            </th>
+                        }
+                    </tr>
                     @foreach (var item in Model)
                     {
                         @if (!item.isRed)
                         {
                             <tr>
-                                <td colspan="2">
+                                <td class="col-3">
                                     <a href="@item.FilePath">@item.FileName</a>
                                 </td>
-                                <td colspan="2">
+                                <td class="col-6">
                                     @Html.DisplayFor(w => item.Description)
                                 </td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td class="col-1">
+                                        <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="bi bi-pencil-square">Edit</i>
+                                        </a>
+                                        <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName scenario?")'>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-trash"></i>Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                }
                             </tr>
                         }
                     }
-                }
-                @if (User.IsInRole("Admin"))
-                {
-                    @foreach (var item in Model)
-                    {
-
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-
-                    }
-                }
-
-            </table>
+                </table>
+            }
 
         </div>
     </div>
