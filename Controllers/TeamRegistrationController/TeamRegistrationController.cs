@@ -147,6 +147,15 @@ namespace CySim.Controllers.TeamRegistrationController
             if (ModelState.IsValid)
             {
                 teamRegistration.TeamName = registration.TeamName;
+                teamRegistration.User1 = registration.User1;
+                teamRegistration.User2 = registration.User2;
+                teamRegistration.User3 = registration.User3;
+                teamRegistration.User4 = registration.User4;
+                teamRegistration.User5 = registration.User5;
+                teamRegistration.User6 = registration.User6;
+                teamRegistration.IsRed = registration.IsRed;
+
+                //We will need to update our available spots from edit
                 _context.Update(teamRegistration);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
