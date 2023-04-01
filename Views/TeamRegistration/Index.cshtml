@@ -54,10 +54,7 @@
                         @Html.DisplayNameFor(m => m.SpotsTaken)
                     </th>
                     <th colspan="2">
-                        Join Team
-                    </th>
-                    <th align="right">
-                        Edit/Delete
+                        Controls
                     </th>
                 </tr>
                 @foreach (var item in Model)
@@ -79,32 +76,32 @@
                                 @Html.DisplayFor(w => item.SpotsTaken)
                             </td>
                             @*<partial name="_TableButtonPartial" model="item.Id" />*@
-                            <td colspan="2">
-                                <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i></a>
-                                </div>
-                            </td>
 
+                            <td colspan="2">
+                            <div class="btn-group" role="group">
+                                <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
+                            </div>
                             @if (item.TeamCreator == User.Identity.Name)
-                            {
-                                <td align="left" colspan="2">
-                                    <div class="btn-group" role="group">
-                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
+                             {
+                                <div class="btn-group" role="group">
+                                    <div>
+                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
                                         @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                    </div>
+                                    <div>
                                         <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
+                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
                                         </form>
                                     </div>
-                                </td>
-                            }
+                                </div>
+                             }
+                            </td>
                         </tr>
                     }
                     @if (!item.IsRed && User.IsInRole("Blue Team"))
                     {
                         <tr>
-                            @*<td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>*@
+                           
                             <td class="scoreboard-team-logo">
                                 <img class="scoreboard-team-logo"
                                      src="@item.FilePath" height="100" width="100">
@@ -118,22 +115,23 @@
                             @*<partial name="_TableButtonPartial" model="item.Id" />*@
                             <td colspan="2">
                                 <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i></a>
+                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
                                 </div>
-                            </td>
-
-                            @if (item.TeamCreator == User.Identity.Name)
-                            {
-                                <td align="left" colspan="2">
+                                @if (item.TeamCreator == User.Identity.Name)
+                                {
                                     <div class="btn-group" role="group">
-                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
-                                        <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
-                                        </form>
+                                        <div>
+                                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                            @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                        </div>
+                                        <div>
+                                            <form method="post" action="Delete">
+                                                <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </td>
-                            }
+                                }
+                            </td>
                         </tr>
                     }
                 }
@@ -154,7 +152,7 @@
                         @Html.DisplayNameFor(m => m.SpotsTaken)
                     </th>
                     <th align="right">
-                        Edit/Delete
+                        Controls
                     </th>
                 </tr>
                 @foreach (var item in Model)
@@ -179,11 +177,15 @@
 
                             <td align="left" colspan="2">
                                 <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
-                                    @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
-                                    <form method="post" action="Delete">
-                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
-                                    </form>
+                                    <div>
+                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                        @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                    </div>
+                                    <div>
+                                        <form method="post" action="Delete">
+                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
 
@@ -230,11 +232,15 @@
 
                             <td align="left" colspan="2">
                                 <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i></a>
-                                    @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
-                                    <form method="post" action="Delete">
-                                        <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i> </button>
-                                    </form>
+                                    <div>
+                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                        @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                    </div>
+                                    <div>
+                                        <form method="post" action="Delete">
+                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
 

@@ -73,7 +73,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 fileName = file.FileName;
 
 
-            if (_context.TeamRegistrations.Any(x => x.FileName == fileName))
+            if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != "DefaultImage.png")
             {
                 ViewData["errors"] = "Sorry this file name already exist";
                 return View();
