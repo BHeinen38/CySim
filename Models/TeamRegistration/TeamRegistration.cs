@@ -17,8 +17,9 @@ namespace CySim.Models.TeamRegistration
         [Display(Name ="Team Name")]
         public string TeamName { get; set; }
 
-        [Display(Name ="Spots Taken")]
-        public int SpotsTaken { get; set; }
+        [Display(Name = "Available Spots")]
+        [DefaultValue(6)]
+        public int AvailSpots { get; set; }
 
         public string TeamCreator { get; set; }
 

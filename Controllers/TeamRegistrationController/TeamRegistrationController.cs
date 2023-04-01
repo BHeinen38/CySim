@@ -99,6 +99,8 @@ namespace CySim.Controllers.TeamRegistrationController
             registration.FilePath = Path.Combine("Documents/Images", fileName);
             registration.IsRed = teamRegistration.IsRed;
             registration.TeamName = teamRegistration.TeamName;
+            registration.AvailSpots = 6;
+            
 
             if (ModelState.IsValid)
             {
@@ -201,7 +203,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User1 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 
@@ -211,7 +213,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User2 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 
@@ -221,7 +223,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User3 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 
@@ -231,7 +233,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User4 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 
@@ -241,7 +243,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User5 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 
@@ -251,7 +253,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
                     registration.User6 = name;
-                    registration.SpotsTaken++;
+                    registration.AvailSpots--;
                     _context.Update(registration);
                     _context.SaveChanges();
 

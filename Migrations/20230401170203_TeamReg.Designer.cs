@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CySim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230331204358_UpdateTeamReg3")]
-    partial class UpdateTeamReg3
+    [Migration("20230401170203_TeamReg")]
+    partial class TeamReg
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,13 @@ namespace CySim.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AvailSpots")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(512)")
                         .HasMaxLength(512);
@@ -98,9 +105,6 @@ namespace CySim.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SpotsTaken")
                         .HasColumnType("int");
 
                     b.Property<string>("TeamCreator")

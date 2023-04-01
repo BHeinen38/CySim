@@ -85,6 +85,9 @@ namespace CySim.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AvailSpots")
+                        .HasColumnType("int");
+
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
@@ -100,9 +103,6 @@ namespace CySim.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SpotsTaken")
                         .HasColumnType("int");
 
                     b.Property<string>("TeamCreator")
