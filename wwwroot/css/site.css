@@ -78,17 +78,10 @@ body {
 /*this is the start of the scoreboard*/
 
 
-article {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 8;
-}
-
 
 
 table {
-    min-width: 320px;
+    min-width: 100%;
     border-collapse: collapse;
     white-space: nowrap;
 }
@@ -112,10 +105,6 @@ table, th, td {
 }
 
 
-.article {
-    background-color: aliceblue;
-    text-align: center;
-}
 
 .footer {
     width: 100%;
@@ -152,7 +141,7 @@ table, th, td {
 }
 
 img.scoreboard-team-logo {
-    width: 125pt;
+    width: 100pt;
     padding-right: 0.5em;
     padding-left: 0.5em;
 }

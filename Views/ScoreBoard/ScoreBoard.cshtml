@@ -7,87 +7,34 @@
     <header>
         <br />
     </header>
-    <article>
-        <div class="col-md-10 col-centered">
-            @if (User.IsInRole("Red Team") || User.IsInRole("Blue Team"))
+        <div class="col-md-20 col-centered">
+            @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
             {
-                <table class="col-md-10 col-centered">
+                <h2 class="text-danger">Red Team Scoreboard</h2>
+                <table class="col-md-20 col-centered">
                     <thead>
-                        <tr>
-                            <th align="center">Placement</th>
+                        <tr class="table-danger">
+                            <th align="center" class="thead-secondary">Placement</th>
                             <th align="center" class="thead-secondary">Profile Picture</th>
                             <th align="center" class="thead-secondary">Team Name</th>
                             <th align="center" class="thead-secondary">Score</th>
                             <th align="center" class="thead-secondary">Flags</th>
                             <th align="center" class="thead-secondary">Usability</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th align="center" class="thead-secondary">Edit</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
                         @{int iter = 1; }
-                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
-                        {
-                            @if (User.IsInRole("Red Team") && item.IsRed)
-                            {
-                                <tr>
-                                    <td class="scoreboard-ranking">@(iter)</td>
-
-                                    <td class="scoreboard-team-logo">
-                                        <img class="scoreboard-team-logo"
-                                             src="~/@item.FilePath" height="100" width="100">
-                                    </td>
-                                    <td class="scoreboard-team">@item.TeamName</td>
-                                    <td class="scoreboard-score">@item.Score</td>
-                                    <td class="scoreboard-flags">@item.Usability</td>
-                                    <td class="scoreboard-usability">@item.Flags</td>
-
-                                </tr>
-                                ++iter;
-                            }
-                            @if (User.IsInRole("Blue Team") && !item.IsRed)
-                            {
-                                <tr>
-                                    <td class="scoreboard-ranking">@(iter)</td>
-
-                                    <td class="scoreboard-team-logo">
-                                        <img class="scoreboard-team-logo"
-                                             src="~/@item.FilePath" height="100" width="100">
-                                    </td>
-                                    <td class="scoreboard-team">@item.TeamName</td>
-                                    <td class="scoreboard-score">@item.Score</td>
-                                    <td class="scoreboard-flags">@item.Usability</td>
-                                    <td class="scoreboard-usability">@item.Flags</td>
-
-                                </tr>
-                                ++iter;
-                            }
-                        }
-                    </tbody>
-                </table>
-            }
-
-            @if (User.IsInRole("Admin"))
-            {
-                <h4 class="text-danger">Red Team Scoreboard</h4>
-                <table class="col-md-10 col-centered">
-                    <thead>
-                        <tr>
-                            <th align="center">Placement</th>
-                            <th align="center" class="thead-secondary">Profile Picture</th>
-                            <th align="center" class="thead-secondary">Team Name</th>
-                            <th align="center" class="thead-secondary">Score</th>
-                            <th align="center" class="thead-secondary">Flags</th>
-                            <th align="center" class="thead-secondary">Usability</th>
-                            <th align="center" class="thead-secondary">Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{int iter = 1; }
-                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        @foreach (var item in Model)
                         {
                             @if (item.IsRed)
                             {
                                 <tr>
                                     <td class="scoreboard-ranking">@(iter)</td>
+
                                     <td class="scoreboard-team-logo">
                                         <img class="scoreboard-team-logo"
                                              src="~/@item.FilePath" height="100" width="100">
@@ -96,11 +43,14 @@
                                     <td class="scoreboard-score">@item.Score</td>
                                     <td class="scoreboard-flags">@item.Usability</td>
                                     <td class="scoreboard-usability">@item.Flags</td>
-                                    <td align="left" class="scoreboard-usability">
-                                        <div class="btn-group" role="group">
-                                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                        </div>
-                                    </td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td align="left" class="scoreboard-usability">
+                                            <div class="btn-group" role="group">
+                                                <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                                 ++iter;
                             }
@@ -108,28 +58,38 @@
                     </tbody>
                 </table>
                 <br />
+            }
+            @if (User.IsInRole("Admin"))
+            {
                 <br />
-                <h4 class="text-primary">Blue Team Scoreboard</h4>
-                <table class="col-md-10 col-centered">
+            }
+            @if (User.IsInRole("Blue Team") || User.IsInRole("Admin"))
+            {
+                <h2 class="text-primary">Blue Team Scoreboard</h2>
+                <table class="col-md-20 col-centered">
                     <thead>
-                        <tr>
-                            <th align="center">Placement</th>
+                        <tr class="table-primary">
+                            <th align="center" class="thead-secondary">Placement</th>
                             <th align="center" class="thead-secondary">Profile Picture</th>
                             <th align="center" class="thead-secondary">Team Name</th>
                             <th align="center" class="thead-secondary">Score</th>
                             <th align="center" class="thead-secondary">Flags</th>
                             <th align="center" class="thead-secondary">Usability</th>
-                            <th align="center" class="thead-secondary">Edit</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th align="center" class="thead-secondary">Edit</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
-                        @{iter = 1; }
-                        @foreach (var item in Model)@* Right now this will print out 5 team fox placeholder rankings needs to become a for each loop*@
+                        @{int iter = 1; }
+                        @foreach (var item in Model)
                         {
                             @if (!item.IsRed)
                             {
                                 <tr>
                                     <td class="scoreboard-ranking">@(iter)</td>
+
                                     <td class="scoreboard-team-logo">
                                         <img class="scoreboard-team-logo"
                                              src="~/@item.FilePath" height="100" width="100">
@@ -138,26 +98,21 @@
                                     <td class="scoreboard-score">@item.Score</td>
                                     <td class="scoreboard-flags">@item.Usability</td>
                                     <td class="scoreboard-usability">@item.Flags</td>
-                                    <td align="left" class="scoreboard-usability">
-                                        <div class="btn-group" role="group">
-                                            <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                        </div>
-                                    </td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td align="left" class="scoreboard-usability">
+                                            <div class="btn-group" role="group">
+                                                <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Edit", new { id = item.Id })"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                            </div>
+                                        </td>
+                                    }
                                 </tr>
                                 ++iter;
                             }
                         }
                     </tbody>
                 </table>
+                <br />
             }
-            <br />
         </div>
-    </article>
 </div>
-
-
-
-@*<td class="scoreboard-team-logo">
-        <img class="scoreboard-team-logo"
-             src="https://www.dropbox.com/s/4ib10cmlh0cden6/foxIcon.jpg?dl=1" alt="Team Foxes" height="100" width="100">
-    </td>*@
