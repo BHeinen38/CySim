@@ -97,10 +97,21 @@ namespace CySim.Controllers.TeamRegistrationController
 
             registration.FileName = fileName;
             registration.FilePath = Path.Combine("Documents/Images", fileName);
-            registration.IsRed = teamRegistration.IsRed;
             registration.TeamName = teamRegistration.TeamName;
             registration.AvailSpots = 6;
-            
+
+            if (User.IsInRole("Admin"))
+            {
+                registration.IsRed = teamRegistration.IsRed;
+            }
+            if(User.IsInRole("Blue Team"))
+            {
+                registration.IsRed = false;
+            }
+            if (User.IsInRole("Red Team"))
+            {
+                registration.IsRed = true;
+            }
 
             if (ModelState.IsValid)
             {
