@@ -12,6 +12,7 @@ using CySim.Models.TeamRegistration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -144,12 +145,109 @@ namespace CySim.Controllers.TeamRegistrationController
             if (ModelState.IsValid)
             {
                 teamRegistration.TeamName = registration.TeamName;
-                teamRegistration.User1 = registration.User1;
-                teamRegistration.User2 = registration.User2;
-                teamRegistration.User3 = registration.User3;
-                teamRegistration.User4 = registration.User4;
-                teamRegistration.User5 = registration.User5;
-                teamRegistration.User6 = registration.User6;
+
+                if(teamRegistration.User1 != registration.User1)
+                {
+                    if(AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User1 = registration.User1;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User1 = registration.User1;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                if(teamRegistration.User2 != registration.User2)
+                {
+                    if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User2 = registration.User2;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User2 = registration.User2;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                if (teamRegistration.User3 != registration.User3)
+                {
+                    if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User3 = registration.User3;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User3 = registration.User3;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                if (teamRegistration.User4 != registration.User4)
+                {
+                    if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User4 = registration.User4;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User4 = registration.User4;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                if (teamRegistration.User5 != registration.User5)
+                {
+                    if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User5 = registration.User5;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User5 = registration.User5;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                if (teamRegistration.User6 != registration.User6)
+                {
+                    if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == 1)
+                    {
+                        teamRegistration.User6 = registration.User6;
+                        teamRegistration.AvailSpots++;
+                    }
+                    else if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == -1)
+                    {
+                        teamRegistration.User6 = registration.User6;
+                        teamRegistration.AvailSpots--;
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
                 if (User.IsInRole("Admin"))
                 {
                     registration.IsRed = teamRegistration.IsRed;
@@ -289,6 +387,59 @@ namespace CySim.Controllers.TeamRegistrationController
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private string FindUser (string Email)
+        {
+            string connectionString = "Server=localhost;Database=CySim;User Id=sa;Password=cpre491p@ssword;Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False";
+            string returnUser = null;
+            if(Email != null)
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("", connection))
+                    {
+                        command.CommandText = "SELECT * FROM [CySim].[dbo].[AspNetUsers] WHERE Email=@Email";
+                        command.Parameters.AddWithValue("@Email", Email);
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            returnUser = reader["Email"].ToString();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+                
+            return returnUser;
+        }
+        private int AddOrDenyUser(string oldUser, string newUser, string teamName)
+        {
+            int userInt = -1;
+            var user = FindUser(newUser);
+            if (newUser == null)
+            {
+                _logger.LogInformation("User {user} has succesfully been removed from the team named {teamName}", user, teamName);
+                userInt = 1;
+                return userInt;
+                
+            }
+            else
+            {
+                if (user == null)
+                {
+                    _logger.LogError("Sorry that user does not exist");
+                    userInt = 0;
+                    return userInt;
+                }
+                else
+                {
+                    _logger.LogInformation("User {user} has succesfully joined the team named {teamName}", user, teamName);
+                    userInt = -1;
+                    return userInt;
+                }
+            }
         }
     }
 }
