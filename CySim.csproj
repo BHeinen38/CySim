@@ -9,23 +9,19 @@
     <None Remove="Microsoft.EntityFrameworkCore" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
-    <None Remove="Data\Migrations\" />
     <None Remove="Controllers\BaseController\" />
-    <None Remove="Models\ScoreBoardModels\" />
     <None Remove="Controllers\ScoreBoardController\" />
     <None Remove="Views\ScoreBoard\" />
     <None Remove="Models\TeamRegistration\" />
     <None Remove="Views\TeamRegistration\" />
     <None Remove="Views\Tutorial\" />
     <None Remove="Models\Tutorial\" />
-    <None Remove="Extensions\" />
     <None Remove="Views\Machine\" />
     <None Remove="Controllers\ScenarioController\" />
     <None Remove="Views\Scenario\" />
     <None Remove="Views\MachineInfo\" />
     <None Remove="Models\Scenario\" />
     <None Remove="Views\MachineStatus\" />
-    <None Remove="Services\" />
     <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
@@ -50,16 +46,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="Controllers\BaseController\" />
-    <Folder Include="Models\ScoreBoardModels\" />
     <Folder Include="Controllers\ScoreBoardController\" />
     <Folder Include="Views\ScoreBoard\" />
     <Folder Include="Models\TeamRegistration\" />
     <Folder Include="Views\TeamRegistration\" />
     <Folder Include="Views\Tutorial\" />
     <Folder Include="Models\Tutorial\" />
-    <Folder Include="Extensions\" />
     <Folder Include="wwwroot\Documents\" />
     <Folder Include="Views\Machine\" />
     <Folder Include="Controllers\ScenarioController\" />
@@ -70,7 +63,6 @@
     <Folder Include="wwwroot\Documents\Scenario\" />
     <Folder Include="Models\Scenario\" />
     <Folder Include="Views\MachineStatus\" />
-    <Folder Include="Services\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>

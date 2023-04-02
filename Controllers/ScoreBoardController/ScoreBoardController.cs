@@ -8,8 +8,8 @@ using CySim.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using CySim.Models.ScoreBoardModels;
 using CySim.Models.TeamRegistration;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,6 +33,7 @@ namespace CySim.Controllers.ScoreBoardController
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -46,6 +47,7 @@ namespace CySim.Controllers.ScoreBoardController
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(TeamRegistration registration)
         {
             var teamRegistration = _context.TeamRegistrations.Find(registration.Id);
@@ -57,8 +59,6 @@ namespace CySim.Controllers.ScoreBoardController
             _context.Update(teamRegistration);
             _context.SaveChanges();
             return RedirectToAction(nameof(ScoreBoard));
-            
-           
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

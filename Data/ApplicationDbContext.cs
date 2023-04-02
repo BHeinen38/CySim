@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using CySim.Models;
-using CySim.Models.ScoreBoardModels;
 using CySim.Models.TeamRegistration;
 using CySim.Models.Scenario;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -21,21 +20,19 @@ namespace CySim.Data
         //this is not being used at the moment but we might extend Identity user so this is what will do that.
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-        public DbSet<ScoreBoard> ScoreBoards { get; set; }
-
         public DbSet<Scenario> Scenarios { get; set; }
 
         public DbSet<TeamRegistration> TeamRegistrations { get; set; }
 
         public DbSet<Tutorial> Tutorials { get; set; }
 
-        public IEnumerable<ScoreBoard> Leaders()
+        public IEnumerable<TeamRegistration> Leaders()
         {
-            return ScoreBoards.OrderByDescending(x => x.Score);
+            return TeamRegistrations.OrderByDescending(x => x.Score);
         }
-        public IEnumerable<ScoreBoard> Leaders(int count)
+        public IEnumerable<TeamRegistration> Leaders(int count)
         {
-            return ScoreBoards.OrderByDescending(x => x.Score).Take(count);
+            return TeamRegistrations.OrderByDescending(x => x.Score).Take(count);
         }
     }
 }

@@ -47,20 +47,6 @@ namespace CySim.Controllers.TeamRegistrationController
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Create(TeamRegistration teamRegistration)
-        //{
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        teamRegistration.TeamCreator = User.Identity.Name;
-        //        _context.Add(teamRegistration);
-        //        _context.SaveChanges();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(teamRegistration);
-        //}
-
         [HttpPost]
         public IActionResult Create(TeamRegistration teamRegistration, IFormFile file)
         {
@@ -164,7 +150,18 @@ namespace CySim.Controllers.TeamRegistrationController
                 teamRegistration.User4 = registration.User4;
                 teamRegistration.User5 = registration.User5;
                 teamRegistration.User6 = registration.User6;
-                teamRegistration.IsRed = registration.IsRed;
+                if (User.IsInRole("Admin"))
+                {
+                    registration.IsRed = teamRegistration.IsRed;
+                }
+                if (User.IsInRole("Blue Team"))
+                {
+                    registration.IsRed = false;
+                }
+                if (User.IsInRole("Red Team"))
+                {
+                    registration.IsRed = true;
+                }
 
                 //We will need to update our available spots from edit
                 _context.Update(teamRegistration);
@@ -193,8 +190,6 @@ namespace CySim.Controllers.TeamRegistrationController
         [HttpPost]
         public IActionResult Join(TeamRegistration teamRegistration)
         {
-            //if (_vroomDbContext.Makes.Where(x => x.Name == make.Name).Any())
-            //    throw new Exception("Sorry this username already exist"); //this is where you will want to implement you username already exist
             if (ModelState.IsValid)
             {
                 var name = User.Identity.Name;
@@ -216,12 +211,12 @@ namespace CySim.Controllers.TeamRegistrationController
                 if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||
                     name == registration.User5 || name == registration.User6)
                 {
-                    _logger.LogInformation(name + " is already in " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " is already in " + registration.TeamName);
                     return RedirectToAction(nameof(Index));
                 }
                 else if (registration.User1 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User1 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
@@ -231,7 +226,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 }
                 else if (registration.User2 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User2 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
@@ -241,7 +236,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 }
                 else if (registration.User3 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User3 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
@@ -251,7 +246,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 }
                 else if (registration.User4 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User4 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
@@ -261,7 +256,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 }
                 else if (registration.User5 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User5 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
@@ -271,7 +266,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 }
                 else if (registration.User6 == null)
                 {
-                    _logger.LogInformation(name + " just joined the team " + teamRegistration.TeamName);
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     registration.User6 = name;
                     registration.AvailSpots--;
                     _context.Update(registration);
