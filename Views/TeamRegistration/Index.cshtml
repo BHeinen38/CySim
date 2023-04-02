@@ -32,136 +32,17 @@
 <br />
 
 <div class="row">
-    <div class="col-6">
-        <h2 class="text-info">Register For a Team here</h2>
+    @*<div align="right">
+        <h2>Register For a Team here</h2>
+    </div>*@
+    <div align="right">
+        <a class="btn btn-info" asp-action="Create">Add a New Team<i class="fa-solid fa-bicycle"></i></a>
     </div>
-    <div align="right" class="col-6">
-        <a class="btn btn-info" asp-action="Create">Register or Add a Team <i class="fa-solid fa-bicycle"></i></a>
-    </div>
-    <br />
-    <br />
     <br />
     <div class="col-12">
-        @if (User.IsInRole("Red Team") || User.IsInRole("Blue Team"))
+        @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
         {
-            <table class="table table-striped border">
-                <tr class="table-info">
-                    <th colspan="2">
-                        @Html.DisplayNameFor(m => m.FilePath)
-                    </th>
-                    <th colspan="2">
-                        @Html.DisplayNameFor(m => m.TeamName)
-                    </th>
-                    <th colspan="2">
-                        @Html.DisplayNameFor(m => m.AvailSpots)
-                    </th>
-                    <th colspan="2">
-                        Users
-                    </th>
-                    <th colspan="2">
-                        Controls
-                    </th>
-                </tr>
-                @foreach (var item in Model)
-                {
-                    @if (item.IsRed && User.IsInRole("Red Team"))
-                    {
-                        <tr>
-                            @*<td colspan="2">
-            <a href="@item.FilePath">@item.FileName</a>
-        </td>*@
-                            <td class="scoreboard-team-logo">
-                                <img class="scoreboard-team-logo"
-                                     src="@item.FilePath" height="100" width="100">
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.TeamName)
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.AvailSpots)
-                            </td>
-                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
-                        <td colspan="2">
-                            @Html.DisplayFor(w => item.User1)
-                            @Html.DisplayFor(w => item.User2)<br />
-                            @Html.DisplayFor(w => item.User3)
-                            @Html.DisplayFor(w => item.User4)<br />
-                            @Html.DisplayFor(w => item.User5)
-                            @Html.DisplayFor(w => item.User6)
-                        </td>
-                            <td colspan="2">
-                                <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
-                                </div>
-                                @if (item.TeamCreator == User.Identity.Name)
-                                {
-                                    <div class="btn-group" role="group">
-                                        <div>
-                                            <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                            @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
-                                        </div>
-                                        <div>
-                                            <form method="post" action="Delete">
-                                                <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    @if (!item.IsRed && User.IsInRole("Blue Team"))
-                    {
-                        <tr>
-
-                            <td class="scoreboard-team-logo">
-                                <img class="scoreboard-team-logo"
-                                     src="@item.FilePath" height="100" width="100">
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.TeamName)
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.AvailSpots)
-                            </td>
-                            <td colspan="2">
-                                
-                                    @Html.DisplayFor(w => item.User1)
-                                    @Html.DisplayFor(w => item.User2)<br />
-                                    @Html.DisplayFor(w => item.User3)
-                                    @Html.DisplayFor(w => item.User4)<br />
-                                    @Html.DisplayFor(w => item.User5)
-                                    @Html.DisplayFor(w => item.User6)
-                                
-                            </td>
-                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
-                            <td colspan="2">
-                                <div class="btn-group" role="group">
-                                    <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
-                                </div>
-                                @if (item.TeamCreator == User.Identity.Name)
-                                {
-                                    <div class="btn-group" role="group">
-                                        <div>
-                                            <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                            @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
-                                        </div>
-                                        <div>
-                                            <form method="post" action="Delete">
-                                                <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                }
-                            </td>
-                        </tr>
-                    }
-                }
-            </table>
-        }
-        @if (User.IsInRole("Admin"))
-        {
-            <h4 class="text-danger">Red Team Table</h4>
+            <h4 class="text-danger">Red Teams</h4>
             <table class="table table-striped border">
                 <tr class="table-danger">
                     <th colspan="2">
@@ -185,9 +66,6 @@
                     @if (item.IsRed)
                     {
                         <tr>
-                            @*<td colspan="2">
-                            <a href="@item.FilePath">@item.FileName</a>
-                             </td>*@
                             <td class="scoreboard-team-logo">
                                 <img class="scoreboard-team-logo"
                                      src="@item.FilePath" height="100" width="100">
@@ -198,6 +76,7 @@
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.AvailSpots)
                             </td>
+                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.User1)
                                 @Html.DisplayFor(w => item.User2)<br />
@@ -206,29 +85,39 @@
                                 @Html.DisplayFor(w => item.User5)
                                 @Html.DisplayFor(w => item.User6)
                             </td>
-                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
-
-                            <td align="left" colspan="2">
-                                <div class="btn-group" role="group">
-                                    <div>
-                                        <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                        @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                            <td colspan="2">
+                                @if (User.IsInRole("Red Team"))
+                                {
+                                    <div class="btn-group" role="group">
+                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
                                     </div>
-                                    <div>
-                                        <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
-                                        </form>
+                                }
+                                @if (item.TeamCreator == User.Identity.Name || User.IsInRole("Admin"))
+                                {
+                                    <div class="btn-group" role="group">
+                                        <div>
+                                            <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                            @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                        </div>
+                                        <div>
+                                            <form method="post" action="Delete">
+                                                <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </td>
-
                         </tr>
                     }
+
                 }
             </table>
-            <br />
-            <br />
-            <h4 class="text-primary">Blue Team Table</h4>
+        }
+    </div>
+    <div class="col-12">
+        @if (User.IsInRole("Blue Team") || User.IsInRole("Admin"))
+        {
+            <h4 class="text-primary">Blue Teams</h4>
             <table class="table table-striped border">
                 <tr class="table-primary">
                     <th colspan="2">
@@ -252,10 +141,6 @@
                     @if (!item.IsRed)
                     {
                         <tr>
-                            @*<td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                             </td>*@
-
                             <td class="scoreboard-team-logo">
                                 <img class="scoreboard-team-logo"
                                      src="@item.FilePath" height="100" width="100">
@@ -266,6 +151,7 @@
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.AvailSpots)
                             </td>
+                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
                             <td colspan="2">
                                 @Html.DisplayFor(w => item.User1)
                                 @Html.DisplayFor(w => item.User2)<br />
@@ -274,24 +160,31 @@
                                 @Html.DisplayFor(w => item.User5)
                                 @Html.DisplayFor(w => item.User6)
                             </td>
-                            @*<partial name="_TableButtonPartial" model="item.Id" />*@
-
-                            <td align="left" colspan="2">
-                                <div class="btn-group" role="group">
-                                    <div>
-                                        <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
-                                        @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                            <td colspan="2">
+                                @if (User.IsInRole("Blue Team"))
+                                {
+                                    <div class="btn-group" role="group">
+                                        <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
                                     </div>
-                                    <div>
-                                        <form method="post" action="Delete">
-                                            <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
-                                        </form>
+                                }
+                                @if (item.TeamCreator == User.Identity.Name || User.IsInRole("Admin"))
+                                {
+                                    <div class="btn-group" role="group">
+                                        <div>
+                                            <a type="button" class="btn btn-primary rounded-true" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                                            @*<a type="button" class="btn btn-primary" href="@Url.Action("Delete", new { id = item.Id})">Delete</a>*@
+                                        </div>
+                                        <div>
+                                            <form method="post" action="Delete">
+                                                <button onclick="if (!confirm('Are you sure you want to delete this?')){ return false }" type="submit" class="btn btn-danger rounded-true" asp-action="Delete" asp-route-id="@item.Id"> <i class="fa-solid fa-trash"></i>Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </td>
-
                         </tr>
                     }
+
                 }
             </table>
         }
