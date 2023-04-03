@@ -23,6 +23,7 @@
     <None Remove="Models\Scenario\" />
     <None Remove="Views\MachineStatus\" />
     <None Remove="Migrations\" />
+    <None Remove="HelperFunctions\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
@@ -64,6 +65,7 @@
     <Folder Include="Models\Scenario\" />
     <Folder Include="Views\MachineStatus\" />
     <Folder Include="Migrations\" />
+    <Folder Include="HelperFunctions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Documents\" />

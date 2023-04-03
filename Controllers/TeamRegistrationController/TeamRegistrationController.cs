@@ -140,125 +140,38 @@ namespace CySim.Controllers.TeamRegistrationController
         [HttpPost]
         public IActionResult Edit(TeamRegistration registration)
         {
-            var teamRegistration = _context.TeamRegistrations.Find(registration.Id);
+            var startRegistration = _context.TeamRegistrations.Find(registration.Id);
 
             if (ModelState.IsValid)
             {
-                teamRegistration.TeamName = registration.TeamName;
+                var teamRegistration = CySim.HelperFunctions.TeamRegistrationHelper.GetEditTeamRegistration(registration, startRegistration);
 
-                if(teamRegistration.User1 != registration.User1)
+                if (teamRegistration.User1 == "There is no user in database" || teamRegistration.User2 == "There is no user in database" || teamRegistration.User3 == "There is no user in database"
+                    || teamRegistration.User4 == "There is no user in database" || teamRegistration.User5 == "There is no user in database" || teamRegistration.User6 == "There is no user in database")
                 {
-                    if(AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User1 = registration.User1;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User1 = registration.User1;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
+                    //this is where we will need to add a error page showing that the User does not exist
+                    _logger.LogInformation("There is no user of this type username in the database");
+                    return RedirectToAction(nameof(Index));
                 }
-                if(teamRegistration.User2 != registration.User2)
+
+                else
                 {
-                    if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User2 = registration.User2;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User2 = registration.User2;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
+                    teamRegistration.TeamName = registration.TeamName;
+                    _logger.LogInformation("Successfully update the team");
                 }
-                if (teamRegistration.User3 != registration.User3)
-                {
-                    if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User3 = registration.User3;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User3 = registration.User3;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-                if (teamRegistration.User4 != registration.User4)
-                {
-                    if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User4 = registration.User4;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User4 = registration.User4;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-                if (teamRegistration.User5 != registration.User5)
-                {
-                    if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User5 = registration.User5;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User5 = registration.User5;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-                if (teamRegistration.User6 != registration.User6)
-                {
-                    if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == 1)
-                    {
-                        teamRegistration.User6 = registration.User6;
-                        teamRegistration.AvailSpots++;
-                    }
-                    else if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == -1)
-                    {
-                        teamRegistration.User6 = registration.User6;
-                        teamRegistration.AvailSpots--;
-                    }
-                    else
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
+
+
                 if (User.IsInRole("Admin"))
                 {
-                    registration.IsRed = teamRegistration.IsRed;
+                    teamRegistration.IsRed = registration.IsRed;
                 }
                 if (User.IsInRole("Blue Team"))
                 {
-                    registration.IsRed = false;
+                    teamRegistration.IsRed = false;
                 }
                 if (User.IsInRole("Red Team"))
                 {
-                    registration.IsRed = true;
+                    teamRegistration.IsRed = true;
                 }
 
                 //We will need to update our available spots from edit
@@ -291,7 +204,7 @@ namespace CySim.Controllers.TeamRegistrationController
             if (ModelState.IsValid)
             {
                 var name = User.Identity.Name;
-                var registration = _context.TeamRegistrations.Find(teamRegistration.Id);
+                var startRegistration = _context.TeamRegistrations.Find(teamRegistration.Id);
 
 
                 //one user can only join one team
@@ -301,80 +214,32 @@ namespace CySim.Controllers.TeamRegistrationController
                         || item.User6 == name)
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
+                        //this is where we will need to throw an error message showing that the name is already in a team
                         return RedirectToAction(nameof(Index));
                     }
                 }
 
 
-                if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||
-                    name == registration.User5 || name == registration.User6)
+                //if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||
+                //    name == registration.User5 || name == registration.User6)
+                //{
+                //    _logger.LogInformation(name + " is already in " + registration.TeamName);
+                //    return RedirectToAction(nameof(Index));
+                //}
+                var registration = CySim.HelperFunctions.TeamRegistrationHelper.GetJoinTeamRegistration(teamRegistration, startRegistration, name);
+                
+                if(registration.TeamName == "Team already has 6 users")
                 {
-                    _logger.LogInformation(name + " is already in " + registration.TeamName);
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User1 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User1 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User2 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User2 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User3 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User3 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User4 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User4 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User5 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User5 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (registration.User6 == null)
-                {
-                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
-                    registration.User6 = name;
-                    registration.AvailSpots--;
-                    _context.Update(registration);
-                    _context.SaveChanges();
-
+                    _logger.LogInformation("Sorry this team already has 6 users");
+                    //this is where we will need to create an error message showing that the team already has 6 users.
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    _logger.LogInformation("Sorry this team already has 6 users");
+                    _logger.LogInformation(name + " just joined the team " + registration.TeamName);
+                    _context.Update(registration);
+                    _context.SaveChanges();
+
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -388,58 +253,6 @@ namespace CySim.Controllers.TeamRegistrationController
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        private string FindUser (string Email)
-        {
-            string connectionString = "Server=localhost;Database=CySim;User Id=sa;Password=cpre491p@ssword;Trusted_Connection=True;MultipleActiveResultSets=true;Integrated Security=False";
-            string returnUser = null;
-            if(Email != null)
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("", connection))
-                    {
-                        command.CommandText = "SELECT * FROM [CySim].[dbo].[AspNetUsers] WHERE Email=@Email";
-                        command.Parameters.AddWithValue("@Email", Email);
-                        SqlDataReader reader = command.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            returnUser = reader["Email"].ToString();
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-                
-            return returnUser;
-        }
-        private int AddOrDenyUser(string oldUser, string newUser, string teamName)
-        {
-            int userInt = -1;
-            var user = FindUser(newUser);
-            if (newUser == null)
-            {
-                _logger.LogInformation("User {user} has succesfully been removed from the team named {teamName}", user, teamName);
-                userInt = 1;
-                return userInt;
-                
-            }
-            else
-            {
-                if (user == null)
-                {
-                    _logger.LogError("Sorry that user does not exist");
-                    userInt = 0;
-                    return userInt;
-                }
-                else
-                {
-                    _logger.LogInformation("User {user} has succesfully joined the team named {teamName}", user, teamName);
-                    userInt = -1;
-                    return userInt;
-                }
-            }
-        }
+      
     }
 }
