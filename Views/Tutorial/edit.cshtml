@@ -1,0 +1,54 @@
+@model CySim.Models.Tutorial.Tutorial
+
+@{
+    ViewData["Title"] = "Edit Tutorial";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 class="text-primary mb-4">Edit the @Model.FileName Tutorial Document Below</h2>
+@if (TempData["errors"] != null && !TempData["errors"].Equals(""))
+{
+    <p class="text-danger mb-4">@TempData["errors"]</p>
+}
+<form method="post" asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Tutorial document to replace @Model.FileName contents (Optional):</label>
+        <input type="file" class="form-control" name="file" />
+    </div>
+
+    <br>
+    
+    <div class="form-group">
+        <label for="FileName">Provide the file name for the document:</label>
+        <input type="text" class="form-control" name="FileName" value="@Model.FileName" />
+    </div>
+
+    <br>
+
+    <div class="form-group">
+        <label for="Description">Provide the description for the document:</label>
+        <input type="text" class="form-control" name="Description" value="@Model.Description" />
+    </div>
+
+    <br>
+
+    <div class="form-check">
+        <label class="form-check-label" for="isRed">Is this a red team document?</label>
+        <input type="checkbox" class="form-check-input" name="isRed" value=@(Model.isRed?"true":"false") @(Model.isRed?"checked='checked'":"") onchange="this.value=this.checked" />
+    </div>
+
+    <br>
+  
+    <div class="form-check">
+        <label class="form-check-label" for="isGameType">Is this a Game Type?</label>
+        <input type="checkbox" class="form-check-input" name="isGameType" value=@(Model.isGameType?"true":"false") @(Model.isGameType?"checked='checked'":"") onchange="this.value=this.checked" />
+    </div>
+  
+    <br
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Update" />
+        <a asp-action="Index" class="btn btn-success">Back</a>
+    </div>
+</form>
