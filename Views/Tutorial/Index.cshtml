@@ -24,173 +24,178 @@
 <br />
 <br />    
     
-<div class="row">
-    <div class="col-6" align="center">
-        <h2 class="text-center" align="center">Welcome to the Tutorial Page!</h2>
-    </div>
-    <br />
-    <div class="col-12">
-        <br /><br /><br />
+@if (signInManager.IsSignedIn(User))
+{    
+    <div class="row">
+        <div class="col-6" align="center">
+            <h2 class="text-center" align="center">Access Tutorial Documents</h2>
+        </div>
+        <br>
+        
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
             <div align="left" class="col-6">
                 <a class="btn btn-info" asp-action="Create">Add a Tutorial</a>
             </div>
         }
-        <br />
-        <h4>Getting Started Tutorials</h4>
-        <table class="table table-striped border">
-            <tr class="table-info">
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.FileName)
-
-                </th>
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.Description)
-                </th>
-            </tr>
-
-            @foreach (var item in Model)
+       <div class="col-12">
+            //admin red team
+            @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
             {
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
+            <div class="col-6">
+                <h4 class="text-danger">Red Team Tutorialss</h4>
+            </div>
+            <table class="table table-striped border">
+                <tr class="table-danger">
+                    <th class="col-3">
+                        @Html.DisplayNameFor(m => m.FileName)
+
+                    </th>
+                    <th class="col-6">
+                        @Html.DisplayNameFor(m => m.Description)
+                    </th>
+                     @if (User.IsInRole("Admin")) 
+                     {
+                        <th class="col-1">
+                            Actions
+                        </th>
+                     }
+                </tr>
+                @foreach (var item in Model)
                 {
+                    //if its red gametype
+                    @if (item.isRed && item.isGameType)
+                    {
+                        <tr>
+                            <td class="col-3">
+                                <a href="@item.FilePath">@item.FileName</a>
+                            </td>
+                            <td class="col-6">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                            @if (User.IsInRole("Admin")) 
+                            {
+                                <td class="col-1">
+                                    <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName GameType?")'>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
+                    //if its not a red gametype
                     @if (item.isRed && !item.isGameType)
                     {
                         <tr>
-                            <td colspan="2">
+                            <td class="col-3">
                                 <a href="@item.FilePath">@item.FileName</a>
                             </td>
-                            <td colspan="2">
+                            <td class="col-6">
                                 @Html.DisplayFor(w => item.Description)
                             </td>
+                            @if (User.IsInRole("Admin")) 
+                            {
+                                <td class="col-1">
+                                    <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName Tutorial?")'>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
                         </tr>
                     }
                 }
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-                {
-                    @if (item.isRed && !item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
-
-                }
-
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                {
-                    @if (item.isRed && !item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
-                    @if (!item.isRed && !item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
-
-                }
-
-
+            </table>
+            <br>
             }
-
-        </table>
-
-        <br />
-        <br />
-        <h4>Game Tutorials</h4>
-        <table class="table table-striped border">
-            <tr class="table-info">
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.FileName)
-
-                </th>
-                <th colspan="2">
-                    @Html.DisplayNameFor(m => m.Description)
-                </th>
-            </tr>
-
-            @foreach (var item in Model)
+           
+           
+            @if (User.IsInRole("Blue Team") || User.IsInRole("Admin"))
             {
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Red Team"))
-                {
-                    @if (item.isRed && item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
-                }
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Blue Team"))
-                {
-                    @if (item.isRed && item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
+            <div class="col-6">
+                <h4 class="text-primary">Blue Team Tutorials</h4>
+            </div>
+            <table class="table table-striped border">
+                <tr class="table-primary">
+                    <th class="col-3">
+                        @Html.DisplayNameFor(m => m.FileName)
 
-                }
-
-                @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    </th>
+                    <th class="col-6">
+                        @Html.DisplayNameFor(m => m.Description)
+                    </th>
+                     @if (User.IsInRole("Admin")) 
+                     {
+                        <th class="col-1">
+                            Actions
+                        </th>
+                     }
+                </tr>
+                @foreach (var item in Model)
                 {
-                    @if (item.isRed && item.isGameType)
-                    {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@item.FilePath">@item.FileName</a>
-                            </td>
-                            <td colspan="2">
-                                @Html.DisplayFor(w => item.Description)
-                            </td>
-                        </tr>
-                    }
+                    //blue gametype
                     @if (!item.isRed && item.isGameType)
                     {
                         <tr>
-                            <td colspan="2">
+                            <td class="col-3">
                                 <a href="@item.FilePath">@item.FileName</a>
                             </td>
-                            <td colspan="2">
+                            <td class="col-6">
                                 @Html.DisplayFor(w => item.Description)
                             </td>
+                            @if (User.IsInRole("Admin")) 
+                            {
+                                <td class="col-1">
+                                    <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName GameType?")'>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
                         </tr>
                     }
-
+                    //not a blue gametype
+                    @if (!item.isRed && !item.isGameType)
+                    {
+                        <tr>
+                            <td class="col-3">
+                                <a href="@item.FilePath">@item.FileName</a>
+                            </td>
+                            <td class="col-6">
+                                @Html.DisplayFor(w => item.Description)
+                            </td>
+                            @if (User.IsInRole("Admin")) 
+                            {
+                                <td class="col-1">
+                                    <a class="btn btn-success d-inline-block" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form class="d-inline-block" asp-action="Delete" asp-route-id="@item.Id" onsubmit='return confirm("Are you sure you want to delete the @item.FileName Tutorial?")'>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
                 }
-
-
+            </table>
             }
 
-        </table>
-
+        </div>
     </div>
-</div>
+}
