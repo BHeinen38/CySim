@@ -1,44 +1,35 @@
-﻿@model CySim.Models.Tutorial.Tutorial
+@model CySim.Models.Tutorial.Tutorial
 
 @{
 
-    ViewData["Title"] = "Create";
+    TempData["Title"] = "Create Tutorial";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2 class="text-info">Add a New Tutorial</h2>
-@if (ViewData["errors"] != null && !ViewData["errors"].Equals(""))
+@if (TempData["errors"] != null && !TempData["errors"].Equals(""))
 {
-    <p style="color:red;">@ViewData["errors"]</p>
+    <p style="color:red;">@TempData["errors"]</p>
 }
-<form method="post" action="Create" enctype="multipart/form-data">
+<form method="post" asp-action="Create" enctype="multipart/form-data">
     <div class="form-group">
         <label for="file">Select a Tutorial to Upload</label>
         <input type="file" class="form-control" name="file" />
     </div>
-
     <br>
-
     <div class="form-group">
         <label for="Description">Description:</label>
         <input type="text" class="form-control" name="Description" />
     </div>
-
     <br>
-
     <div class="form-check">
         <label class="form-check-label" for="isRed">Red Team?</label>
         <input type="checkbox" class="form-check-input" name="isRed" value="false" onchange="this.value=this.checked" />
     </div>
-
-
     <div class="form-check">
         <label class="form-check-label" for="isGameType">Game Type?</label>
         <input type="checkbox" class="form-check-input" name="isGameType" value="false" onchange="this.value=this.checked" />
     </div>
     <br />
-
-
     <div class="form-group">
         <input type="submit" class="btn btn-primary" value="Create" />
         <a asp-action="Index" class="btn btn-success">Back</a>
