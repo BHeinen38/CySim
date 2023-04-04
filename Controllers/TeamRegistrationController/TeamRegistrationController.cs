@@ -27,11 +27,8 @@ namespace CySim.Controllers.TeamRegistrationController
     public class TeamRegistrationController : Controller
     {
         private readonly ILogger<TeamRegistrationController> _logger;
-
         private readonly ApplicationDbContext _context;
-
         private readonly SignInManager<IdentityUser> _signInManager;
-
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -50,14 +47,13 @@ namespace CySim.Controllers.TeamRegistrationController
             return View(_context.TeamRegistrations.ToList());
         }
 
+        //Errors
         [HttpGet]
-        public IActionResult TeamRegUserAlreadyIn(string name)
+        public IActionResult UserExistError(string name)
         {
             return View(name);
         }
 
-        //we need two create becuase one  is to display form to user
-        //other one is used as a submit to save data
         //HTTP Get Method
         [HttpGet]
         public IActionResult Create()
@@ -68,7 +64,6 @@ namespace CySim.Controllers.TeamRegistrationController
         [HttpPost]
         public async Task<IActionResult> Create(TeamRegistration teamRegistration, IFormFile file)
         {
-
             var fileName = "";
 
             if (file == null)
@@ -101,14 +96,6 @@ namespace CySim.Controllers.TeamRegistrationController
             }
             var registration = new TeamRegistration();
 
-            //var registration = new TeamRegistration()
-            //{
-            //    FileName = fileName,
-            //    FilePath = Path.Combine("Documents/Images", fileName),
-            //    IsRed = teamRegistration.IsRed,
-            //    TeamName = teamRegistration.TeamName
-            //};
-
             registration.FileName = fileName;
             registration.FilePath = Path.Combine("Documents/Images", fileName);
             registration.TeamName = teamRegistration.TeamName;
@@ -137,10 +124,6 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     IdentityUser identity =  GetIdentityUser(registration.TeamCreator);
                     await _userManager.AddToRoleAsync(identity, "Team User");
-                    IdentityRole role = _context.Roles.Where(x => x.Name == "Team User").First();
-                    await _roleManager.UpdateAsync(role);
-                    
-
                 }
                 IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
                 await _signInManager.RefreshSignInAsync(identityUser);
@@ -156,7 +139,12 @@ namespace CySim.Controllers.TeamRegistrationController
         public async Task<IActionResult> Delete(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
+
+            string[] users = new string[6] { registration.User1, registration.User2, registration.User3, registration.User4,
+            registration.User5, registration.User6};
+
             IdentityUser identity = null;
+
             if (registration == null)
             {
                 return NotFound();
@@ -164,41 +152,21 @@ namespace CySim.Controllers.TeamRegistrationController
 
             if (User.IsInRole("Team User") || User.IsInRole("Admin"))
             {
-                if(registration.User1 != null)
+                for(var i = 0; i < users.Length; i++)
                 {
-                    identity = GetIdentityUser(registration.User1);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                }
-                if (registration.User2 != null)
-                {
-                    identity = GetIdentityUser(registration.User2);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                }
-                if (registration.User3 != null)
-                {
-                    identity = GetIdentityUser(registration.User3);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                }
-                if (registration.User4 != null)
-                {
-                    identity = GetIdentityUser(registration.User4);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                }
-                if (registration.User5 != null)
-                {
-                    identity = GetIdentityUser(registration.User5);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                }
-                if (registration.User6 != null)
-                {
-                    identity = GetIdentityUser(registration.User6);
-                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                    if (users[i] != null)
+                    {
+                        identity = GetIdentityUser(users[i]);
+                        await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                    }
                 }
             }
+            if(registration.FileName != "DefaultImage.png")
+                System.IO.File.Delete(Path.Combine("wwwroot/", registration.FilePath));
 
-            await _userManager.UpdateAsync(identity);
-            IdentityRole role = _context.Roles.Where(x => x.Name == "Team User").First();
-            await _roleManager.UpdateAsync(role);
+            if(identity != null)
+                await _userManager.UpdateAsync(identity);
+
             IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
             await _signInManager.RefreshSignInAsync(identityUser);
             _context.TeamRegistrations.Remove(registration);
@@ -216,100 +184,116 @@ namespace CySim.Controllers.TeamRegistrationController
             if (registration == null)
                 return NotFound();
 
-
             return View(registration);
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(TeamRegistration registration)
+        public async Task<IActionResult> Edit(TeamRegistration registration, IFormFile file)
         {
             var startRegistration = _context.TeamRegistrations.Find(registration.Id);
             string[] tempUser = new string[6] { startRegistration.User1, startRegistration.User2, startRegistration.User3, startRegistration.User4,
             startRegistration.User5, startRegistration.User6};
 
             IdentityUser identity = null;
+            var fileName = "";
+
+            if (file == null)
+                fileName = startRegistration.FileName;
+            else
+                fileName = file.FileName;
+
+            if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && fileName != "DefaultImage.png")
+                System.IO.File.Delete(Path.Combine("wwwroot/", startRegistration.FilePath));
+
+            if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
+            {
+                ViewData["errors"] = "Sorry this file name already exist";
+                return View();
+            }
+            if (file != null)
+            {
+                using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Images", fileName), FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+            }
 
             if (ModelState.IsValid)
             {
                 string[] Users = new string[6];
                 var teamRegistration = CySim.HelperFunctions.TeamRegistrationHelper.GetEditTeamRegistration(registration, startRegistration, out Users);
 
-                if (teamRegistration.User1 == "There is no user in database" || teamRegistration.User2 == "There is no user in database" || teamRegistration.User3 == "There is no user in database"
-                    || teamRegistration.User4 == "There is no user in database" || teamRegistration.User5 == "There is no user in database" || teamRegistration.User6 == "There is no user in database")
+                for (int i = 0; i < Users.Length; i++)
                 {
-                    //this is where we will need to add a error page showing that the User does not exist
-                    _logger.LogInformation("There is no user of this type username in the database");
-                    return RedirectToAction(nameof(Index));
-                }
-
-                else
-                {
-                    teamRegistration.TeamName = registration.TeamName;
-
-                    for(int i =0; i < Users.Length; i++)
+                    if (Users[i] == "There is no user in database")
                     {
-                        if (Users[i] == null)
+                        //this is where we will need to add a error page showing that the User does not exist
+                        _logger.LogInformation("There is no user of this type username in the database");
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                teamRegistration.TeamName = registration.TeamName;
+
+                for(int i =0; i < Users.Length; i++)
+                {
+                    if (Users[i] == null)
+                    {
+                        continue;
+                    }
+                    else if (Users[i] != "Removed")
+                    {
+                        identity = GetIdentityUser(Users[i]);
+                        await _userManager.AddToRoleAsync(identity, "Team User");
+                    }
+                    else
+                    {
+                        switch (i)
                         {
-                            continue;
-                        }
-                        else if (Users[i] != "Removed")
-                        {
-                            identity = GetIdentityUser(Users[i]);
-                            await _userManager.AddToRoleAsync(identity, "Team User");
-                        }
-                        else
-                        {
-                            switch (i)
-                            {
-                                case 0:
-                                    identity = GetIdentityUser(tempUser[0]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                                case 1:
-                                    identity = GetIdentityUser(tempUser[1]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                                case 2:
-                                    identity = GetIdentityUser(tempUser[2]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                                case 3:
-                                    identity = GetIdentityUser(tempUser[3]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                                case 4:
-                                    identity = GetIdentityUser(tempUser[4]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                                case 5:
-                                    identity = GetIdentityUser(tempUser[5]);
-                                    await _userManager.RemoveFromRoleAsync(identity, "Team User");
-                                    break;
-                            }
+                            case 0:
+                                identity = GetIdentityUser(tempUser[0]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
+                            case 1:
+                                identity = GetIdentityUser(tempUser[1]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
+                            case 2:
+                                identity = GetIdentityUser(tempUser[2]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
+                            case 3:
+                                identity = GetIdentityUser(tempUser[3]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
+                            case 4:
+                                identity = GetIdentityUser(tempUser[4]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
+                            case 5:
+                                identity = GetIdentityUser(tempUser[5]);
+                                await _userManager.RemoveFromRoleAsync(identity, "Team User");
+                                break;
                         }
                     }
-
-                    _logger.LogInformation("Successfully update the team");
                 }
+
+                _logger.LogInformation("Successfully update the team");
+
+                teamRegistration.FileName = fileName;
+                teamRegistration.FilePath = Path.Combine("Documents/Images", fileName);
 
                 if (User.IsInRole("Admin"))
-                {
                     teamRegistration.IsRed = registration.IsRed;
-                }
-                if (User.IsInRole("Blue Team"))
-                {
-                    teamRegistration.IsRed = false;
-                }
-                if (User.IsInRole("Red Team"))
-                {
-                    teamRegistration.IsRed = true;
-                }
 
-                //We will need to update our available spots from edit
-                await _userManager.UpdateAsync(identity);
-                IdentityRole role = _context.Roles.Where(x => x.Name == "Team User").First();
-                await _roleManager.UpdateAsync(role);
+                if (User.IsInRole("Blue Team"))
+                    teamRegistration.IsRed = false;
+
+                if (User.IsInRole("Red Team"))
+                    teamRegistration.IsRed = true;
+
+                if(identity != null)
+                    await _userManager.UpdateAsync(identity);
+
                 IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
                 await _signInManager.RefreshSignInAsync(identityUser);
                 _context.Update(teamRegistration);
@@ -330,9 +314,7 @@ namespace CySim.Controllers.TeamRegistrationController
             if (registration == null)
                 return NotFound();
 
-
             return View(registration);
-
         }
 
         [HttpPost]
@@ -343,7 +325,6 @@ namespace CySim.Controllers.TeamRegistrationController
                 var name = User.Identity.Name;
                 var startRegistration = _context.TeamRegistrations.Find(teamRegistration.Id);
 
-
                 //one user can only join one team
                 foreach(var item in _context.TeamRegistrations)
                 {
@@ -352,17 +333,10 @@ namespace CySim.Controllers.TeamRegistrationController
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
                         //this is where we will need to throw an error message showing that the name is already in a team
-                        return View(nameof(TeamRegUserAlreadyIn), name);
+                        return View(nameof(UserExistError), name);
                     }
                 }
 
-
-                //if (name == registration.User1 || name == registration.User2 || name == registration.User3 || name == registration.User4 ||
-                //    name == registration.User5 || name == registration.User6)
-                //{
-                //    _logger.LogInformation(name + " is already in " + registration.TeamName);
-                //    return RedirectToAction(nameof(Index));
-                //}
                 var registration = CySim.HelperFunctions.TeamRegistrationHelper.GetJoinTeamRegistration(teamRegistration, startRegistration, name);
                 
                 if(registration.TeamName == "Team already has 6 users")
@@ -378,19 +352,15 @@ namespace CySim.Controllers.TeamRegistrationController
                         IdentityUser identity =  GetIdentityUser(User.Identity.Name);
                         await _userManager.AddToRoleAsync(identity, "Team User");
                         await _userManager.UpdateAsync(identity);
-                        IdentityRole role = _context.Roles.Where(x => x.Name == "Team User").First();
-                        await _roleManager.UpdateAsync(role);
                         await _signInManager.RefreshSignInAsync(identity);
                     }
                         
-
                     _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     _context.Update(registration);
                     _context.SaveChanges();
 
                     return RedirectToAction(nameof(Index));
                 }
-
             }
             return View(teamRegistration);
         }

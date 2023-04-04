@@ -51,13 +51,12 @@ namespace CySim.HelperFunctions
 
             return returnUser;
         }
-        public static int AddOrDenyUser(string oldUser, string newUser, string teamName)
+        public static int AddOrDenyUser(string oldUser, string newUser)
         {
             int userInt = -1;
             var user = FindUser(newUser);
             if (newUser == null)
             {
-                //_logger.LogInformation("User {user} has succesfully been removed from the team named {teamName}", user, teamName);
                 userInt = 1;
                 return userInt;
 
@@ -66,13 +65,11 @@ namespace CySim.HelperFunctions
             {
                 if (user == null)
                 {
-                    //_logger.LogError("Sorry that user does not exist");
                     userInt = 0;
                     return userInt;
                 }
                 else
                 {
-                    //_logger.LogInformation("User {user} has succesfully joined the team named {teamName}", user, teamName);
                     userInt = -1;
                     return userInt;
                 }
@@ -84,120 +81,73 @@ namespace CySim.HelperFunctions
             Users = new string[6];
             teamRegistration.TeamName = registration.TeamName;
 
-            if (teamRegistration.User1 != registration.User1)
-            {
-                if (AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == 1)
-                {
-                    teamRegistration.User1 = registration.User1;
-                    teamRegistration.AvailSpots++;
-                    Users[0] = "Removed";
+            string[] regUsers = new string[6] { registration.User1, registration.User2, registration.User3, registration.User4,
+            registration.User5, registration.User6};
 
-                }
-                else if (AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User1 = registration.User1;
-                    teamRegistration.AvailSpots--;
-                    Users[0] = registration.User1;
-                }
-                else
-                {
-                    teamRegistration.User1 = "There is no user in database";
-                }
-            }
-            if (teamRegistration.User2 != registration.User2)
-            {
-                if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == 1)
-                {
-                    teamRegistration.User2 = registration.User2;
-                    teamRegistration.AvailSpots++;
-                    Users[1] = "Removed";
+            string[] teamRegUsers = new string[6] { teamRegistration.User1, teamRegistration.User2, teamRegistration.User3, teamRegistration.User4,
+            teamRegistration.User5, teamRegistration.User6};
 
-                }
-                else if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User2 = registration.User2;
-                    teamRegistration.AvailSpots--;
-                    Users[1] = registration.User2;
-                }
-                else
-                {
-                    teamRegistration.User2 = "There is no user in database";
-                }
-            }
-            if (teamRegistration.User3 != registration.User3)
+            for(int i = 0; i < regUsers.Length; i++)
             {
-                if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == 1)
+                if (teamRegUsers[i] != regUsers[i])
                 {
-                    teamRegistration.User3 = registration.User3;
-                    teamRegistration.AvailSpots++;
-                    Users[2] = "Removed";
-                }
-                else if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User3 = registration.User3;
-                    teamRegistration.AvailSpots--;
-                    Users[2] = registration.User3;
-                }
-                else
-                {
-                    teamRegistration.User3 = "There is no user in database";
-                }
-            }
-            if (teamRegistration.User4 != registration.User4)
-            {
-                if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == 1)
-                {
-                    teamRegistration.User4 = registration.User4;
-                    teamRegistration.AvailSpots++;
-                    Users[3] = "Removed";
-                }
-                else if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User4 = registration.User4;
-                    teamRegistration.AvailSpots--;
-                    Users[3] = registration.User4;
-                }
-                else
-                {
-                    teamRegistration.User4 = "There is no user in database";
-                }
-            }
-            if (teamRegistration.User5 != registration.User5)
-            {
-                if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == 1)
-                {
-                    teamRegistration.User5 = registration.User5;
-                    teamRegistration.AvailSpots++;
-                    Users[4] = "Removed";
-                }
-                else if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User5 = registration.User5;
-                    teamRegistration.AvailSpots--;
-                    Users[4] = registration.User5;
-                }
-                else
-                {
-                    teamRegistration.User5 = "There is no user in database";
-                }
-            }
-            if (teamRegistration.User6 != registration.User6)
-            {
-                if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == 1)
-                {
-                    teamRegistration.User6 = registration.User6;
-                    teamRegistration.AvailSpots++;
-                    Users[5] = "Removed";
-                }
-                else if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == -1)
-                {
-                    teamRegistration.User6 = registration.User6;
-                    teamRegistration.AvailSpots--;
-                    Users[5] = registration.User6;
-                }
-                else
-                {
-                    teamRegistration.User6 = "There is no user in database";
+                    if (AddOrDenyUser(teamRegUsers[i], regUsers[i]) == 1)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                teamRegistration.User1 = registration.User1;
+                                break;
+                            case 1:
+                                teamRegistration.User2 = registration.User2;
+                                break;
+                            case 2:
+                                teamRegistration.User3 = registration.User3;
+                                break;
+                            case 3:
+                                teamRegistration.User4 = registration.User4;
+                                break;
+                            case 4:
+                                teamRegistration.User5 = registration.User5;
+                                break;
+                            case 5:
+                                teamRegistration.User6 = registration.User6;
+                                break;
+                        }
+                        teamRegistration.AvailSpots++;
+                        Users[i] = "Removed";
+
+                    }
+                    else if (AddOrDenyUser(teamRegUsers[i], regUsers[i]) == -1)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                teamRegistration.User1 = registration.User1;
+                                break;
+                            case 1:
+                                teamRegistration.User2 = registration.User2;
+                                break;
+                            case 2:
+                                teamRegistration.User3 = registration.User3;
+                                break;
+                            case 3:
+                                teamRegistration.User4 = registration.User4;
+                                break;
+                            case 4:
+                                teamRegistration.User5 = registration.User5;
+                                break;
+                            case 5:
+                                teamRegistration.User6 = registration.User6;
+                                break;
+                        }
+                        teamRegistration.AvailSpots--;
+                        Users[i] = regUsers[i];
+                    }
+                    else
+                    {
+                        Users[i] = "There is no user in database";
+                    }
                 }
             }
             return teamRegistration;
