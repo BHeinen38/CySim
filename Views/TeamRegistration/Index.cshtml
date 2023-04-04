@@ -28,11 +28,14 @@
 <br />
 <div class="row">
     @*<div align="right">
-        <h2>Register For a Team here</h2>
-    </div>*@
-    <div align="right">
-        <a class="btn btn-info" asp-action="Create">Add a New Team<i class="fa-solid fa-bicycle"></i></a>
-    </div>
+            <h2>Register For a Team here</h2>
+        </div>*@
+    @if (!User.IsInRole("Team User"))
+        {
+        <div align="right">
+            <a class="btn btn-info" asp-action="Create">Add a New Team<i class="fa-solid fa-bicycle"></i></a>
+        </div>
+        }
     <br />
     <div class="col-12">
         @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
@@ -81,7 +84,7 @@
                                 @Html.DisplayFor(w => item.User6)
                             </td>
                             <td colspan="2">
-                                @if (User.IsInRole("Red Team"))
+                                @if (User.IsInRole("Red Team") && !User.IsInRole("Team User"))
                                 {
                                     <div class="btn-group" role="group">
                                         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>
@@ -161,7 +164,7 @@
                                 @Html.DisplayFor(w => item.User6)
                             </td>
                             <td colspan="2">
-                                @if (User.IsInRole("Blue Team"))
+                                @if (User.IsInRole("Blue Team") && !User.IsInRole("Team User"))
                                 {
                                     <div class="btn-group" role="group">
                                         <a type="button" class="btn btn-primary rounded-true" href="@Url.Action("Join", new { id = item.Id})"><i class="fa-regular fa-pen-to-square"></i>Join</a>

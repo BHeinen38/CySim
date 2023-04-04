@@ -6,19 +6,25 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Data;
 
 namespace CySim.HelperFunctions
 {
-	public class TeamRegistrationHelper
-	{
+    public class TeamRegistrationHelper
+    {
         private readonly ILogger _logger;
         private readonly ApplicationDbContext _context;
 
         public TeamRegistrationHelper(ILogger<TeamRegistrationController> logger, ApplicationDbContext context)
-		{
+        {
             _logger = logger;
             _context = context;
-		}
+        }
 
         private static string FindUser(string Email)
         {
@@ -73,9 +79,9 @@ namespace CySim.HelperFunctions
             }
         }
 
-        public static TeamRegistration GetEditTeamRegistration(TeamRegistration registration, TeamRegistration teamRegistration)
+        public static TeamRegistration GetEditTeamRegistration(TeamRegistration registration, TeamRegistration teamRegistration, out string[] Users)
         {
-
+            Users = new string[6];
             teamRegistration.TeamName = registration.TeamName;
 
             if (teamRegistration.User1 != registration.User1)
@@ -84,11 +90,14 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User1 = registration.User1;
                     teamRegistration.AvailSpots++;
+                    Users[0] = "Removed";
+
                 }
                 else if (AddOrDenyUser(teamRegistration.User1, registration.User1, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User1 = registration.User1;
                     teamRegistration.AvailSpots--;
+                    Users[0] = registration.User1;
                 }
                 else
                 {
@@ -101,11 +110,14 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User2 = registration.User2;
                     teamRegistration.AvailSpots++;
+                    Users[1] = "Removed";
+
                 }
                 else if (AddOrDenyUser(teamRegistration.User2, registration.User2, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User2 = registration.User2;
                     teamRegistration.AvailSpots--;
+                    Users[1] = registration.User2;
                 }
                 else
                 {
@@ -118,11 +130,13 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User3 = registration.User3;
                     teamRegistration.AvailSpots++;
+                    Users[2] = "Removed";
                 }
                 else if (AddOrDenyUser(teamRegistration.User3, registration.User3, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User3 = registration.User3;
                     teamRegistration.AvailSpots--;
+                    Users[2] = registration.User3;
                 }
                 else
                 {
@@ -135,11 +149,13 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User4 = registration.User4;
                     teamRegistration.AvailSpots++;
+                    Users[3] = "Removed";
                 }
                 else if (AddOrDenyUser(teamRegistration.User4, registration.User4, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User4 = registration.User4;
                     teamRegistration.AvailSpots--;
+                    Users[3] = registration.User4;
                 }
                 else
                 {
@@ -152,11 +168,13 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User5 = registration.User5;
                     teamRegistration.AvailSpots++;
+                    Users[4] = "Removed";
                 }
                 else if (AddOrDenyUser(teamRegistration.User5, registration.User5, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User5 = registration.User5;
                     teamRegistration.AvailSpots--;
+                    Users[4] = registration.User5;
                 }
                 else
                 {
@@ -169,11 +187,13 @@ namespace CySim.HelperFunctions
                 {
                     teamRegistration.User6 = registration.User6;
                     teamRegistration.AvailSpots++;
+                    Users[5] = "Removed";
                 }
                 else if (AddOrDenyUser(teamRegistration.User6, registration.User6, teamRegistration.TeamName) == -1)
                 {
                     teamRegistration.User6 = registration.User6;
                     teamRegistration.AvailSpots--;
+                    Users[5] = registration.User6;
                 }
                 else
                 {

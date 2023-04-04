@@ -96,6 +96,9 @@ namespace CySim.Areas.Identity.Pages.Account
                     if (!await _roleManager.RoleExistsAsync("Blue Team"))
                         await _roleManager.CreateAsync(new IdentityRole("Blue Team"));
 
+                    if (!await _roleManager.RoleExistsAsync("Team User"))
+                        await _roleManager.CreateAsync(new IdentityRole("Team User"));
+
                     if (Input.Role == "Admin")
                         await _userManager.AddToRoleAsync(user, "Admin");
 
