@@ -74,19 +74,26 @@ namespace CySim.Controllers.TeamRegistrationController
 
             foreach (var item in _context.TeamRegistrations)
             {
-                if (item.TeamCreator == User.Identity.Name)
+                if (item.TeamCreator == User.Identity.Name && !User.IsInRole("Admin"))
                 {
-                    _logger.LogInformation(User.Identity.Name + "Has Already created a team");
+                    _logger.LogInformation("{item.TeamCreator} Has Already created a team", item.TeamCreator);
+                    //this is where we will need to throw an error message showing that the name is already in a team
+                    return RedirectToAction(nameof(Index));
+                }
+                if (item.TeamName == teamRegistration.TeamName)
+                {
+                    _logger.LogInformation("{item.TeamName} already exist", item.TeamName);
+                    //this is where we will need to throw an error message showing that the name is already in a team
+                    return RedirectToAction(nameof(Index));
+                }
+                if ((item.FileName == fileName) && fileName != "DefaultImage.png")
+                {
+                    _logger.LogInformation("{item.FileName} already exist", item.FileName);
                     //this is where we will need to throw an error message showing that the name is already in a team
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != "DefaultImage.png")
-            {
-                ViewData["errors"] = "Sorry this file name already exist";
-                return View();
-            }
             if (file != null)
             {
                 using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Images", fileName), FileMode.Create))
@@ -200,9 +207,14 @@ namespace CySim.Controllers.TeamRegistrationController
             if (file == null)
                 fileName = startRegistration.FileName;
             else
-                fileName = file.FileName;
+            {
+                if (file.FileName == "Default.Image")
+                    return View();
 
-            if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && fileName != "DefaultImage.png")
+                fileName = file.FileName;
+            }
+
+            if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && startRegistration.FileName != "DefaultImage.png")
                 System.IO.File.Delete(Path.Combine("wwwroot/", startRegistration.FilePath));
 
             if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
