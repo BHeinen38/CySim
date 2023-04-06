@@ -9,6 +9,7 @@ using CySim.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CySim.Models.Scenario;
 
@@ -29,9 +30,9 @@ namespace CySim.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
+            return View(await _context.Scenarios.OrderBy(x => x.isRed).ToListAsync());
         }
 
         [Authorize(Roles="Admin")]
@@ -43,7 +44,7 @@ namespace CySim.Controllers
 
         [Authorize(Roles="Admin")]
         [HttpPost]
-        public IActionResult Create(IFormFile file, String Description, bool isRed)
+        public async Task<IActionResult> Create(IFormFile file, String Description, bool isRed)
         {
             TempData["errors"] = "";
 
@@ -62,7 +63,7 @@ namespace CySim.Controllers
             
             var fileName = file.FileName; 
             
-            if (_context.Scenarios.Any(x => x.FileName == fileName))
+            if (await _context.Scenarios.AnyAsync(x => x.FileName == fileName))
             {
                 _logger.LogError("Scenario Create: FileName of uploaded file matched another scenario");
                 TempData["errors"] = "Sorry this file name already exist";
@@ -71,7 +72,7 @@ namespace CySim.Controllers
 
             using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
             {
-                file.CopyTo(stream);
+                await file.CopyToAsync(stream);
                 _logger.LogInformation("Scenario Create: File was uploaded to Documents/Scenario");
             }
 
@@ -86,7 +87,7 @@ namespace CySim.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(scenario);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 
                 _logger.LogInformation("Scenario Create: New database entry created");
                 
@@ -99,9 +100,9 @@ namespace CySim.Controllers
 
         [Authorize(Roles="Admin")]
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Delete on id = " + id + ": No scenario has id = " + id);
@@ -114,7 +115,7 @@ namespace CySim.Controllers
             {
                 System.IO.File.Delete(fileName);
                 _context.Scenarios.Remove(scenario);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 _logger.LogInformation("Scenario Delete on id = " + id + ": " + fileName + " was deleted and database entry removed");
             }
 
@@ -123,9 +124,9 @@ namespace CySim.Controllers
 
         [Authorize(Roles="Admin")]
         [HttpGet]
-        public IActionResult Edit([FromRoute] int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
@@ -137,12 +138,12 @@ namespace CySim.Controllers
 
         [Authorize(Roles="Admin")]
         [HttpPost]
-        public IActionResult Edit([FromRoute]int id, IFormFile file, String FileName, String Description, bool isRed)
+        public async Task<IActionResult> Edit([FromRoute]int id, IFormFile file, String FileName, String Description, bool isRed)
         {
             // HTML Form Error Handling 
             TempData["errors"] = "";
 
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
@@ -168,7 +169,7 @@ namespace CySim.Controllers
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
           
-            if (_context.Scenarios.Any(x => x.Id != id && x.FileName == FileName))
+            if (await _context.Scenarios.AnyAsync(x => x.Id != id && x.FileName == FileName))
             {
                 _logger.LogError("Scenario Edit on id = " + id + ": FileName matched another scenario");
                 TempData["errors"] = "This file name is already used by another scenario";
@@ -191,7 +192,7 @@ namespace CySim.Controllers
             {
                 using (var stream = new FileStream(CurrFile, FileMode.Create))
                 {
-                    file.CopyTo(stream);
+                    await file.CopyToAsync(stream);
                 }
                 _logger.LogInformation("Scenario Edit on id = " + id + ": File contents were replaced by uploaded file");
             }
@@ -210,7 +211,7 @@ namespace CySim.Controllers
             scenario.isRed = isRed;
             
             _context.Scenarios.Update(scenario);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             
             _logger.LogInformation("Scenario Edit on id = " + id + ": Database entry was updated");
             
