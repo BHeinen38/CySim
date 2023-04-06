@@ -230,9 +230,9 @@ namespace CySim.Controllers.TeamRegistrationController
             }
 
             //Flag - comparing i var with the rest of the array. then doing next increment of i and comparing rest again. Repeat til i is at second to last count
-            for (int i = 0; i < _context.TeamRegistrations.Count() - 1; i++)
+            for (int i = 0; i < curUser.Length - 1; i++)
             {
-                for(int j = i+1; j < _context.TeamRegistrations.Count(); j++)
+                for(int j = i+1; j < curUser.Length; j++)
                 {
                     if (curUser[i] == curUser[j] && curUser[i] != null && curUser[j] != null)
                     {
