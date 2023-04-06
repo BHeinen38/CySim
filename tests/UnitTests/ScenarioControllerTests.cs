@@ -41,12 +41,12 @@ public class ScenarioControllerTests
 
        
     [Fact]
-    public void IndexGet() 
+    public async Task IndexGet() 
     { 
         (_, var controller, _) = InitializeTest(); 
 
         // Query Index 
-        var result = controller.Index();
+        var result = await controller.Index();
         
         // Confirm that a view is returned and has correct model type
         var viewResult = Assert.IsType<ViewResult>(result);
@@ -70,12 +70,12 @@ public class ScenarioControllerTests
     [InlineData(1)]
     [InlineData(2)]
     [InlineData(3)]
-    public void EditGet(int id) 
+    public async Task EditGet(int id) 
     { 
         (_, var controller, var scenarios) = InitializeTest(); 
 
         // Query Index 
-        var result = controller.Edit(id);
+        var result = await controller.Edit(id);
         
         // Confirm that a view is returned and has correct model type
         var viewResult = Assert.IsType<ViewResult>(result);
