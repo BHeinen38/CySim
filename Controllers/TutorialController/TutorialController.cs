@@ -120,7 +120,7 @@ namespace CySim.Controllers
         [HttpGet]
         public IActionResult Edit([FromRoute] int id)
         {
-            var tutorial = _context.Scenarios.Find(id);
+            var tutorial = _context.Tutorials.Find(id);
             if (tutorial == null)
             {
                 return RedirectToAction(nameof(Index));
