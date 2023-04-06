@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CySim.Controllers.ScoreBoardController
 {
+    [Authorize]
     public class ScoreBoardController : Controller
     {
         private readonly ILogger<ScoreBoardController> _logger;

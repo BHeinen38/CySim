@@ -10,6 +10,7 @@ using CySim.Data;
 using CySim.Models;
 using CySim.Models.Scenario;
 using CySim.Models.TeamRegistration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ using Microsoft.VisualStudio.Web.CodeGeneration;
 
 namespace CySim.Controllers.TeamRegistrationController
 {
+    [Authorize]
     public class TeamRegistrationController : Controller
     {
         private readonly ILogger<TeamRegistrationController> _logger;
@@ -48,6 +50,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         //Errors
+        //we can get rid of this entire functions 
         [HttpGet]
         public IActionResult UserExistError(string name)
         {
@@ -74,22 +77,23 @@ namespace CySim.Controllers.TeamRegistrationController
 
             foreach (var item in _context.TeamRegistrations)
             {
+                //TODO: Test to see if this check is needed 
                 if (item.TeamCreator == User.Identity.Name && !User.IsInRole("Admin"))
                 {
                     _logger.LogInformation("{item.TeamCreator} Has Already created a team", item.TeamCreator);
-                    //this is where we will need to throw an error message showing that the name is already in a team
+                    //TODO: This is the one that might not be needed
                     return RedirectToAction(nameof(Index));
                 }
                 if (item.TeamName == teamRegistration.TeamName)
                 {
                     _logger.LogInformation("{item.TeamName} already exist", item.TeamName);
-                    //this is where we will need to throw an error message showing that the name is already in a team
+                    //TODO: Return a TeamExistError 
                     return RedirectToAction(nameof(Index));
                 }
                 if ((item.FileName == fileName) && fileName != "DefaultImage.png")
                 {
                     _logger.LogInformation("{item.FileName} already exist", item.FileName);
-                    //this is where we will need to throw an error message showing that the name is already in a team
+                    //TODO: Return a Filename Exist Error
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -143,6 +147,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
+        [Authorize(Roles ="Admin,Team Creator")]
         public async Task<IActionResult> Delete(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -154,6 +159,7 @@ namespace CySim.Controllers.TeamRegistrationController
 
             if (registration == null)
             {
+                //TODO: Return registration not found error 
                 return NotFound();
             }
 
@@ -182,12 +188,13 @@ namespace CySim.Controllers.TeamRegistrationController
             
         }
 
-        //HTTP GET
         [HttpGet]
+        [Authorize(Roles = "Admin,Team Creator")]
         public IActionResult Edit(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
 
+            //TODO: Same Return Registration Error
             if (registration == null)
                 return NotFound();
 
@@ -195,6 +202,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Team Creator")]
         public async Task<IActionResult> Edit(TeamRegistration registration, IFormFile file)
         {
             var startRegistration = _context.TeamRegistrations.Find(registration.Id);
@@ -208,7 +216,9 @@ namespace CySim.Controllers.TeamRegistrationController
                 fileName = startRegistration.FileName;
             else
             {
+                //User cannot create a file in the same name as our default
                 if (file.FileName == "Default.Image")
+                    //TODO: Return InvalidFileName error 
                     return View();
 
                 fileName = file.FileName;
@@ -219,6 +229,7 @@ namespace CySim.Controllers.TeamRegistrationController
 
             if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
             {
+                //TODO: Return the same filename already exist error
                 ViewData["errors"] = "Sorry this file name already exist";
                 return View();
             }
@@ -239,7 +250,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     if (Users[i] == "There is no user in database")
                     {
-                        //this is where we will need to add a error page showing that the User does not exist
+                        //TODO: Return a UserDoesntExistError
                         _logger.LogInformation("There is no user of this type username in the database");
                         return RedirectToAction(nameof(Index));
                     }
@@ -315,14 +326,13 @@ namespace CySim.Controllers.TeamRegistrationController
             return View(registration);
         }
 
-
-        //HTTP GET
         [HttpGet]
+        [Authorize(Roles = "Admin,Team Creator")]
         public IActionResult Join(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
 
-
+            //TODO: Return Registration not found Error 
             if (registration == null)
                 return NotFound();
 
@@ -344,7 +354,6 @@ namespace CySim.Controllers.TeamRegistrationController
                         || item.User6 == name)
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
-                        //this is where we will need to throw an error message showing that the name is already in a team
                         return View(nameof(UserExistError), name);
                     }
                 }
@@ -354,7 +363,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 if(registration.TeamName == "Team already has 6 users")
                 {
                     _logger.LogInformation("Sorry this team already has 6 users");
-                    //this is where we will need to create an error message showing that the team already has 6 users.
+                    //TODO: Return TeamFullError
                     return RedirectToAction(nameof(Index));
                 }
                 else
