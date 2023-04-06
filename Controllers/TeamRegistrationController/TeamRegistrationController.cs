@@ -340,6 +340,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Team Creator")]
         public async Task<IActionResult> Join(TeamRegistration teamRegistration)
         {
             if (ModelState.IsValid)
