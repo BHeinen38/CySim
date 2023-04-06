@@ -22,8 +22,9 @@ public class ScenarioFixture : IDisposable
 
     public ScenarioFixture()
     {
+        Guid id = Guid.NewGuid();
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        optionsBuilder.UseInMemoryDatabase("CySim");
+        optionsBuilder.UseInMemoryDatabase($"CySim{id}");
         
         context = new ApplicationDbContext(optionsBuilder.Options);
 
@@ -33,9 +34,9 @@ public class ScenarioFixture : IDisposable
         
         // Initialize scenarios in db
         scenarios = new List<Scenario>{
-            new Scenario{Id = 1, FileName  = "FirstFile", FilePath = "Test/FirstFile", Description = "First Test Scenario", isRed = false}, 
-            new Scenario{Id = 2, FileName  = "SecondFile", FilePath = "Test/SecondFile", Description = "Second Test Scenario", isRed = true}, 
-            new Scenario{Id = 3, FileName  = "ThirdFile", FilePath = "Test/ThirdFile", Description = "Third Test Scenario", isRed = false} 
+            new Scenario{Id = 1, FileName  = "First", FilePath = "Test/First", Description = "First Test Scenario", isRed = false}, 
+            new Scenario{Id = 2, FileName  = "Second", FilePath = "Test/Second", Description = "Second Test Scenario", isRed = true}, 
+            new Scenario{Id = 3, FileName  = "Third", FilePath = "Test/Third", Description = "Third Test Scenario", isRed = false} 
         };
         
         context.Scenarios.AddRange(scenarios);
@@ -58,7 +59,10 @@ public static class ScenarioTestsUtils
         var mockFS = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             { "wwwroot/Documents/Scenario/Fake.pdf", new MockFileData("Testing file Fake.pdf") },
-            { "wwwroot/Documents/Scenario/Fake2.pdf", new MockFileData("Testing file Fake2.pdf") }
+            { "wwwroot/Documents/Scenario/Fake2.pdf", new MockFileData("Testing file Fake2.pdf") },
+            { "wwwroot/Test/First", new MockFileData("First") },
+            { "wwwroot/Test/Second", new MockFileData("Second") },
+            { "wwwroot/Test/Third", new MockFileData("Third") }
         });
 
         return new ScenarioController(logger, context, mockFS)
@@ -96,8 +100,16 @@ public static class ScenarioTestsUtils
 public class GetCollection : ICollectionFixture<ScenarioFixture> { }
 
 
-[CollectionDefinition("CreatePostCollection", DisableParallelization = true)]
+[CollectionDefinition("CreatePostCollection")] 
 public class CreatePostCollection : ICollectionFixture<ScenarioFixture> { }
+
+
+[CollectionDefinition("DeletePostCollection")] 
+public class DeletePostCollection : ICollectionFixture<ScenarioFixture> { }
+
+
+[CollectionDefinition("EditPostCollection")] 
+public class EditPostCollection : ICollectionFixture<ScenarioFixture> { }
 
 
 [Collection("GetCollection")]
@@ -141,7 +153,7 @@ public class ScenarioGetTests
     [InlineData(1)]
     [InlineData(2)]
     [InlineData(3)]
-    public async Task EditGet(int id) 
+    public async Task EditGet_ValidID(int id) 
     { 
         var controller = ScenarioTestsUtils.CreateController(_fixture.context);
         
@@ -160,7 +172,7 @@ public class ScenarioGetTests
     
     [Theory]
     [InlineData(100)]
-    public async Task EditGet_NonexistentID(int id) 
+    public async Task EditGet_InvalidID(int id) 
     { 
         var controller = ScenarioTestsUtils.CreateController(_fixture.context);
 
@@ -213,3 +225,50 @@ public class ScenarioCreatePostTests
         Assert.Equal("Create", RedirectResult.ActionName);
     }
 }
+
+
+[Collection("DeletePostCollection")]
+public class ScenarioDeletePostTests
+{
+    private readonly ScenarioFixture _fixture;
+    
+    public ScenarioDeletePostTests(ScenarioFixture fixture)
+    {
+        _fixture = fixture;
+    }
+   
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public async Task DeletePost_ValidID(int id) 
+    { 
+        var controller = ScenarioTestsUtils.CreateController(_fixture.context);
+
+        // Query Index 
+        var result = await controller.Delete(id);
+
+        // Confirm that we redirect to index with invalid ID
+        var RedirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Null(RedirectResult.ControllerName);
+        Assert.Equal("Index", RedirectResult.ActionName);
+
+        // Confirm that logic leads to saving changes in db
+        Assert.Null(await _fixture.context.Scenarios.FindAsync(id));
+    }
+
+
+    [Theory]
+    [InlineData(101)]
+    public async Task DeletePost_InvalidID(int id) 
+    { 
+        var controller = ScenarioTestsUtils.CreateController(_fixture.context);
+
+        // Query Index 
+        var result = await controller.Delete(id);
+
+        // Confirm that we redirect to index with invalid ID
+        var RedirectResult = Assert.IsType<NotFoundResult>(result);
+    }
+}
+
