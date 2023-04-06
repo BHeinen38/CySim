@@ -87,8 +87,10 @@ namespace CySim.Controllers.TeamRegistrationController
                 if (item.TeamName == teamRegistration.TeamName)
                 {
                     _logger.LogInformation("{item.TeamName} already exist", item.TeamName);
-                    //TODO: Return a TeamExistError 
-                    return RedirectToAction(nameof(Index));
+                    //TODO: Return a TeamExistError
+                    TempData["errors"] = "Sorry! Team name already exist";
+                    //be wary of this test if works lol
+                    return RedirectToAction(nameof(Create), new {Id = teamRegistration.Id});
                 }
                 if ((item.FileName == fileName) && fileName != "DefaultImage.png")
                 {
@@ -147,7 +149,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
-        [Authorize(Roles ="Admin,Team Creator")]
+        [Authorize(Roles ="Admin,Team User")]
         public async Task<IActionResult> Delete(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -189,7 +191,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Team Creator")]
+        [Authorize(Roles = "Admin,Team User")]
         public IActionResult Edit(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -202,12 +204,15 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Team Creator")]
+        [Authorize(Roles = "Admin,Team User")]
         public async Task<IActionResult> Edit(TeamRegistration registration, IFormFile file)
         {
             var startRegistration = _context.TeamRegistrations.Find(registration.Id);
             string[] tempUser = new string[6] { startRegistration.User1, startRegistration.User2, startRegistration.User3, startRegistration.User4,
             startRegistration.User5, startRegistration.User6};
+
+            string[] curUser = new string[6] { registration.User1, registration.User2, registration.User3, registration.User4,
+            registration.User5, registration.User6};
 
             IdentityUser identity = null;
             var fileName = "";
@@ -224,15 +229,30 @@ namespace CySim.Controllers.TeamRegistrationController
                 fileName = file.FileName;
             }
 
-            if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && startRegistration.FileName != "DefaultImage.png")
-                System.IO.File.Delete(Path.Combine("wwwroot/", startRegistration.FilePath));
+            //Flag - comparing i var with the rest of the array. then doing next increment of i and comparing rest again. Repeat til i is at second to last count
+            for (int i = 0; i < _context.TeamRegistrations.Count() - 1; i++)
+            {
+                for(int j = i+1; j < _context.TeamRegistrations.Count(); j++)
+                {
+                    if (curUser[i] == curUser[j] && curUser[i] != null && curUser[j] != null)
+                    {
+                        //TODO: Return the same filename already exist error
+                        ViewData["errors"] = "Sorry this file name already exist";
+                        return View();
+                    }
+                }
+            }
 
-            if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
+            if(_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
             {
                 //TODO: Return the same filename already exist error
                 ViewData["errors"] = "Sorry this file name already exist";
                 return View();
             }
+
+            if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && startRegistration.FileName != "DefaultImage.png")
+                System.IO.File.Delete(Path.Combine("wwwroot/", startRegistration.FilePath));
+
             if (file != null)
             {
                 using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Images", fileName), FileMode.Create))
@@ -327,7 +347,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Team Creator")]
+        [Authorize(Roles = "Red Team,Blue Team")]
         public IActionResult Join(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -340,7 +360,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Team Creator")]
+        [Authorize(Roles = "Red Team,Blue Team")]
         public async Task<IActionResult> Join(TeamRegistration teamRegistration)
         {
             if (ModelState.IsValid)
