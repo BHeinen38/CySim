@@ -51,13 +51,13 @@ namespace CySim.Controllers
             {
                 _logger.LogError("Scenario Create: No file was uploaded");
                 TempData["errors"] = "No file was uploaded"; 
-                return View();
+                return RedirectToAction(nameof(Create));
             }
             if(Description == null) 
             {
                 _logger.LogError("Scenario Create: No Description was entered");
                 TempData["errors"] = "No description was provided"; 
-                return View();
+                return RedirectToAction(nameof(Create));
             }
             
             var fileName = file.FileName; 
@@ -66,7 +66,7 @@ namespace CySim.Controllers
             {
                 _logger.LogError("Scenario Create: FileName of uploaded file matched another scenario");
                 TempData["errors"] = "Sorry this file name already exist";
-                return View();
+                return RedirectToAction(nameof(Create));
             }
 
             using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
@@ -93,7 +93,7 @@ namespace CySim.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return RedirectToAction(nameof(Create));
         }
 
 
@@ -105,7 +105,7 @@ namespace CySim.Controllers
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Delete on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
             
             var fileName = Path.Combine("wwwroot/", scenario.FilePath);
@@ -115,6 +115,7 @@ namespace CySim.Controllers
                 System.IO.File.Delete(fileName);
                 _context.Scenarios.Remove(scenario);
                 _context.SaveChanges();
+                _logger.LogInformation("Scenario Delete on id = " + id + ": " + fileName + " was deleted and database entry removed");
             }
 
             return RedirectToAction(nameof(Index));
@@ -128,7 +129,7 @@ namespace CySim.Controllers
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             return View(scenario);
@@ -145,7 +146,7 @@ namespace CySim.Controllers
             if(scenario == null) 
             { 
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             if (!ModelState.IsValid)

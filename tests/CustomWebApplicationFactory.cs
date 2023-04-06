@@ -23,16 +23,12 @@ public class CustomWebApplicationFactory<TProgram>
                 d => d.ServiceType ==
                     typeof(DbContextOptions<ApplicationDbContext>));
 
-//            _ = dbContextDesc ?? throw new ArgumentNullException(nameof(dbContextDesc));
-
             services.Remove(dbContextDesc);
 
             var dbConnectionDesc = services.SingleOrDefault(
                 d => d.ServiceType ==
                     typeof(DbConnection));
             
-//            _ = dbConnectionDesc ?? throw new ArgumentNullException(nameof(dbConnectionDesc));
-
             services.Remove(dbConnectionDesc);
 
             // Create open SqliteConnection so EF won't automatically close it.
