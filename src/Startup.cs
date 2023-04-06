@@ -12,6 +12,7 @@ using CySim.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO.Abstractions;
 
 namespace CySim
 {
@@ -38,6 +39,8 @@ namespace CySim
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+   
+            services.AddSingleton<IFileSystem, FileSystem>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

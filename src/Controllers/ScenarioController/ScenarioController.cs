@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CySim.Models.Scenario;
+using System.IO.Abstractions;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CySim.Controllers
 {
@@ -22,11 +22,13 @@ namespace CySim.Controllers
     {
         private readonly ILogger<ScenarioController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IFileSystem _fileSystem;
 
-        public ScenarioController(ILogger<ScenarioController> logger, ApplicationDbContext context)
+        public ScenarioController(ILogger<ScenarioController> logger, ApplicationDbContext context, IFileSystem fileSystem)
         {
             _logger = logger;
             _context = context;
+            _fileSystem = fileSystem;
         }
 
         [HttpGet]
@@ -70,7 +72,9 @@ namespace CySim.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
-            using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
+            var filePath = Path.Combine("Documents/Scenario", fileName);
+            
+            using (var stream = _fileSystem.FileStream.New(Path.Combine("wwwroot", filePath), FileMode.Create))
             {
                 await file.CopyToAsync(stream);
                 _logger.LogInformation("Scenario Create: File was uploaded to Documents/Scenario");
@@ -79,7 +83,7 @@ namespace CySim.Controllers
             var scenario = new Scenario() 
             {
                 FileName = fileName,
-                FilePath = Path.Combine("Documents/Scenario", fileName),
+                FilePath = filePath,
                 Description = Description,
                 isRed = isRed,
             };
@@ -109,11 +113,11 @@ namespace CySim.Controllers
                 return NotFound();
             }
             
-            var fileName = Path.Combine("wwwroot/", scenario.FilePath);
+            var fileName = Path.Combine("wwwroot", scenario.FilePath);
             
-            if (ModelState.IsValid && System.IO.File.Exists(fileName))
+            if (ModelState.IsValid && _fileSystem.File.Exists(fileName))
             {
-                System.IO.File.Delete(fileName);
+                _fileSystem.File.Delete(fileName);
                 _context.Scenarios.Remove(scenario);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Scenario Delete on id = " + id + ": " + fileName + " was deleted and database entry removed");
@@ -190,7 +194,7 @@ namespace CySim.Controllers
             // Replace file contents
             if (file != null) 
             {
-                using (var stream = new FileStream(CurrFile, FileMode.Create))
+                using (var stream = _fileSystem.FileStream.New(CurrFile, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
@@ -200,7 +204,7 @@ namespace CySim.Controllers
             // Rename file
             if(CurrFile != NewFile) 
             {
-                System.IO.File.Move(CurrFile, NewFile);
+                _fileSystem.File.Move(CurrFile, NewFile);
                 _logger.LogInformation("Scenario Edit on id = " + id + ": File was renamed");
             }
             
