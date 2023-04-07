@@ -77,7 +77,7 @@ public static class ScenarioTestsUtils
         var file = new Mock<IFormFile>();
         file.Setup(f => f.FileName).Returns(fileName).Verifiable();
         file.Setup(_ => _.CopyToAsync(It.IsAny<Stream>(), CancellationToken.None))
-            .Returns(Task.CompletedTask);
+            .Returns(Task.CompletedTask).Verifiable();
 
         return file;
     }
@@ -89,10 +89,23 @@ public static class ScenarioTestsUtils
         yield return new object[] { GenerateMockFile("Fake2.pdf"), "Fake Scenario 2 PDF", true };
     }
 
-    public static IEnumerable<object[]> GenerateInvalidCreatePostData()
+    public static IEnumerable<object?[]> GenerateInvalidCreatePostData()
     {
-        yield return new object[] { null, "Fake Scenario 1 PDF", false };
-        yield return new object[] { GenerateMockFile("Fake.pdf"), null, true };
+        yield return new object?[] { null, "Fake Scenario 1 PDF", false };
+        yield return new object?[] { GenerateMockFile("Fake.pdf"), null, true };
+    }
+
+    public static IEnumerable<object?[]> GenerateValidEditPostData()
+    {
+        yield return new object[] { 1, GenerateMockFile("Fake.pdf"), "Test1.pdf", "Test Scenario 1 PDF", false };
+        yield return new object[] { 2, GenerateMockFile("Fake2.pdf"), "Test2.pdf", "Test Scenario 2 PDF", true };
+        yield return new object?[] { 3, null, "Test3.pdf", "Test Scenario 3 PDF", false };
+    }
+
+    public static IEnumerable<object?[]> GenerateInvalidEditPostData()
+    {
+        yield return new object?[] { 2, GenerateMockFile("Fake.pdf"), null, "Fake Scenario 1 PDF", false };
+        yield return new object?[] { 3, GenerateMockFile("Fake2.pdf"), "Fake2.pdf", null, true };
     }
 }
 
@@ -271,4 +284,62 @@ public class ScenarioDeletePostTests
         var RedirectResult = Assert.IsType<NotFoundResult>(result);
     }
 }
+
+
+[Collection("EditPostCollection")]
+public class ScenarioEditPostTests
+{
+    private readonly ScenarioFixture _fixture;
+    
+    public ScenarioEditPostTests(ScenarioFixture fixture)
+    {
+        _fixture = fixture;
+    }
+   
+    [Theory]
+    [MemberData(nameof(ScenarioTestsUtils.GenerateValidEditPostData), MemberType = typeof(ScenarioTestsUtils))]
+    public async Task EditPost_ValidData(int id, Mock<IFormFile>? file, String fileName, String Description, bool isRed) 
+    { 
+        var controller = ScenarioTestsUtils.CreateController(_fixture.context);
+
+        // Query Index 
+        var result = await controller.Edit(id, file?.Object ?? null, fileName, Description, isRed);
+ 
+        // Confirm that we redirect to index with invalid ID
+        var RedirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Null(RedirectResult.ControllerName);
+        Assert.Equal("Index", RedirectResult.ActionName);
+    }
+
+    [Theory]
+    [MemberData(nameof(ScenarioTestsUtils.GenerateInvalidEditPostData), MemberType = typeof(ScenarioTestsUtils))]
+    public async Task EditPost_InvalidData(int id, Mock<IFormFile>? file, String fileName, String Description, bool isRed) 
+    { 
+        var controller = ScenarioTestsUtils.CreateController(_fixture.context);
+
+        // Query Index 
+        var result = await controller.Edit(id, file?.Object ?? null, fileName, Description, isRed);
+ 
+        // Confirm that we redirect to index with invalid ID
+        var RedirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Null(RedirectResult.ControllerName);
+        Assert.Equal("Edit", RedirectResult.ActionName);
+        Assert.Equal(id, RedirectResult.RouteValues?["id"] ?? null);
+    }
+
+    [Theory]
+    [InlineData(202)]
+    public async Task EditPost_InvalidID(int id) 
+    { 
+        var controller = ScenarioTestsUtils.CreateController(_fixture.context);
+
+        // Query Index 
+        var result = await controller.Edit(id, null, null, null, false);
+
+        // Confirm that we redirect to index with invalid ID
+        var RedirectResult = Assert.IsType<NotFoundResult>(result);
+    }
+
+}
+
 
