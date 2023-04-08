@@ -34,9 +34,11 @@
         
         @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
         {
+            <br>
             <div align="left" class="col-6">
                 <a class="btn btn-info" asp-action="Create">Add a Tutorial</a>
             </div>
+            <br>
         }
        <div class="col-12">
             @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
