@@ -224,7 +224,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 //User cannot create a file in the same name as our default
                 if (file.FileName == "Default.Image")
                     //TODO: Return InvalidFileName error 
-                    return View();
+                    return RedirectToAction(nameof(Index));
 
                 fileName = file.FileName;
             }
@@ -238,7 +238,7 @@ namespace CySim.Controllers.TeamRegistrationController
                     {
                         //TODO: Return the same filename already exist error
                         ViewData["errors"] = "Sorry this file name already exist";
-                        return View();
+                        return RedirectToAction(nameof(Index));
                     }
                 }
             }
@@ -247,7 +247,7 @@ namespace CySim.Controllers.TeamRegistrationController
             {
                 //TODO: Return the same filename already exist error
                 ViewData["errors"] = "Sorry this file name already exist";
-                return View();
+                return RedirectToAction(nameof(Index));
             }
 
             if (System.IO.File.Exists(Path.Combine("wwwroot/", startRegistration.FilePath)) && startRegistration.FileName != fileName && startRegistration.FileName != "DefaultImage.png")
