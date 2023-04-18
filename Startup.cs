@@ -12,6 +12,7 @@ using CySim.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO.Abstractions;
 
 namespace CySim
 {
@@ -36,6 +37,7 @@ namespace CySim
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            services.AddSingleton<IFileSystem, FileSystem>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
