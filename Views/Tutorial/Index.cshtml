@@ -28,7 +28,7 @@
 @if (signInManager.IsSignedIn(User))
 {
     <div class="row">
-        <div class="col-6" align="center">
+        <div class="col-6">
             <h2 class="text">Access Tutorial Documents</h2>
         </div>
         <br>
@@ -41,6 +41,7 @@
             </div>
             <br>
         }
+        <br>
         <div class="col-12">
             @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
             {
