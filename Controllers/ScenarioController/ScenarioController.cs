@@ -9,10 +9,11 @@ using CySim.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using CySim.Models.Scenario;
+using System.IO.Abstractions;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CySim.Controllers
 {
@@ -21,17 +22,19 @@ namespace CySim.Controllers
     {
         private readonly ILogger<ScenarioController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IFileSystem _fileSystem;
 
-        public ScenarioController(ILogger<ScenarioController> logger, ApplicationDbContext context)
+        public ScenarioController(ILogger<ScenarioController> logger, ApplicationDbContext context, IFileSystem fileSystem)
         {
             _logger = logger;
             _context = context;
+            _fileSystem = fileSystem;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Scenarios.OrderBy(x => x.isRed).ToList());
+            return View(await _context.Scenarios.OrderBy(x => x.isRed).ToListAsync());
         }
 
         [Authorize(Roles = "Admin")]
@@ -43,7 +46,7 @@ namespace CySim.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Create(IFormFile file, String Description, bool isRed)
+        public async Task<IActionResult> Create(IFormFile file, String Description, bool isRed)
         {
             TempData["errors"] = "";
 
@@ -51,34 +54,36 @@ namespace CySim.Controllers
             {
                 _logger.LogError("Scenario Create: No file was uploaded");
                 TempData["errors"] = "No file was uploaded";
-                return View();
+                return RedirectToAction(nameof(Create));
             }
             if (Description == null)
             {
                 _logger.LogError("Scenario Create: No Description was entered");
                 TempData["errors"] = "No description was provided";
-                return View();
+                return RedirectToAction(nameof(Create));
             }
 
             var fileName = file.FileName;
 
-            if (_context.Scenarios.Any(x => x.FileName == fileName))
+            if (await _context.Scenarios.AnyAsync(x => x.FileName == fileName))
             {
                 _logger.LogError("Scenario Create: FileName of uploaded file matched another scenario");
                 TempData["errors"] = "Sorry this file name already exist";
-                return View();
+                return RedirectToAction(nameof(Create));
             }
 
-            using (var stream = new FileStream(Path.Combine("wwwroot/Documents/Scenario", fileName), FileMode.Create))
+            var filePath = Path.Combine("Documents/Scenario", fileName);
+
+            using (var stream = _fileSystem.FileStream.New(Path.Combine("wwwroot", filePath), FileMode.Create))
             {
-                file.CopyTo(stream);
+                await file.CopyToAsync(stream);
                 _logger.LogInformation("Scenario Create: File was uploaded to Documents/Scenario");
             }
 
             var scenario = new Scenario()
             {
                 FileName = fileName,
-                FilePath = Path.Combine("Documents/Scenario", fileName),
+                FilePath = filePath,
                 Description = Description,
                 isRed = isRed,
             };
@@ -86,35 +91,36 @@ namespace CySim.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(scenario);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Scenario Create: New database entry created");
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return RedirectToAction(nameof(Create));
         }
 
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if (scenario == null)
             {
                 _logger.LogError("Scenario Delete on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
-            var fileName = Path.Combine("wwwroot/", scenario.FilePath);
+            var fileName = Path.Combine("wwwroot", scenario.FilePath);
 
-            if (ModelState.IsValid && System.IO.File.Exists(fileName))
+            if (ModelState.IsValid && _fileSystem.File.Exists(fileName))
             {
-                System.IO.File.Delete(fileName);
+                _fileSystem.File.Delete(fileName);
                 _context.Scenarios.Remove(scenario);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Scenario Delete on id = " + id + ": " + fileName + " was deleted and database entry removed");
             }
 
             return RedirectToAction(nameof(Index));
@@ -122,13 +128,13 @@ namespace CySim.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult Edit([FromRoute] int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if (scenario == null)
             {
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             return View(scenario);
@@ -136,16 +142,16 @@ namespace CySim.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, IFormFile file, String FileName, String Description, bool isRed)
+        public async Task<IActionResult> Edit([FromRoute] int id, IFormFile file, String FileName, String Description, bool isRed)
         {
             // HTML Form Error Handling 
             TempData["errors"] = "";
 
-            var scenario = _context.Scenarios.Find(id);
+            var scenario = await _context.Scenarios.FindAsync(id);
             if (scenario == null)
             {
                 _logger.LogError("Scenario Edit on id = " + id + ": No scenario has id = " + id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             if (!ModelState.IsValid)
@@ -167,7 +173,7 @@ namespace CySim.Controllers
                 return RedirectToAction(nameof(Edit), new { id = id });
             }
 
-            if (_context.Scenarios.Any(x => x.Id != id && x.FileName == FileName))
+            if (await _context.Scenarios.AnyAsync(x => x.Id != id && x.FileName == FileName))
             {
                 _logger.LogError("Scenario Edit on id = " + id + ": FileName matched another scenario");
                 TempData["errors"] = "This file name is already used by another scenario";
@@ -188,9 +194,9 @@ namespace CySim.Controllers
             // Replace file contents
             if (file != null)
             {
-                using (var stream = new FileStream(CurrFile, FileMode.Create))
+                using (var stream = _fileSystem.FileStream.New(CurrFile, FileMode.Create))
                 {
-                    file.CopyTo(stream);
+                    await file.CopyToAsync(stream);
                 }
                 _logger.LogInformation("Scenario Edit on id = " + id + ": File contents were replaced by uploaded file");
             }
@@ -198,7 +204,7 @@ namespace CySim.Controllers
             // Rename file
             if (CurrFile != NewFile)
             {
-                System.IO.File.Move(CurrFile, NewFile);
+                _fileSystem.File.Move(CurrFile, NewFile);
                 _logger.LogInformation("Scenario Edit on id = " + id + ": File was renamed");
             }
 
@@ -209,7 +215,7 @@ namespace CySim.Controllers
             scenario.isRed = isRed;
 
             _context.Scenarios.Update(scenario);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _logger.LogInformation("Scenario Edit on id = " + id + ": Database entry was updated");
 
