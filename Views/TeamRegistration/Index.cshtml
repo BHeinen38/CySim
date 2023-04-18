@@ -30,12 +30,19 @@
     @*<div align="right">
             <h2>Register For a Team here</h2>
         </div>*@
+
+    @*Checking for error messages*@
+    @if (TempData["errors"] != null && !TempData["errors"].Equals(""))
+    {
+        <p class="text-danger mb-4">@TempData["errors"]</p>
+    }
+
     @if (!User.IsInRole("Team User"))
-        {
+    {
         <div align="right">
             <a class="btn btn-info" asp-action="Create">Add a New Team<i class="fa-solid fa-bicycle"></i></a>
         </div>
-        }
+    }
     <br />
     <div class="col-12">
         @if (User.IsInRole("Red Team") || User.IsInRole("Admin"))
