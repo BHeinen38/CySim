@@ -202,9 +202,11 @@ namespace CySim.Controllers.TeamRegistrationController
 
             //TODO: Same Return Registration Error
             if (registration == null)
+            {
                 TempData["errors"] = "Team registration not found. Try registering a team.";
-            _logger.LogInformation("Error: Team registration not found");
-            return RedirectToAction(nameof(Index));
+                _logger.LogInformation("Error: Team registration not found");
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(registration);
         }
