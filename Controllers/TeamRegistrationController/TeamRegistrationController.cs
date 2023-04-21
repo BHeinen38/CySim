@@ -389,7 +389,7 @@ namespace CySim.Controllers.TeamRegistrationController
                         || item.User6 == name)
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
-                        TempData["errors"] = "You are already in " + item.TeamName"; Users can only join 1 team.");
+                        TempData["errors"] = "You are already in " + item.TeamName + "; Users can only join 1 team.";
                         return RedirectToAction(nameof(Index));
                     }
                 }
