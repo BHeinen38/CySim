@@ -70,10 +70,20 @@ namespace CySim.Controllers.TeamRegistrationController
             var fileName = "";
 
             if (file == null)
+            {
                 fileName = "DefaultImage.png";
+            }
             else
-                fileName = file.FileName;
+            {
+                if(file.FileName == "DefaultImage.png")
+                {
+                    TempData["errors"] = "Error: Cannot upload a file with same name as default";
+                    _logger.LogInformation("Error: Cannot upload a file with same name as default");
+                    return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id });
+                }
 
+                fileName = file.FileName;
+            }
 
             foreach (var item in _context.TeamRegistrations)
             {
@@ -93,12 +103,12 @@ namespace CySim.Controllers.TeamRegistrationController
                     //be wary of this test if works lol
                     return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id });
                 }
-                if ((item.FileName == fileName) && fileName != "DefaultImage.png")
+                if (item.FileName == fileName && fileName != "DefaultImage.png")
                 {
                     _logger.LogInformation("Error: File called {item.FileName} already exists", item.FileName);
                     TempData["errors"] = "Sorry, a file with that name already exists.";
                     //TODO: Return a Filename Exist Error
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id});
                 }
             }
 
@@ -166,7 +176,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 //TODO: Return registration not found error
                 TempData["errors"] = "Team registration not found. Try registering a team.";
                 _logger.LogInformation("Error: Team registration not found");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = registration.Id });
             }
 
             if (User.IsInRole("Team User") || User.IsInRole("Admin"))
@@ -205,7 +215,7 @@ namespace CySim.Controllers.TeamRegistrationController
             {
                 TempData["errors"] = "Team registration not found. Try registering a team.";
                 _logger.LogInformation("Error: Team registration not found");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), new { id = registration.Id });
             }
 
             return View(registration);
@@ -230,11 +240,11 @@ namespace CySim.Controllers.TeamRegistrationController
             else
             {
                 //User cannot create a file in the same name as our default
-                if (file.FileName == "Default.Image")
+                if (file.FileName == "DefaultImage.png")
                 {
                     TempData["errors"] = "Error: Cannot upload a file with same name as default";
                     _logger.LogInformation("Error: Cannot upload a file with same name as default");
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Edit), new { Id = registration.Id });
                 }
 
                 fileName = file.FileName;
@@ -250,7 +260,7 @@ namespace CySim.Controllers.TeamRegistrationController
                     {
                         TempData["errors"] = "Error: A file with this name already exists";
                         _logger.LogInformation("Error: A file with this name already exists");
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Edit), new { id = registration.Id });
                     }
                 }
             }
@@ -284,7 +294,7 @@ namespace CySim.Controllers.TeamRegistrationController
                     {
                         TempData["errors"] = "Error: No users found in database";
                         _logger.LogInformation("Error: No users found in database");
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Edit), new { id = registration.Id });
                     }
                 }
                 teamRegistration.TeamName = registration.TeamName;
@@ -369,7 +379,7 @@ namespace CySim.Controllers.TeamRegistrationController
             {
                 TempData["errors"] = "Team registration not found. Try registering a team.";
                 _logger.LogInformation("Error: Team registration not found");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Join), new { id = registration.Id });
             }
 
             return View(registration);
@@ -392,7 +402,7 @@ namespace CySim.Controllers.TeamRegistrationController
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
                         TempData["errors"] = "You are already in " + item.TeamName + "; Users can only join 1 team.";
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Join));
                     }
                 }
 
@@ -402,7 +412,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     TempData["errors"] = "Sorry, this team already has the maximum of 6 members!";
                     _logger.LogInformation("Error: User could not join a full team");
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Join), new { id = registration.Id });
                 }
                 else
                 {

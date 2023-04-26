@@ -11,6 +11,10 @@
 <h2 class="text-info">Edit a Team for @Model.TeamName</h2>
 <form method="post" action="Edit" enctype="multipart/form-data">
     <div class="form-group row">
+        @if (TempData["errors"] != null && !TempData["errors"].Equals(""))
+        {
+            <p class="text-danger mb-4">@TempData["errors"]</p>
+        }
         <div class="form-group">
             <label for="file">Select file to replace profile picture (Optional):</label>
             <input type="file" class="form-control" name="file" />
