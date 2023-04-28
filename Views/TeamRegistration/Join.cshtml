@@ -9,6 +9,10 @@
 <h2 class="text-info">Join a Team</h2>
 <form method="post" action="Join">
     <div class="form-group row">
+        @if (TempData["errors"] != null && !TempData["errors"].Equals(""))
+        {
+            <p class="text-danger mb-4">@TempData["errors"]</p>
+        }
         <div class="col-2">
             <label asp-for="TeamName"></label>
         </div>
