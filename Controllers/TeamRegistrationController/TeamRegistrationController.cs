@@ -45,7 +45,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
         [HttpGet]
         public IActionResult Index()
-        { 
+        {
             return View(_context.TeamRegistrations.ToList());
         }
 
@@ -70,33 +70,45 @@ namespace CySim.Controllers.TeamRegistrationController
             var fileName = "";
 
             if (file == null)
+            {
                 fileName = "DefaultImage.png";
+            }
             else
-                fileName = file.FileName;
+            {
+                if (file.FileName == "DefaultImage.png")
+                {
+                    TempData["errors"] = "Error: Cannot upload a file with same name as default";
+                    _logger.LogInformation("Error: Cannot upload a file with same name as default");
+                    return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id });
+                }
 
+                fileName = file.FileName;
+            }
 
             foreach (var item in _context.TeamRegistrations)
             {
                 //TODO: Test to see if this check is needed 
                 if (item.TeamCreator == User.Identity.Name && !User.IsInRole("Admin"))
                 {
-                    _logger.LogInformation("{item.TeamCreator} Has Already created a team", item.TeamCreator);
+                    _logger.LogInformation("Error: {item.TeamCreator} has already created a team", item.TeamCreator);
+                    TempData["errors"] = "Sorry, this user has already created a team.";
                     //TODO: This is the one that might not be needed
                     return RedirectToAction(nameof(Index));
                 }
                 if (item.TeamName == teamRegistration.TeamName)
                 {
-                    _logger.LogInformation("{item.TeamName} already exist", item.TeamName);
+                    _logger.LogInformation("Error: Team called {item.TeamName} already exists", item.TeamName);
                     //TODO: Return a TeamExistError
-                    TempData["errors"] = "Sorry! Team name already exist";
+                    TempData["errors"] = "Sorry, a team with that name already exists.";
                     //be wary of this test if works lol
-                    return RedirectToAction(nameof(Create), new {Id = teamRegistration.Id});
+                    return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id });
                 }
-                if ((item.FileName == fileName) && fileName != "DefaultImage.png")
+                if (item.FileName == fileName && fileName != "DefaultImage.png")
                 {
-                    _logger.LogInformation("{item.FileName} already exist", item.FileName);
+                    _logger.LogInformation("Error: File called {item.FileName} already exists", item.FileName);
+                    TempData["errors"] = "Sorry, a file with that name already exists.";
                     //TODO: Return a Filename Exist Error
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Create), new { Id = teamRegistration.Id });
                 }
             }
 
@@ -118,7 +130,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 registration.IsRed = teamRegistration.IsRed;
                 registration.AvailSpots = 6;
             }
-            else if(User.IsInRole("Blue Team"))
+            else if (User.IsInRole("Blue Team"))
             {
                 registration.IsRed = false;
                 registration.User1 = User.Identity.Name;
@@ -135,7 +147,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 registration.TeamCreator = User.Identity.Name;
                 if (User.IsInRole("Blue Team") || User.IsInRole("Red Team"))
                 {
-                    IdentityUser identity =  GetIdentityUser(registration.TeamCreator);
+                    IdentityUser identity = GetIdentityUser(registration.TeamCreator);
                     await _userManager.AddToRoleAsync(identity, "Team User");
                 }
                 IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
@@ -149,7 +161,7 @@ namespace CySim.Controllers.TeamRegistrationController
         }
 
         [HttpPost]
-        [Authorize(Roles ="Admin,Team User")]
+        [Authorize(Roles = "Admin,Team User")]
         public async Task<IActionResult> Delete(int id)
         {
             var registration = _context.TeamRegistrations.Find(id);
@@ -161,13 +173,15 @@ namespace CySim.Controllers.TeamRegistrationController
 
             if (registration == null)
             {
-                //TODO: Return registration not found error 
-                return NotFound();
+                //TODO: Return registration not found error
+                TempData["errors"] = "Team registration not found. Try registering a team.";
+                _logger.LogInformation("Error: Team registration not found");
+                return RedirectToAction(nameof(Edit), new { id = registration.Id });
             }
 
             if (User.IsInRole("Team User") || User.IsInRole("Admin"))
             {
-                for(var i = 0; i < users.Length; i++)
+                for (var i = 0; i < users.Length; i++)
                 {
                     if (users[i] != null)
                     {
@@ -176,10 +190,10 @@ namespace CySim.Controllers.TeamRegistrationController
                     }
                 }
             }
-            if(registration.FileName != "DefaultImage.png")
+            if (registration.FileName != "DefaultImage.png")
                 System.IO.File.Delete(Path.Combine("wwwroot/", registration.FilePath));
 
-            if(identity != null)
+            if (identity != null)
                 await _userManager.UpdateAsync(identity);
 
             IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
@@ -187,7 +201,7 @@ namespace CySim.Controllers.TeamRegistrationController
             _context.TeamRegistrations.Remove(registration);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
-            
+
         }
 
         [HttpGet]
@@ -198,7 +212,11 @@ namespace CySim.Controllers.TeamRegistrationController
 
             //TODO: Same Return Registration Error
             if (registration == null)
-                return NotFound();
+            {
+                TempData["errors"] = "Team registration not found. Try registering a team.";
+                _logger.LogInformation("Error: Team registration not found");
+                return RedirectToAction(nameof(Edit), new { id = registration.Id });
+            }
 
             return View(registration);
         }
@@ -222,31 +240,35 @@ namespace CySim.Controllers.TeamRegistrationController
             else
             {
                 //User cannot create a file in the same name as our default
-                if (file.FileName == "Default.Image")
-                    //TODO: Return InvalidFileName error 
-                    return RedirectToAction(nameof(Index));
+                if (file.FileName == "DefaultImage.png")
+                {
+                    TempData["errors"] = "Error: Cannot upload a file with same name as default";
+                    _logger.LogInformation("Error: Cannot upload a file with same name as default");
+                    return RedirectToAction(nameof(Edit), new { Id = registration.Id });
+                }
 
                 fileName = file.FileName;
             }
 
             //Flag - comparing i var with the rest of the array. then doing next increment of i and comparing rest again. Repeat til i is at second to last count
-            for (int i = 0; i < curUser.Length - 1; i++)
+            for (int i = 0; i < curUser.Length; i++)
             {
-                for(int j = i+1; j < curUser.Length; j++)
+                for (int j = 0; j < curUser.Length; j++)
                 {
-                    if (curUser[i] == curUser[j] && curUser[i] != null && curUser[j] != null)
+                    //if these two are different objects and match, that's a no no
+                    if (i != j && curUser[i] == curUser[j] && curUser[i] != null && curUser[j] != null)
                     {
-                        //TODO: Return the same filename already exist error
-                        ViewData["errors"] = "Sorry this file name already exist";
-                        return RedirectToAction(nameof(Index));
+                        TempData["errors"] = "Error: A file with this name already exists";
+                        _logger.LogInformation("Error: A file with this name already exists");
+                        return RedirectToAction(nameof(Edit), new { id = registration.Id });
                     }
                 }
             }
 
-            if(_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
+            if (_context.TeamRegistrations.Any(x => x.FileName == fileName) && fileName != startRegistration.FileName && fileName != "DefaultImage.png")
             {
-                //TODO: Return the same filename already exist error
-                ViewData["errors"] = "Sorry this file name already exist";
+                TempData["errors"] = "Error: A file with this name already exists";
+                _logger.LogInformation("Error: A file with this name already exists");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -270,14 +292,14 @@ namespace CySim.Controllers.TeamRegistrationController
                 {
                     if (Users[i] == "There is no user in database")
                     {
-                        //TODO: Return a UserDoesntExistError
-                        _logger.LogInformation("There is no user of this type username in the database");
-                        return RedirectToAction(nameof(Index));
+                        TempData["errors"] = "Error: No users found in database";
+                        _logger.LogInformation("Error: No users found in database");
+                        return RedirectToAction(nameof(Edit), new { id = registration.Id });
                     }
                 }
                 teamRegistration.TeamName = registration.TeamName;
 
-                for(int i =0; i < Users.Length; i++)
+                for (int i = 0; i < Users.Length; i++)
                 {
                     if (Users[i] == null)
                     {
@@ -334,7 +356,7 @@ namespace CySim.Controllers.TeamRegistrationController
                 if (User.IsInRole("Red Team"))
                     teamRegistration.IsRed = true;
 
-                if(identity != null)
+                if (identity != null)
                     await _userManager.UpdateAsync(identity);
 
                 IdentityUser identityUser = _context.Users.Where(x => x.Email == User.Identity.Name).First();
@@ -354,7 +376,11 @@ namespace CySim.Controllers.TeamRegistrationController
 
             //TODO: Return Registration not found Error 
             if (registration == null)
-                return NotFound();
+            {
+                TempData["errors"] = "Team registration not found. Try registering a team.";
+                _logger.LogInformation("Error: Team registration not found");
+                return RedirectToAction(nameof(Join), new { id = registration.Id });
+            }
 
             return View(registration);
         }
@@ -369,34 +395,35 @@ namespace CySim.Controllers.TeamRegistrationController
                 var startRegistration = _context.TeamRegistrations.Find(teamRegistration.Id);
 
                 //one user can only join one team
-                foreach(var item in _context.TeamRegistrations)
+                foreach (var item in _context.TeamRegistrations)
                 {
-                    if(item.User1 == name || item.User2 == name || item.User3 == name || item.User4 == name || item.User5 == name
+                    if (item.User1 == name || item.User2 == name || item.User3 == name || item.User4 == name || item.User5 == name
                         || item.User6 == name)
                     {
                         _logger.LogInformation(name + " is already in " + item.TeamName);
-                        return View(nameof(UserExistError), name);
+                        TempData["errors"] = "You are already in " + item.TeamName + "; Users can only join 1 team.";
+                        return RedirectToAction(nameof(Join));
                     }
                 }
 
                 var registration = CySim.HelperFunctions.TeamRegistrationHelper.GetJoinTeamRegistration(teamRegistration, startRegistration, name);
-                
-                if(registration.TeamName == "Team already has 6 users")
+
+                if (registration.TeamName == "Team already has 6 users")
                 {
-                    _logger.LogInformation("Sorry this team already has 6 users");
-                    //TODO: Return TeamFullError
-                    return RedirectToAction(nameof(Index));
+                    TempData["errors"] = "Sorry, this team already has the maximum of 6 members!";
+                    _logger.LogInformation("Error: User could not join a full team");
+                    return RedirectToAction(nameof(Join), new { id = registration.Id });
                 }
                 else
                 {
                     if (User.IsInRole("Blue Team") || User.IsInRole("Red Team"))
                     {
-                        IdentityUser identity =  GetIdentityUser(User.Identity.Name);
+                        IdentityUser identity = GetIdentityUser(User.Identity.Name);
                         await _userManager.AddToRoleAsync(identity, "Team User");
                         await _userManager.UpdateAsync(identity);
                         await _signInManager.RefreshSignInAsync(identity);
                     }
-                        
+
                     _logger.LogInformation(name + " just joined the team " + registration.TeamName);
                     _context.Update(registration);
                     _context.SaveChanges();
@@ -411,7 +438,7 @@ namespace CySim.Controllers.TeamRegistrationController
         {
             IdentityUser identity = _context.Users.Where(x => x.Email == email).First();
             return identity;
-            
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
